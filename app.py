@@ -1,5 +1,6 @@
+from flask import Flask, render_template, request, redirect, url_for
+import database
 
-from flask import Flask, redirect, url_for
 
 app = Flask(__name__)
 
@@ -7,9 +8,23 @@ app = Flask(__name__)
 def home():
     return 'homepage'
 
-@app.route('/registration')
+@app.route('/registration', methods=['GET', 'POST'])
 def user_registration():
-    return 'registration'
+    if request.method == 'POST':
+        user_data = {
+            "name": request.form['name'],
+            "surname": request.form['surname'],
+            "email": request.form['email'],
+            "phone_number": request.form['phone_number']
+        }
+        database.add_user(user_data)
+        return redirect(url_for('home'))
+    return 'registration.html'
+
+@app.route('/crimes')
+def crimes():
+    crimes_list = database.get_crimes()
+    return 'crimes.html'
 
 @app.route('/admin')
 def admin():
