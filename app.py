@@ -2,11 +2,11 @@ from flask import Flask, render_template, request, redirect, url_for
 import database
 
 
-app = Flask(__name__, template_folder='templates')
+app = Flask(__name__, template_folder='templates/frontend')
 
 @app.route('/')
 def home():
-    return 'homepage'
+    return render_template('main_page.html')
 
 
 @app.route('/register_as', methods=['GET', 'POST'])
