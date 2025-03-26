@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форма реєстрації свідка</title>
+    <link rel="stylesheet" href="registrartion.css">
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-header">
+            <h1 class="form-title">СТВОРИТИ ОБЛІКОВИЙ ЗАПИС</h1>
+        </div>
+        
+        <div class="form-scrollable">
+            <form id="registration-form">
+                <div class="form-group">
+                    <label class="form-label">ПІБ</label>
+                    <input type="text" class="form-input" name="full_name" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">ПРІЗВИЩЕ</label>
+                    <input type="text" class="form-input" name="last_name" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">МІСЦЕ ЗНАХОДЖЕННЯ</label>
+                    <input type="text" class="form-input" name="location" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">ЕЛЕКТРОННА ПОШТА</label>
+                    <input type="email" class="form-input" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">КОНТАКТНИЙ ТЕЛЕФОН</label>
+                    <input type="tel" class="form-input" name="phone" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">ТИП ПОДАВАЧА</label>
+                    <select class="form-input" name="submitter_type" required>
+                        <option value="">Оберіть тип</option>
+                        <option value="witness">Очевидець</option>
+                        <option value="journalist">Журналіст</option>
+                        <option value="victim">Потерпілий</option>
+                        <option value="prosecutor">Прокурор</option>
+                        <option value="investigator">Слідчий</option>
+                        <option value="lawyer">Адвокат</option>
+                        <option value="ngo_representative">Представник НГО</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">МІСЦЕ ПРАЦІ (ЯКЩО ЗАСТОСОВНО)</label>
+                    <input type="text" class="form-input" name="workplace" placeholder="Необов'язково">
+                </div>
+
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox-input" id="terms" required>
+                    <label for="terms" class="checkbox-label">
+                        Я погоджуюсь з обробкою персональних даних відповідно до політики конфіденційності
+                    </label>
+                </div>
+
+                <div class="form-footer">
+                    <button type="submit" class="submit-button">ЗАРЕЄСТРУВАТИСЯ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ЦЕ ПОТІМ ТРЕБА ВИДАЛИТИ!!!
+        // Я ВСТАВИЛА ЦЕ ТІЛЬКИ ЩОБ ПОКАЗАТИ ЯК ВОНО МАЄ КЛІКАТИСЬ
+
+        
+        // Додаткова валідація форми може бути додана тут
+        document.getElementById('registration-form').addEventListener('submit', function(e) {
+            const emailInput = document.querySelector('input[name="email"]');
+            const phoneInput = document.querySelector('input[name="phone"]');
+            
+            // Проста перевірка email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailInput.value)) {
+                e.preventDefault();
+                alert('Будь ласка, введіть коректну електронну пошту');
+                return;
+            }
+
+            // Проста перевірка телефону (10 цифр)
+            const phoneRegex = /^\d{10}$/;
+            if (!phoneRegex.test(phoneInput.value.replace(/\D/g,''))) {
+                e.preventDefault();
+                alert('Будь ласка, введіть коректний номер телефону (10 цифр)');
+                return;
+            }
+        });
+    </script>
+</body>
+</html>

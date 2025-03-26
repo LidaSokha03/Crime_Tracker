@@ -1,0 +1,221 @@
+/* General Styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: #f0f0f0;
+}
+
+/* Header Styles */
+header {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 1rem 2rem;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 100;
+    box-sizing: border-box;
+}
+
+.navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navigation h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    margin: 0;
+}
+
+.nav-links {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+}
+
+.left-links, .right-links {
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.nav-links a.active, .nav-links a:hover {
+    text-decoration: underline;
+}
+
+/* Login Container Styles */
+.container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.background-image {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: url('apartment-building.png');
+    background-size: cover;
+    background-position: center;
+    filter: grayscale(100%) brightness(60%);
+}
+
+/* Login Form Styles */
+.login-form {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    text-align: center;
+    color: white;
+}
+
+.title {
+    background-color: #cc0000;
+    color: white;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-family: 'Bebas Neue', sans-serif;
+}
+
+input[type="email"], input[type="password"] {
+    width: 90%;
+    padding: 10px;
+    margin: 5px 0 15px;
+    border: none;
+    border-radius: 3px;
+}
+
+label {
+    display: block;
+    text-align: left;
+    margin-left: 10px;
+    text-transform: uppercase;
+    font-size: 12px;
+    margin-bottom: 3px;
+    font-weight: 600;
+}
+
+.submit-btn {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid white;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-top: 10px;
+    text-transform: uppercase;
+    font-weight: bold;
+    width: 90%;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 1px;
+}
+
+.specialist-btn {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid white;
+    padding: 10px 0px;
+    cursor: pointer;
+    margin-top: 10px;
+    text-transform: uppercase;
+    font-weight: bold;
+    width: 80%;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 1px;
+    font-size: 14px;
+}
+
+.links {
+    margin-top: 20px;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.links a.forgot-password {
+    color: white;
+    text-decoration: none;
+    margin: 10px 0;
+    font-size: 11px;
+}
+
+.links .register-btn {
+    width: 40%;
+    font-size: 9px;
+    padding: 5px 8px;
+    margin-top: 10px;
+}
+
+.registration-options {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 20px;
+    width: 100%;
+    align-items: center;
+}
+
+.registration-options a {
+    width: 90%;
+    text-decoration: none;
+}
+
+.registration-options .submit-btn {
+    background-color: #cc0000;
+    border: none;
+    width: 100%;
+    font-size: 14px;
+    padding: 12px 0;
+    transition: background-color 0.3s ease;
+}
+
+.registration-options .submit-btn:hover {
+    background-color: #990000;
+}
+
+/* Стилі для секції входу */
+.login-section {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.account-text {
+    font-size: 12px;
+    color: white;
+    margin-bottom: 10px;
+}
+
+/* Новий стиль для кнопки "УВІЙТИ" */
+.login-btn-outline {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid white;
+    padding: 5px 0px;
+    cursor: pointer;
+    margin-top: 3px;
+    text-transform: uppercase;
+    font-weight: bold;
+    width: 40%;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 1px;
+    font-size: 13px;
+}
+
+.login-btn-outline:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
