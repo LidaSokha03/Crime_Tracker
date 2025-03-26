@@ -24,18 +24,14 @@
                 <div class="title">ЗАРЕЄСТРУВАТИСЯ ЯК</div>
                 
                 <div class="registration-options">
-                    <a href="register_specialist.html">
-                        <button type="button" class="specialist-btn">СПЕЦІАЛІСТ</button>
-                    </a>
-                    
-                    <a href="register_provider.html">
-                        <button type="button" class="specialist-btn">ПОДАВАЧ</button>
-                    </a>
+                    <a href="{{ url_for('registration_lawyer') }}" class="action-button">СПЕЦІАЛІСТ</a>
+    
+                    <a href="{{ url_for('registration_applicant') }}" class="action-button">ПОДАВАЧ</a>
                 </div>
                 
                 <div class="login-section">
                     <div class="account-text">ВЖЕ МАЄТЕ АКАУНТ?</div>
-                    <a href="login.html" class="login-btn-outline">УВІЙТИ</a>
+                    <a href="login" class="action-button">УВІЙТИ</a>
                 </div>
             </div>
         </div>

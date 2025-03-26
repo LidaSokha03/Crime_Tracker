@@ -7,7 +7,6 @@ app.logger.setLevel(logging.DEBUG)
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    app.logger.debug("This is a debug message")  # Логування
     return render_template('main_page.html')
 
 
