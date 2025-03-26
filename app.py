@@ -4,7 +4,7 @@ import database
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
     return render_template('main_page.html')
 
@@ -47,7 +47,7 @@ def registration_lawyer():
     return render_template('registration_lawyer.html')
 
 
-@app.route('/profile')
+@app.route('/profile', methods=['GET', 'POST'])
 def profile():
     return render_template('profile.html')
 
@@ -64,16 +64,16 @@ def login():
     return render_template('login.html')
 
 
-@app.route('/password')
+@app.route('/password', methods=['GET', 'POST'])
 def password():
     return render_template('password.html')
 
-@app.route('/crimes')
+@app.route('/crimes', methods=['GET', 'POST'])
 def crimes():
     crimes_list = database.get_crimes()
     return 'crimes.html'
 
-@app.route('/admin')
+@app.route('/admin', methods=['GET', 'POST'])
 def admin():
     return redirect(url_for('home'))
 
