@@ -1,11 +1,13 @@
 from flask import Flask, render_template, request, redirect, url_for
 import database
-
+import logging
 
 app = Flask(__name__)
+app.logger.setLevel(logging.DEBUG)
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
+    app.logger.debug("This is a debug message")  # Логування
     return render_template('main_page.html')
 
 
@@ -78,4 +80,4 @@ def admin():
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
