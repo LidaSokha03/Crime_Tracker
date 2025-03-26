@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 import database
 
 
-app = Flask(__name__, template_folder='templates/frontend', static_folder='templates/frontend/static')
+app = Flask(__name__)
 
 @app.route('/')
 def home():
