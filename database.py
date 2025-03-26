@@ -72,6 +72,15 @@ def add_user(user_data):
     except PyMongoError as e:
         print(f"Помилка: {e}")
         return None
+def get_user(email, password):
+    try:
+        user = users_collection.find_one({"email": email, "password": password})
+        if user:
+            user["_id"] = str(user["_id"])
+        return user
+    except PyMongoError as e:
+        print(f"Помилка: {e}")
+        return None
 
 def get_user_by_email(email):
     '''
