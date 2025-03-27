@@ -1,6 +1,6 @@
-from flask import Flask, render_template, request, redirect, url_for
-import database
+from flask import Flask, render_template, request, redirect, url_for, session
 import logging
+import database
 
 app = Flask(__name__)
 app.logger.setLevel(logging.DEBUG)
@@ -12,11 +12,6 @@ def home():
 
 @app.route('/register_as', methods=['GET', 'POST'])
 def register_as():
-    if request.method == 'POST':
-        if request.form['register_as'] == 'applicant':
-            return redirect(url_for('registration_applicant'))
-        elif request.form['register_as'] == 'lawyer':
-            return redirect(url_for('registration_lawyer'))
     return render_template('register_as.html')
 
 
@@ -38,13 +33,13 @@ def registration_applicant():
 def registration_lawyer():
     if request.method == 'POST':
         user_data = {
-            "name": request.form['name'],
-            "surname": request.form['surname'],
+            "full_name": request.form['full_name'],
             "email": request.form['email'],
-            "phone_number": request.form['phone_number']
+            "phone": request.form['phone'],
+            
         }
-        database.add_user(user_data)
-        return redirect(url_for('home'))
+        session['user_data'] = user_data
+        return redirect(url_for('password'))
     return render_template('registration_lawyer.html')
 
 
@@ -67,6 +62,15 @@ def login():
 
 @app.route('/password', methods=['GET', 'POST'])
 def password():
+    if request.method == 'POST':
+        user_data = session.get('user_data', None)
+        if user_data:
+            user_data['password'] = request.form['password']
+            database.add_user(user_data)
+            session.pop('user_data', None)
+            return redirect(url_for('home'))
+        else:
+            return redirect(url_for('register_as'))
     return render_template('password.html')
 
 @app.route('/crimes', methods=['GET', 'POST'])
