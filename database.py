@@ -8,54 +8,12 @@ client = MongoClient(url, server_api=ServerApi('1'))
 db = client["crime_tracker_db"]
 
 crimes_collection = db["crimes"]
-users_collection = db["user"]
+lawyers_collection = db["lawyer"]
+applicants_collection = db["applicant"]
+def_users_collection = db["default_user"]
 
-def check_crime(crime_data):
-    '''
-    Check if all required fields are present in the crime_data dictionary.
-    '''
-    required_fields = ['applicant', 'date', 'description', 'files']
-    if not all(field in crime_data for field in required_fields):
-        print("Дані про злочин неповні.")
-        return None
-    return True
 
-def check_user(user_data):
-    '''
-    Check if all required fields are present in the user_data dictionary.
-    '''
-    required_fields = ['name', 'surname', 'email', 'phone_number']
-    if not all(field in user_data for field in required_fields):
-        print("Дані користувача неповні.")
-        return None
-    return True
-
-def add_crime(crime_data):
-    '''
-    Add a new crime to the database.
-    '''
-    if not check_crime(crime_data):
-        print("Дані про злочин неповні.")
-        return None
-    try:
-        result = crimes_collection.insert_one(crime_data)
-        return str(result.inserted_id)
-    except PyMongoError as e:
-        print(f"Помилка: {e}")
-        return None
-
-def get_crimes(filter_query=None):
-    '''
-    Get crimes from the database.
-    '''
-    try:
-        crimes = crimes_collection.find(filter_query or {})
-    except PyMongoError as e:
-        print(f"Помилка: {e}")
-        return None
-    return list(crimes)
-
-def add_user(user_data):
+def add_lawyer(user_data):
     '''
     Add a new user to the database.
     '''
@@ -64,7 +22,41 @@ def add_user(user_data):
         print("Дані користувача неповні. Потрібні поля:", required_fields)
         return None
     try:
-        result = users_collection.insert_one(user_data)
+        result = lawyers_collection.insert_one(user_data)
+        print(f"Користувач доданий з ID: {str(result.inserted_id)}")
+        return str(result.inserted_id)
+    except PyMongoError as e:
+        print(f"Помилка при додаванні користувача: {e}")
+        return None
+
+
+def add_applicant(user_data):
+    '''
+    Add a new user to the database.
+    '''
+    required_fields = ['full_name', 'email', 'phone']
+    if not all(field in user_data for field in required_fields):
+        print("Дані користувача неповні. Потрібні поля:", required_fields)
+        return None
+    try:
+        result = applicants_collection.insert_one(user_data)
+        print(f"Користувач доданий з ID: {str(result.inserted_id)}")
+        return str(result.inserted_id)
+    except PyMongoError as e:
+        print(f"Помилка при додаванні користувача: {e}")
+        return None
+
+
+def add_default_user(user_data):
+    '''
+    Add a new user to the database.
+    '''
+    required_fields = ['full_name', 'email', 'phone']
+    if not all(field in user_data for field in required_fields):
+        print("Дані користувача неповні. Потрібні поля:", required_fields)
+        return None
+    try:
+        result = def_users_collection.insert_one(user_data)
         print(f"Користувач доданий з ID: {str(result.inserted_id)}")
         return str(result.inserted_id)
     except PyMongoError as e:
@@ -72,24 +64,12 @@ def add_user(user_data):
         return None
 
 def get_user(email, password):
-    try:
-        user = users_collection.find_one({"email": email, "password": password})
-        if user:
-            user["_id"] = str(user["_id"])
-        return user
-    except PyMongoError as e:
-        print(f"Помилка: {e}")
-        return None
-
-def get_user_by_email(email):
     '''
-    Get a user
+    Get a user from the database.
     '''
-    try:
-        user = users_collection.find_one({"email": email})
+    collections = [lawyers_collection, applicants_collection, def_users_collection]
+    for collection in collections:
+        user = collection.find_one({"email": email, "password": password})
         if user:
-            user["_id"] = str(user["_id"])
-        return user
-    except PyMongoError as e:
-        print(f"Помилка: {e}")
-        return None
+            return user
+    return None
