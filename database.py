@@ -63,6 +63,7 @@ def add_default_user(user_data):
         print(f"Помилка при додаванні користувача: {e}")
         return None
 
+
 def get_user(email, password):
     '''
     Get a user from the database.
@@ -73,3 +74,4 @@ def get_user(email, password):
         if user:
             return user
     return None
+

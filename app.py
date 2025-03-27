@@ -96,14 +96,5 @@ def login():
     return render_template('login.html')
 
 
-@app.route('/crimes', methods=['GET', 'POST'])
-def crimes():
-    crimes_list = database.get_crimes()
-    return 'crimes.html'
-
-@app.route('/admin', methods=['GET', 'POST'])
-def admin():
-    return redirect(url_for('home'))
-
 if __name__ == '__main__':
     app.run(debug=True)
