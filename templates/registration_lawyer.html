@@ -13,17 +13,12 @@
         </div>
         
         <div class="form-scrollable">
-            <form id="registration-form">
+            <form id="registration-form" method="POST" action="{{ url_for('registration_lawyer') }}">
                 <div class="form-group">
                     <label class="form-label">ПІБ</label>
                     <input type="text" class="form-input" name="full_name" required>
                 </div>
-// делііт
-                <div class="form-group">
-                    <label class="form-label">ПРІЗВИЩЕ</label>
-                    <input type="text" class="form-input" name="last_name" required>
-                </div>
-// делііт
+
                 <div class="form-group">
                     <label class="form-label">ЕЛЕКТРОННА ПОШТА</label>
                     <input type="email" class="form-input" name="email" required>
@@ -55,11 +50,6 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">МІСЦЕ ПРАЦІ</label>
-                    <input type="text" class="form-input" name="workplace_details" required>
-                </div>
-
-                <div class="form-group">
                     <label class="form-label">ПОСАДА</label>
                     <input type="text" class="form-input" name="position" required>
                 </div>
@@ -70,7 +60,7 @@
                         <img src="upload-icon.svg" alt="Upload" class="upload-icon" id="upload-icon">
                         <p class="upload-text">Натисніть щоб завантажити</p>
                         <img src="" alt="Preview" class="img-preview" id="img-preview">
-                        <input type="file" class="file-input" id="file-input" accept="image/*">
+                        <input type="file" class="file-input" id="file-input" name="qualification_document" accept="image/*" required>
                     </div>
                 </div>
 
