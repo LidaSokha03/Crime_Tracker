@@ -59,19 +59,18 @@ def add_user(user_data):
     '''
     Add a new user to the database.
     '''
-    if not check_user(user_data):
-        print("Дані користувача неповні.")
-        return None
-    required_fields = ['name', 'surname', 'email', 'phone_number']
+    required_fields = ['full_name', 'email', 'phone']
     if not all(field in user_data for field in required_fields):
         print("Дані користувача неповні. Потрібні поля:", required_fields)
         return None
     try:
         result = users_collection.insert_one(user_data)
+        print(f"Користувач доданий з ID: {str(result.inserted_id)}")
         return str(result.inserted_id)
     except PyMongoError as e:
-        print(f"Помилка: {e}")
+        print(f"Помилка при додаванні користувача: {e}")
         return None
+
 def get_user(email, password):
     try:
         user = users_collection.find_one({"email": email, "password": password})
