@@ -46,7 +46,8 @@ def registration_lawyer():
             "region": request.form['region'],
             "experience_years": request.form['experience_years'],
             "position": request.form['position'],
-            "qualification_document": request.form['qualification_document']
+            "qualification_document": request.form['qualification_document'],
+            "submitter_type": 'secret'
         }
         user_ = user.Lawyer(user_data['full_name'], user_data['email'], user_data['phone_number'], user_data['specialization'], user_data['region'], user_data['experience_years'], user_data['position'], user_data['qualification_document'])
         session['user_data'] = user_.to_dict()
@@ -60,7 +61,13 @@ def password():
         user_data = session.get('user_data', None)
         if user_data:
             user_data['password'] = request.form['confirm_password']
-            userid = database.add_user(user_data)
+            submitter_type = user_data['submitter_type']
+            if submitter_type == 'secret':
+                userid = database.add_lawyer(user_data)
+            elif submitter_type == 'default_user':
+                userid = database.add_default_user(user_data)
+            else:
+                userid = database.add_applicant(user_data)
             if userid:
                 session.pop('user_data', None)
                 return redirect(url_for('home'))
