@@ -82,6 +82,9 @@ def password():
 def profile():
     return render_template('profile.html')
 
+@app.route('/crimes', methods=['GET', 'POST'])
+def crimes():
+    return render_template('crimes.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
