@@ -2,7 +2,6 @@
 class User
 '''
 import re
-import bcrypt
 
 class User:
     '''
