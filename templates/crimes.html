@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Влучання в житловий будинок у Львові</title>
-    <link rel="stylesheet" href="static/anya_first.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='anya_first.css') }}">
     <style>
         .image-modal {
             display: none;
@@ -272,22 +272,23 @@
         });
     </script>
 
-    <div class="filters-modal">
-        <div class="filters-modal-content">
-            <div class="filters-modal-header">
-                <h2>Фільтри</h2>
-                <span class="filters-modal-close">&times;</span>
-            </div>
+<div class="filters-modal">
+    <div class="filters-modal-content">
+        <div class="filters-modal-header">
+            <h2>Фільтри</h2>
+            <span class="filters-modal-close">&times;</span>
+        </div>
+        <form method="POST">
             <div class="filters-grid">
                 <div class="filter-section">
                     <h3>Період</h3>
-                    <input type="text" placeholder="Від" onfocus="(this.type='date')" onblur="(this.type='text')">
-                    <input type="text" placeholder="До" onfocus="(this.type='date')" onblur="(this.type='text')">
+                    <input type="date" name="date_from">
+                    <input type="date" name="date_to">
                 </div>
                 <div class="filter-section">
                     <h3>Локація</h3>
-                    <select>
-                        <option>Область</option>
+                    <select name="region">
+                        <option value="">Область</option>
                         <option>Вінницька</option>
                         <option>Волинська</option>
                         <option>Дніпропетровська</option>
@@ -313,11 +314,11 @@
                         <option>Чернівецька</option>
                         <option>Чернігівська</option>
                     </select>
-                    <input type="text" placeholder="Населений пункт">
+                    <input type="text" name="city" placeholder="Населений пункт">
                 </div>
                 <div class="filter-section">
                     <h3>Зброя</h3>
-                    <select multiple>
+                    <select multiple name="weapon">
                         <option>Шахед-136</option>
                         <option>Кинджал</option>
                         <option>Іскандер</option>
@@ -327,22 +328,24 @@
                         <option>Х-101</option>
                         <option>Х-55</option>
                         <option>Торната</option>
-                        <option>Ракета "Оса"</option>
+                        <option>Ракета \"Оса\"</option>
                         <option>Crimson</option>
                         <option>Штурм-СМ</option>
                     </select>
                 </div>
                 <div class="filter-section">
                     <h3>Статус Злочину</h3>
-                    <select>
+                    <select name="status">
+                        <option value="">Оберіть статус</option>
                         <option>Підтверджені</option>
                         <option>В обробці</option>
                     </select>
                 </div>
             </div>
-            <button class="filter-apply-btn">Застосувати фільтри</button>
-        </div>
+            <button type="submit" class="filter-apply-btn">Застосувати фільтри</button>
+        </form>
     </div>
+</div>
 
     <script>
         // ЦЕ ПОТІМ ТРЕБА ВИДАЛИТИ!!!

@@ -84,7 +84,7 @@ def profile():
 
 @app.route('/crimes', methods=['GET', 'POST'])
 def crimes():
-    return render_template('crimes.html')
+    return render_template('crimes.html', crimes=crimes)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

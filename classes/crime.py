@@ -1,4 +1,5 @@
 from user import User
+
 class Crime:
     '''
     ...
