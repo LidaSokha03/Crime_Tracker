@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Подання інформації про злочин</title>
+  <link rel="stylesheet" href="static/report_crime.css">
+</head>
+
+<body>
+
+  <div class="form-container">
+    <h1 class="header">Подання інформації про злочин</h1>
+
+    <img src="static/report_img1.png" alt="Error: image not found" class="first_img">
+    
+    <p class="description">При поданні даних про злочин ви підтверджуєте те, що ви відповідальні за вказану інформацію</p>
+    <p class="note">* позначені поля, обов'язкові до заповнення</p>
+    
+    <form>
+      <div class="form-field">
+        <input type="text" placeholder="Ваше ПІБ" required><span class="required-mark">*</span>
+      </div>
+      
+      <div class="form-field">
+        <input type="tel" placeholder="Контактний номер тел." required><span class="required-mark">*</span>
+      </div>
+      
+      <div class="form-field">
+        <input type="text" placeholder="Локація (місто, район, вулиця, номер будинку)" required><span class="required-mark">*</span>
+      </div>
+      
+      <div class="form-field">
+        <input type="date" placeholder="Дата" required><span class="required-mark">*</span>
+      </div>
+      
+      <div class="form-field">
+        <textarea placeholder="Опис злочину" rows="5" required></textarea><span class="required-mark">*</span>
+      </div>
+      
+      <div class="form-field">
+        <p>Прикріплені файли<span class="required-mark">*</span></p>
+        <div class="file-upload-container">
+          <div class="file-upload">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
+            </svg>
+          </div>
+          <div class="file-upload">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
+            </svg>
+          </div>
+          <div class="file-upload">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-field">
+        <input type="text" placeholder="Тип зброї, якою був вчинений злочин (якщо відомо)">
+      </div>
+      
+      <div class="form-field">
+        <input type="number" placeholder="Кількість поранених, жертв">
+      </div>
+      
+      <div class="form-field">
+        <input type="text" placeholder="ПІБ, вік поранених та жертв">
+      </div>
+      
+      <button type="submit" class="submit-button">Подати інформацію</button>
+    </form>
+  </div>
+
+  <div class="red-container">
+    <img src="static/report_img2.png" alt="Error: image not found" class="second_img">
+  </div>
+</body>
+</html>
