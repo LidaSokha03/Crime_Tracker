@@ -14,30 +14,29 @@
     <div class="profile-container">
         <div class="profile-header">
             <!-- <img src="profile-icon.svg" alt="Profile Icon" class="profile-icon"> -->
-            <p class="nickname">@nickname</p>
         </div>
         <div class="profile-box">
             <h1>Персональний кабінет</h1>
             <div class="profile-info">
                 <div class="info-row">
                     <span class="info-label">Ім'я</span>
-                    <span>Максим-Василь</span>
+                    <span>{{ user_data['full_name'].split()[1] }}</span>
                 </div>
                 <div class="info-row">
                     <span class="info-label">Прізвище</span>
-                    <span>Тарнавський</span>
+                    <span>{{ user_data['full_name'].split()[0] }}</span>
                 </div>
                 <div class="info-row">
                     <span class="info-label">Електронна пошта</span>
-                    <span>tarnavskyi.pn@ucu.edu.ua</span>
+                    <span>{{ user_data['email'] }}</span>
                 </div>
                 <div class="info-row">
                     <span class="info-label">Телефон</span>
-                    <span>+38*********</span>
+                    <span>{{ user_data['phone'] }}</span>
                 </div>
                 <div class="info-row">
-                    <span class="info-label">Країна</span>
-                    <span>Україна</span>
+                    <span class="info-label">Локація</span>
+                    <span>{{ user_data['location'] }}</span>
                 </div>
             </div>
         </div>

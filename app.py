@@ -1,3 +1,5 @@
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
 from flask import Flask, render_template, request, redirect, url_for, session
 import logging
 import database
@@ -6,6 +8,15 @@ from classes import user
 app = Flask(__name__)
 app.logger.setLevel(logging.DEBUG)
 app.secret_key = 'super secret key'
+
+uri = "mongodb+srv://lidasokha:lidasokha0303@cluster0.20mu9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+client = MongoClient(uri, server_api=ServerApi('1'))
+db = client["crime_tracker_db"]
+try:
+    client.admin.command('ping')
+    print("Pinged your deployment. You successfully connected to MongoDB!")
+except Exception as e:
+    print(e)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -43,13 +54,13 @@ def registration_lawyer():
             "email": request.form['email'],
             "phone_number": request.form['phone'],
             "specialization": request.form['specialization'],
-            "region": request.form['region'],
+            "location": request.form['location'],
             "experience_years": request.form['experience_years'],
             "position": request.form['position'],
             "qualification_document": request.form['qualification_document'],
             "submitter_type": 'secret'
         }
-        user_ = user.Lawyer(user_data['full_name'], user_data['email'], user_data['phone_number'], user_data['specialization'], user_data['region'], user_data['experience_years'], user_data['position'], user_data['qualification_document'])
+        user_ = user.Lawyer(user_data['full_name'], user_data['email'], user_data['phone_number'], user_data['specialization'], user_data['location'], user_data['experience_years'], user_data['position'], user_data['qualification_document'])
         session['user_data'] = user_.to_dict()
         return redirect(url_for('password'))
     return render_template('registration_lawyer.html')
@@ -80,7 +91,11 @@ def password():
 
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
-    return render_template('profile.html')
+    user_data = session.get('user_data', None)
+    if user_data:
+        return render_template('profile.html', user_data=user_data)
+    else:
+        return redirect(url_for('register_as'))
 
 @app.route('/crimes', methods=['GET', 'POST'])
 def crimes():
@@ -93,6 +108,7 @@ def login():
         password = request.form['password']
         user = database.get_user(email, password)
         if user:
+            session['user_data'] = user
             return redirect(url_for('profile'))
         else:
             return 'User not found'

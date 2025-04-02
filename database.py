@@ -1,6 +1,7 @@
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from pymongo.errors import PyMongoError
+from bson import ObjectId
 
 
 url = "mongodb+srv://lidasokha:lidasokha0303@cluster0.20mu9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
@@ -72,6 +73,7 @@ def get_user(email, password):
     for collection in collections:
         user = collection.find_one({"email": email, "password": password})
         if user:
+            if isinstance(user.get('_id'), ObjectId):
+                user['_id'] = str(user['_id'])
             return user
     return None
-
