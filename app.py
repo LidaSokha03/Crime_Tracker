@@ -112,7 +112,7 @@ def login():
             session['user_data'] = user
             if user['submitter_type'] == 'secret':
                 return redirect(url_for('analyst_page'))
-            return redirect(url_for('profile'))
+            return redirect(url_for('home_page'))
         else:
             return 'User not found'
     return render_template('login.html')
@@ -169,11 +169,15 @@ def crime_report():
             'victims': request.form['victims'],
             'vict_info': request.form['vict_info']
         }
-        crime = crime.Crime(crime_info['applicant'], crime_info['applicant_number'], crime_info['location'], crime_info['date'], crime_info['description'], crime_info['files'], crime_info['weapon_type'], crime_info['victims'], crime_info['vict_info'])
+        crime = crime.Crime(crime_info['applicant'], crime_info['applicant_number'], crime_info['location'], crime_info['date'], crime_info['description'], None, crime_info['weapon_type'], crime_info['victims'], crime_info['vict_info'])
         crime_ = dict(crime)
         crimeid = database.crime_report(crime_)
         return redirect(url_for(crime_report))
     return render_template('crime_report.html')
+
+@app.route('/home_page')
+def home_page():
+    return render_template('home_page.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
