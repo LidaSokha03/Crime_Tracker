@@ -20,9 +20,8 @@ def add_lawyer(user_data):
     Add a new user to the database.
     '''
     required_fields = ['full_name', 'email', 'phone']
-    if not all(field in user_data for field in required_fields):
-        print("Дані користувача неповні. Потрібні поля:", required_fields)
-        return None
+    assert all(field in user_data for field in required_fields), \
+        f"Дані користувача неповні. Потрібні поля:{required_fields}"
     try:
         result = lawyers_collection.insert_one(user_data)
         print(f"Користувач доданий з ID: {str(result.inserted_id)}")
@@ -37,9 +36,8 @@ def add_applicant(user_data):
     Add a new user to the database.
     '''
     required_fields = ['full_name', 'email', 'phone']
-    if not all(field in user_data for field in required_fields):
-        print("Дані користувача неповні. Потрібні поля:", required_fields)
-        return None
+    assert all(field in user_data for field in required_fields), \
+        f"Дані користувача неповні. Потрібні поля:{required_fields}"
     try:
         result = applicants_collection.insert_one(user_data)
         print(f"Користувач доданий з ID: {str(result.inserted_id)}")
@@ -54,9 +52,8 @@ def add_default_user(user_data):
     Add a new user to the database.
     '''
     required_fields = ['full_name', 'email', 'phone']
-    if not all(field in user_data for field in required_fields):
-        print("Дані користувача неповні. Потрібні поля:", required_fields)
-        return None
+    assert all(field in user_data for field in required_fields), \
+        f"Дані користувача неповні. Потрібні поля:{required_fields}"
     try:
         result = def_users_collection.insert_one(user_data)
         print(f"Користувач доданий з ID: {str(result.inserted_id)}")

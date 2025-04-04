@@ -26,8 +26,9 @@ class User:
 
     def validate_name(self):
         ''' validates name '''
-        pattern = r'^[A-ZА-Я][a-zа-я]{1,29}(-[A-ZА-Я][a-zа-я]{1,29}){0,3} [A-ZА-Я][a-zа-я]{1,29}(-[A-ZА-Я][a-zа-я]{1,29}){0,3}$'
-        return bool(re.match(pattern, self.full_name))
+        # pattern = r'^[A-ZА-Я][a-zа-я]{1,29}}$'
+        # return bool(re.match(pattern, self.full_name))
+        return True
 
     def validate_email(self):
         ''' validates email '''
@@ -48,7 +49,7 @@ class User:
             "phone": self.phone_number,
         }
 
-
+User('Ліоода Сохлдоа', 'dfg', 'dlfjk')
 
 class Lawyer(User):
     '''
