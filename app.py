@@ -155,6 +155,25 @@ def confirm_password():
 def analyst_page():
     return render_template('analyst_page.html')
 
+@app.route('/crime_report', methods=['GET', 'POST'])
+def crime_report():
+    if request.method == 'POST':
+        crime_info = {
+            'applicant': request.form['applicant'],
+            'applicant_number': request.form['phone'],
+            'location': request.form['location'],
+            'date': request.form['date'],
+            'description': request.form['description'],
+            'files': None,
+            'weapon_type': request.form['weapon'],
+            'victims': request.form['victims'],
+            'vict_info': request.form['vict_info']
+        }
+        crime = crime.Crime(crime_info['applicant'], crime_info['applicant_number'], crime_info['location'], crime_info['date'], crime_info['description'], crime_info['files'], crime_info['weapon_type'], crime_info['victims'], crime_info['vict_info'])
+        crime_ = dict(crime)
+        crimeid = database.crime_report(crime_)
+        return redirect(url_for(crime_report))
+    return render_template('crime_report.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

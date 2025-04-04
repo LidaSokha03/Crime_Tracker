@@ -18,25 +18,25 @@
     <p class="description">При поданні даних про злочин ви підтверджуєте те, що ви відповідальні за вказану інформацію</p>
     <p class="note">* позначені поля, обов'язкові до заповнення</p>
     
-    <form>
+    <form method="POST" action="{{ url_for('crime_report') }}">
       <div class="form-field">
-        <input type="text" placeholder="Ваше ПІБ" required><span class="required-mark">*</span>
+        <input type="text" name="applicant" placeholder="Ваше ПІБ" required><span class="required-mark">*</span>
       </div>
       
       <div class="form-field">
-        <input type="tel" placeholder="Контактний номер тел." required><span class="required-mark">*</span>
+        <input type="tel" name="phone" placeholder="Контактний номер тел." required><span class="required-mark">*</span>
       </div>
       
       <div class="form-field">
-        <input type="text" placeholder="Локація (місто, район, вулиця, номер будинку)" required><span class="required-mark">*</span>
+        <input type="text" name="location" placeholder="Локація (місто, район, вулиця, номер будинку)" required><span class="required-mark">*</span>
       </div>
       
       <div class="form-field">
-        <input type="date" placeholder="Дата" required><span class="required-mark">*</span>
+        <input type="date" name="date" placeholder="Дата" required><span class="required-mark">*</span>
       </div>
       
       <div class="form-field">
-        <textarea placeholder="Опис злочину" rows="5" required></textarea><span class="required-mark">*</span>
+        <textarea name="description" placeholder="Опис злочину"  rows="5" required></textarea><span class="required-mark">*</span>
       </div>
       
       <div class="form-field">
@@ -61,15 +61,15 @@
       </div>
       
       <div class="form-field">
-        <input type="text" placeholder="Тип зброї, якою був вчинений злочин (якщо відомо)">
+        <input type="text" name="weapon" placeholder="Тип зброї, якою був вчинений злочин (якщо відомо)">
       </div>
       
       <div class="form-field">
-        <input type="number" placeholder="Кількість поранених, жертв">
+        <input type="number" name="victims" placeholder="Кількість поранених, жертв">
       </div>
       
       <div class="form-field">
-        <input type="text" placeholder="ПІБ, вік поранених та жертв">
+        <input type="text" name="vict_info" placeholder="ПІБ, вік поранених та жертв">
       </div>
       
       <button type="submit" class="submit-button">Подати інформацію</button>

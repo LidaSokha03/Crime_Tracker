@@ -9,11 +9,11 @@ url = "mongodb+srv://lidasokha:lidasokha0303@cluster0.20mu9.mongodb.net/?retryWr
 client = MongoClient(url, server_api=ServerApi('1'))
 db = client["crime_tracker_db"]
 
-crimes_collection = db["crimes"]
+valid_crimes_collection = db["valid_crimes"]
+unvalid_crimes_collection = db['unvalid_crimes']
 lawyers_collection = db["lawyer"]
 applicants_collection = db["applicant"]
 def_users_collection = db["default_user"]
-
 
 def add_lawyer(user_data):
     '''
@@ -104,3 +104,14 @@ def update_users_password(email, password):
             if result.modified_count > 0:
                 return True
     return False
+
+def crime_report(crime):
+    required_fields = ['applicant', 'applicant_number']
+    assert all(field in crime for field in required_fields), \
+        print("Unluck")
+    try:
+        result = unvalid_crimes_collection.insert_one(crime)
+        return str(result.inserted_id)
+    except PyMongoError as e:
+        print(f"{e}")
+        return None
