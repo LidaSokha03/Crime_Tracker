@@ -1,0 +1,471 @@
+@font-face {
+    font-family: 'Bebas Neue Cyryllic';
+    src: url('/fonts/Bebas_Neue_Cyrillic.ttf');
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #000000;
+}
+
+header {
+    background-color: #000000;
+    color: #fff;
+    padding: 10px 20px;
+}
+
+.navigation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.navigation h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 40px;
+    margin: 0;
+    margin-bottom: 5px;
+    width: 100%;
+    text-align: center;
+}
+
+.nav-links {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 7px;
+}
+
+.left-links {
+    display: flex;
+    gap: 20px;
+}
+
+.navigation a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+    font-family: 'Inter', sans-serif;
+}
+
+main {
+    text-align: center;
+}
+
+.start {
+    position: relative;
+}
+
+.start img {
+    width: 100%;
+    height: 760px;
+    object-fit: cover;
+}
+
+.start p {
+    font-family: Impact, fantasy;
+    font-size: 75px;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #b40c0c;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+}
+
+.air_raid_allert {
+    background-color: #b40c0c;
+    color: white;
+    padding: 80px 10%;
+    text-align: center;
+    padding-top: 220px;
+    padding-bottom: 220px;
+    height: 426px;
+}
+
+.air_raid_allert h1 {
+    font-size: 4rem;
+    text-transform: uppercase;
+    font-family: Impact, fantasy;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.air_raid_allert p {
+    font-size: 1.3rem;
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    flex-wrap: wrap;
+    margin-top: 40px;
+}
+
+.action-button {
+    background-color: #000;
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.action-button:hover {
+    background-color: #333;
+}
+
+@media (max-width: 768px) {
+    .nav-links, .left-links {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .start p {
+        font-size: 40px;
+        width: auto;
+        padding: 5px 15px;
+    }
+}
+
+.rules {
+    background-color: #ffffff;
+    color: white;
+    position: relative;
+    text-align: center;
+}
+
+.rules img {
+    width: 100%;
+    height: 874px;
+    object-fit: cover;
+}
+
+.rules h1 {
+    font-family: Impact, fantasy;
+    text-transform: uppercase;
+    font-size: 60px;
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #b40c0c;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+}
+
+.rules p {
+    line-height: 1.6;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: block;
+    max-width: 1000px;
+    
+}
+
+.rules h6 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: block;
+    max-width: 800px;
+    
+}
+
+.map {
+    background-color: #ffffff;
+    color: white;
+    position: relative;
+    text-align: center;
+}
+
+.map img {
+    width: 100%;
+    height: 870px;
+    object-fit: cover;
+}
+
+.map h1 {
+    text-transform: uppercase;
+    font-family: Impact, fantasy;
+    font-size: 80px;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    color: #b40c0c;
+    padding: 10px 20px;
+    text-align: center;
+}
+
+.heroes {
+    background-color: #000000;
+    color: white;
+    padding: 80px 10%;
+    text-align: center;
+    height: 700px; 
+    overflow: hidden;
+    position: relative;
+    border: 1px solid white;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.scrolling-text {
+    display: inline-block;
+    padding-left: 100%;
+    animation: scroll-left 200s linear infinite;
+    white-space: nowrap;
+    margin: 0;
+}
+
+
+@keyframes scroll-left {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-100%);
+    }
+}
+
+.books {
+    background-color: #ffffff;
+    color: white;
+    position: relative;
+    text-align: center;
+}
+
+.books img {
+    width: 100%;
+    height: 874px;
+    object-fit: cover;
+}
+
+.books h1 {
+    text-transform: uppercase;
+    font-family: Impact, fantasy;
+    font-size: 60px;
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #b40c0c;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+}
+
+.books p {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    color: rgb(0, 0, 0);
+    width: 100%;
+    text-align: center;
+    border-radius: 5px;
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: block;
+    max-width: 1000px;
+    line-height: 1.6;
+}
+
+.text {
+    background-color: #ffffff;
+    color: white;
+    position: relative;
+    text-align: center;
+}
+
+.text img {
+    width: 100%;
+    height: 874px;
+    object-fit: cover;
+}
+
+.text .p1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 25px;
+    color: rgb(0, 0, 0);
+    text-align: center;
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: inline-block;
+    line-height: 1.6;
+}
+
+.text .p2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 25px;
+    color: rgb(0, 0, 0);
+    text-align: center;
+    position: absolute;
+    top: 37%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: block; 
+    line-height: 1.6;
+}
+
+.text .p3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 25px;
+    color: rgb(0, 0, 0);
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: block;
+    line-height: 1.6;
+}
+
+.text .p4 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 25px;
+    color: rgb(0, 0, 0);
+    text-align: center;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: block;
+    line-height: 1.6;
+}
+
+.text h5 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 30px;
+    position: absolute;
+    top: 75%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #b40c0c;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    line-height: 1.6;
+}
+
+.fund {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+  
+.hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.7);
+}
+  
+.content-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding-top: 80px;
+    padding-left: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.title-box {
+    background-color: #000;
+    color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    max-width: 450px;
+    max-height: 150px;
+}
+  
+.main-title {
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    font-family: Impact, fantasy;
+    line-height: 1.2;
+    margin: 0;
+    padding: 0;
+}
+  
+.fund .buttons {
+    display: flex;
+    gap: 77px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.donate-button {
+    background-color: #b22222;
+    color: white;
+    padding: 15px 25px;
+    font-size: 18px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.donate-button:hover {
+    background-color: #8b0000;
+}
+
+.news-button {
+    background-color: #000;
+    color: white;
+    padding: 15px 25px;
+    font-size: 18px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.news-button:hover {
+    background-color: #333;
+}
+
+.user-icon {
+    margin-left: 20px;
+    padding-right: 50px;
+    font-size: 24px;
+    color: #fff;
+  }
+  
+.nav-links .right-links {
+    padding-left: 900px;
+}
