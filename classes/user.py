@@ -40,6 +40,14 @@ class User:
         pattern1 = r'^\+[0-9]{9,12}$'
         pattern2 = r'^\+[0-9]{2} \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}$'
         return bool(re.match(pattern1, self.phone_number) or re.match(pattern2, self.phone_number))
+    
+    def to_dict(self):
+        return {
+            "full_name": self.full_name,
+            "email": self.email,
+            "phone": self.phone_number,
+        }
+
 
 
 class Lawyer(User):
