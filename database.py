@@ -89,3 +89,18 @@ def find_user_by_email(email):
             return user
     return None
 
+def update_users_password(email, password):
+    '''
+    ...
+    '''
+    user = find_user_by_email(email)
+    if user:
+        new_password = password
+        collections = [lawyers_collection, applicants_collection, def_users_collection]
+        for collection in collections:
+            result = collection.update_one(
+                {"email": email},
+                {"$set": {"password": new_password}})
+            if result.modified_count > 0:
+                return True
+    return False

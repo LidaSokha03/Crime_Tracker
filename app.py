@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 import logging
 import database
 from classes import user
-import email
+import send_email
 
 app = Flask(__name__)
 app.logger.setLevel(logging.DEBUG)
@@ -118,14 +118,37 @@ def login():
 @app.route('/forgotten_password', methods=['GET', 'POST'])
 def forgotten_password():
     if request.method == 'POST':
-        email = request.form['email']
-        user = database.find_user_by_email(email)
-        if user:
-            session['user_data'] = user
-            code = email.send_email_to_confirm(email)
+        if 'email' in request.form:
+            email = request.form['email']
+            user = database.find_user_by_email(email)
+            if user:
+                session['user_data'] = user
+                code = send_email.send_email_to_confirm(email)
+                session['confirmation_code'] = code
+            else:
+                return render_template('forgotten_password.html', message = 'Неправильна пошта')
+        elif 'code' in request.form:
             code_from_page = request.form['code']
-            if code == code_from_page:
-                redirect(url_for('password'))
+            code_in_session = session.get('confirmation_code')
+            if code_from_page == str(code_in_session):
+                return redirect(url_for('confirm_password'))
+            else:
+                return render_template('forgotten_password.html')
     return render_template('forgotten_password.html')
+
+@app.route('/confirm_password', methods=['GET', 'POST'])
+def confirm_password():
+    if request.method == 'POST':
+        user = session.get('user_data', None)
+        if user:
+            new_password = request.form['new_password']
+            confirm_pass = request.form['confirm_password']
+            if new_password == confirm_pass:
+                email = user['email']
+                database.update_users_password(email, new_password)
+                return redirect(url_for('profile'))
+    return render_template('confirm_password.html')
+
+
 if __name__ == '__main__':
     app.run(debug=True)
