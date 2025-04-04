@@ -54,7 +54,7 @@ class Lawyer(User):
     '''
     ...
     '''
-    def __init__(self, full_name, email, phone_number, specialization, region, experience_years, position, qualification_document):
+    def __init__(self, full_name, email, phone_number, specialization, region, experience_years, position, qualification_document, submitter_type=None):
         super().__init__(full_name, email, phone_number)
         self.specialization = specialization
         self.region = region
@@ -62,6 +62,7 @@ class Lawyer(User):
         self.position = position
         self.doc = qualification_document
         self.password = None
+        self.submitter_type = submitter_type
     
     def to_dict(self):
         return {
@@ -72,7 +73,8 @@ class Lawyer(User):
             "region": self.region,
             "experience_years": self.experience_years,
             "position": self.position,
-            "qualification_document": self.doc
+            "qualification_document": self.doc,
+            "submitter_type": self.submitter_type
         }
 
 

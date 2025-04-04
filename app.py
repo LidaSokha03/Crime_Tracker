@@ -61,7 +61,7 @@ def registration_lawyer():
             "qualification_document": request.form['qualification_document'],
             "submitter_type": 'secret'
         }
-        user_ = user.Lawyer(user_data['full_name'], user_data['email'], user_data['phone_number'], user_data['specialization'], user_data['location'], user_data['experience_years'], user_data['position'], user_data['qualification_document'])
+        user_ = user.Lawyer(user_data['full_name'], user_data['email'], user_data['phone_number'], user_data['specialization'], user_data['location'], user_data['experience_years'], user_data['position'], user_data['qualification_document'], user_data['submitter_type'])
         session['user_data'] = user_.to_dict()
         return redirect(url_for('password'))
     return render_template('registration_lawyer.html')
@@ -110,6 +110,8 @@ def login():
         user = database.get_user(email, password)
         if user:
             session['user_data'] = user
+            if user['submitter_type'] == 'secret':
+                return redirect(url_for('analyst_page'))
             return redirect(url_for('profile'))
         else:
             return 'User not found'
@@ -148,6 +150,10 @@ def confirm_password():
                 database.update_users_password(email, new_password)
                 return redirect(url_for('profile'))
     return render_template('confirm_password.html')
+
+@app.route('/analyst_page')
+def analyst_page():
+    return render_template('analyst_page.html')
 
 
 if __name__ == '__main__':
