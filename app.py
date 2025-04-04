@@ -4,6 +4,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 import logging
 import database
 from classes import user
+import email
 
 app = Flask(__name__)
 app.logger.setLevel(logging.DEBUG)
@@ -114,6 +115,17 @@ def login():
             return 'User not found'
     return render_template('login.html')
 
-
+@app.route('/forgotten_password', methods=['GET', 'POST'])
+def forgotten_password():
+    if request.method == 'POST':
+        email = request.form['email']
+        user = database.find_user_by_email(email)
+        if user:
+            session['user_data'] = user
+            code = email.send_email_to_confirm(email)
+            code_from_page = request.form['code']
+            if code == code_from_page:
+                redirect(url_for('password'))
+    return render_template('forgotten_password.html')
 if __name__ == '__main__':
     app.run(debug=True)

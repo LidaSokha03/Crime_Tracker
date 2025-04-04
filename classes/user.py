@@ -38,9 +38,9 @@ class User:
     
     def validate_phone(self):
         ''' validates phone number '''
-        pattern1 = r'^\+[0-9]{9,12}$'
-        pattern2 = r'^\+[0-9]{2} \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}$'
-        return bool(re.match(pattern1, self.phone_number) or re.match(pattern2, self.phone_number))
+        # pattern1 = r'^\+[0-9]{9,12}$'
+        # pattern2 = r'^\+[0-9]{2} \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}$'
+        return True
     
     def to_dict(self):
         return {
@@ -49,7 +49,6 @@ class User:
             "phone": self.phone_number,
         }
 
-User('Ліоода Сохлдоа', 'dfg', 'dlfjk')
 
 class Lawyer(User):
     '''

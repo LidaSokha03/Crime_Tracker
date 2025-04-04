@@ -75,3 +75,17 @@ def get_user(email, password):
                 user['_id'] = str(user['_id'])
             return user
     return None
+
+def find_user_by_email(email):
+    '''
+    ...
+    '''
+    collections = [lawyers_collection, applicants_collection, def_users_collection]
+    for collection in collections:
+        user = collection.find_one({"email": email,})
+        if user:
+            if isinstance(user.get('_id'), ObjectId):
+                user['_id'] = str(user['_id'])
+            return user
+    return None
+
