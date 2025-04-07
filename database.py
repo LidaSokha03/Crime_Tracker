@@ -5,7 +5,7 @@ from bson import ObjectId
 
 
 
-url = "mongodb+srv://lidasokha:lidasokha0303@cluster0.20mu9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+url = "mongodb+srv://lidasokha:lidasokha0303@cluster0.20mu9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0&tls=true"
 client = MongoClient(url, server_api=ServerApi('1'))
 db = client["crime_tracker_db"]
 
