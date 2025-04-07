@@ -169,9 +169,9 @@ def crimes():
     return render_template('crimes.html', crimes=crimes)
 
 def region_to_cities(region):
-    file_name = region + '.csv'
-    return [f'{t} {n}' for t, n in csv.reader(file_name, delimiter=',')]
-
+    file_name = 'Crime_Tracker/locations/' + region + '.csv'
+    with open(file_name, 'r', encoding='utf-8') as file_name:
+        return sorted([f'{t} {n}' for t, n in csv.reader(file_name, delimiter=',')], key=lambda x: x.split()[1])
 
 @app.route("/filter-section", methods=["GET", 'POST'])
 def search_cities():
@@ -316,5 +316,5 @@ def home_page():
 #тут має бути сторінку для апруву злочинів
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# if __name__ == '__main__':
+#     app.run(debug=True)
