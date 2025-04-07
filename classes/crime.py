@@ -1,5 +1,3 @@
-from user import User
-
 class Crime:
     '''
     ...
@@ -16,8 +14,18 @@ class Crime:
         self.vict_info = vict_info
         self.valid = False
 
-    def __dict__(self):
-        return dict(self)
+    def to_dict(self):
+        return {
+            'applicant': self.applicant,
+            'applicant_number': self.applicant_number,
+            'location': self.location,
+            'date': self.date,
+            'description': self.description,
+            'files': self.files,
+            'weapon_type': self.weapon_type,
+            'victims': self.victims,
+            'vict_info': self.vict_info
+        }
 
     def change_valid(self):
         self.valid = True
