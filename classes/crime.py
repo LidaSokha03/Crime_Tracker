@@ -12,7 +12,6 @@ class Crime:
         self.weapon_type = weapon_type
         self.victims = victims
         self.vict_info = vict_info
-        self.valid = False
 
     def to_dict(self):
         return {
@@ -26,6 +25,3 @@ class Crime:
             'victims': self.victims,
             'vict_info': self.vict_info
         }
-
-    def change_valid(self):
-        self.valid = True

@@ -1,7 +1,8 @@
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session
 import csv
+from bson import ObjectId
 import logging
 import database
 from classes import user
@@ -166,6 +167,7 @@ def crimes():
     This function handles the crime report page.
     It retrieves the list of crimes from the database and renders the 'crimes.html' template.
     '''
+    crimes = list(database.valid_crimes_collection.find())
     return render_template('crimes.html', crimes=crimes)
 
 def region_to_cities(region):
@@ -253,22 +255,20 @@ def confirm_password():
                 return redirect(url_for('profile'))
     return render_template('confirm_password.html')
 
-#зробити таку ж фільтрацію як і на головній сторінці
-#додати можливість переходити по злочинам
+
 @app.route('/analyst_page')
 def analyst_page():
     '''
     This function handles the analyst page.
     It retrieves the list of crimes from the database and renders the 'analyst_page.html' template.
     '''
-    #зробити такий же вивід непідтверджених злочинів
-    #як і на головній сторінці + можливість переходити по них щоб відкривалась сторінка підтвердження
-    return render_template('analyst_page.html')
+    crimes = list(database.unvalid_crimes_collection.find())
+    return render_template('analyst_page.html', crimes=crimes)
+
 
 #додати вспливаюче повідомлення про успішну подачу
 #додати валідацію на заповненість полів
 #трошки полетів дизайн
-#в бд має додаватись воно з змінною valid = False
 @app.route('/crime_report', methods=['GET', 'POST'])
 def crime_report():
     '''
@@ -300,10 +300,10 @@ def crime_report():
             crime_info['vict_info'])
 
         crime_ = crime_.to_dict()
-        crime_['valid'] = False
         act = database.crime_report(crime_)
         return redirect(url_for('crime_report'))
     return render_template('crime_report.html')
+
 
 #текст злетів
 @app.route('/home_page')
@@ -313,7 +313,46 @@ def home_page():
     '''
     return render_template('home_page.html')
 
-#тут має бути сторінку для апруву злочинів
+
+#тут трошки полетів дизайн (або мені здається), бо в нас какашкі повні були з оцим
+#додати перехід на усі злочини на сторінці і пофіксити кнопки
+@app.route('/confirmation_of_crimes', methods=['GET', 'POST'])
+def confirmation_of_crimes():
+    crime = session.get('crime')
+    if request.method == 'POST':
+        if 'confirm' in request.form:
+            database.valid_crimes_collection.insert_one(crime)
+            database.unvalid_crimes_collection.delete_one({"_id": ObjectId(crime['_id'])})
+            session.pop('crime', None)
+            return redirect(url_for('confirmation_of_crimes'))
+
+        elif 'reject' in request.form:
+            database.unvalid_crimes_collection.delete_one({"_id": ObjectId(crime['_id'])})
+            session.pop('crime', None)
+            return redirect(url_for('confirmation_of_crimes'))
+    return render_template('confirmation_of_crimes.html', crime=crime)
+
+
+#не чіпати!! Сторінки такої не існує, це штука чисто для редіректу
+@app.route('/select_crime/<crime_id>', methods=['POST'])
+def select_crime(crime_id):
+    crime = database.unvalid_crimes_collection.find_one({"_id": ObjectId(crime_id)})
+
+    if crime:
+        session['crime'] = {
+            'applicant': crime.get('applicant', ''),
+            'applicant_number': crime.get('applicant_number', ''),
+            'location': crime.get('location', ''),
+            'date': crime.get('date', ''),
+            'description': crime.get('description', ''),
+            'weapon_type': crime.get('weapon_type', ''),
+            'victims': crime.get('victims', ''),
+            'vict_info': crime.get('vict_info', ''),
+            '_id': str(crime['_id']),
+        }
+        return redirect(url_for('confirmation_of_crimes'))
+    else:
+        return "Crime not found", 404
 
 
 if __name__ == '__main__':

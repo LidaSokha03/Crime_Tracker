@@ -18,7 +18,7 @@
         <header>
             <h1>Сторінка Судового Аналітика</h1>
             <div class="subheader">
-                <a href="#">Усі злочини</a>
+                <a href="{{ url_for('crimes') }}" class="btn">Підтверджені злочини</a>
                 <p>Непідтверджені злочини</p>
             </div>
         </header>
@@ -27,29 +27,17 @@
             <div class="section-header">Непідтверджені злочини</div>
             
             <div class="crime-section">
+                {% for crime in crimes %}
                 <div class="crime-item">
-                    <img src="static/crime1.jpeg" alt="Error: image not found" class="crime-image">
+                    <img src="{{ crime['image_url'] }}" alt="Error: image not found" class="crime-image">
                     <div class="crime-content">
-                        <p class="crime-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla est purus, ultrices in porttitor in, accumsan non quam. Nam consectetur porttitor rhoncus. Curabitur eu est et leo feugiat auctor vel quis lorem. Ut et ligula dolor, sit amet consequat lorem.</p>
-                        <button class="more-button">⬤</button>
+                        <p class="crime-text">{{ crime['description'] }}</p>
+                        <form method="POST" action="{{ url_for('select_crime', crime_id=crime['_id']) }}">
+                            <button type="submit" class="more-button">⬤</button>
+                        </form>
                     </div>
                 </div>
-                        
-                <div class="crime-item">
-                    <img src="static/crime2.webp" alt="Error: image not found" class="crime-image">
-                    <div class="crime-content">
-                        <p class="crime-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla est purus, ultrices in porttitor in, accumsan non quam. Nam consectetur porttitor rhoncus. Curabitur eu est et leo feugiat auctor vel quis lorem. Ut et ligula dolor, sit amet consequat lorem.</p>
-                        <button class="more-button">⬤</button>
-                    </div>
-                </div>
-                
-                <div class="crime-item">
-                    <img src="static/crime3.jpeg" alt="Error: image not found" class="crime-image">
-                    <div class="crime-content">
-                        <p class="crime-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla est purus, ultrices in porttitor in, accumsan non quam. Nam consectetur porttitor rhoncus. Curabitur eu est et leo feugiat auctor vel quis lorem. Ut et ligula dolor, sit amet consequat lorem.</p>
-                        <button class="more-button">⬤</button>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </section>
     </div>

@@ -25,74 +25,58 @@
         </header>
         
         <div class="container">
-            <div class="case-number">Діло №304923</div>
+          <div class="case-number">Діло №{{ crime['_id'] }}</div>
+          <div class="form-container">
+            <div class="form-left">
+                <div class="form-field">
+                    <p><strong>ПІБ заявника:</strong> {{ crime['applicant'] }}</p>
+                </div>
             
-            <div class="form-container">
-              <div class="form-left">
                 <div class="form-field">
-                  <input type="text" placeholder="ПІБ заявника">
+                    <p><strong>Контактний номер, тел:</strong> {{ crime['applicant_number'] }}</p>
                 </div>
-                
+            
                 <div class="form-field">
-                  <input type="text" placeholder="Контактний номер, тел">
+                    <p><strong>Локація:</strong> {{ crime['location'] }}</p>
                 </div>
-                
+            
                 <div class="form-field">
-                  <input type="text" placeholder="Локація (місто, район, вулиця, номер будинку)">
+                    <p><strong>Дата:</strong> {{ crime['date'] }}</p>
                 </div>
-                
-                <div class="form-field">
-                  <input type="text" placeholder="Дата">
-                </div>
-              </div>
-              
-              <div class="form-right">
-                <div class="form-field">
-                  <textarea placeholder="Опис злочину"></textarea>
-                </div>
-
-                 <div class="form-field">
-                    <p>Файли</p>
-                    <div class="file-uploads">
-                      <div class="upload-container">
-                        <label for="file-upload1" class="custom-file-upload">
-                          <i class="fas fa-cloud-upload-alt"></i>
-                        </label>
-                        <input id="file-upload1" type="file" accept="image/*" class="file-input" />
-                      </div>
-                      <div class="upload-container">
-                        <label for="file-upload2" class="custom-file-upload">
-                          <i class="fas fa-cloud-upload-alt"></i>
-                        </label>
-                        <input id="file-upload2" type="file" accept="image/*" class="file-input" />
-                      </div>
-                      <div class="upload-container">
-                        <label for="file-upload3" class="custom-file-upload">
-                          <i class="fas fa-cloud-upload-alt"></i>
-                        </label>
-                        <input id="file-upload3" type="file" accept="image/*" class="file-input" />
-                      </div>
-                    </div>
-                    <div class="preview-container"></div>
-                  </div>
-
-                <div class="form-field">
-                  <input type="text" placeholder="Тип зброї">
-                </div>
-                
-                <div class="form-field">
-                  <input type="text" placeholder="Кількість поранених, жертв">
-                </div>
-              </div>
             </div>
+          
+            <div class="form-right">
+                <div class="form-field">
+                    <p><strong>Опис злочину:</strong> {{ crime['description'] }}</p>
+                </div>
+
+                <div class="form-field">
+                    <p><strong>Тип зброї:</strong> {{ crime['weapon_type'] }}</p>
+                </div>
+
+                <div class="form-field">
+                    <p><strong>Кількість поранених/жертв:</strong> {{ crime['victims'] }}</p>
+                </div>
+                
+                <div class="form-field">
+                    <p><strong>Додаткова інформація:</strong> {{ crime['vict_info'] }}</p>
+                </div>
+            </div>
+        </div>
             
             <div class="button-container">
-              <button class="confirm-button">Підтвердити</button>
-              <button class="reject-button">Не відповідає дійсності</button>
+              <div class="button-container">
+                <form method="POST" action="{{ url_for('confirmation_of_crimes') }}">
+                  <button type="submit" name="confirm" class="confirm-button">Підтвердити</button>
+              </form>
+              
+              <form method="POST" action="{{ url_for('confirmation_of_crimes') }}">
+                  <button type="submit" name="reject" class="reject-button">Не відповідає дійсності</button>
+              </form>
             </div>
           </div>
     </div>
-    <script>
+    <!-- <script>
         document.addEventListener('DOMContentLoaded', function() {
           const fileInputs = document.querySelectorAll('.file-input');
           const previewContainer = document.querySelector('.preview-container');
@@ -144,6 +128,6 @@
             });
           });
         });
-        </script>
+        </script> -->
 </body>
 </html>
