@@ -328,7 +328,7 @@
                         <option>Х-101</option>
                         <option>Х-55</option>
                         <option>Торната</option>
-                        <option>Ракета \"Оса\"</option>
+                        <option>Ракета "Оса"</option>
                         <option>Crimson</option>
                         <option>Штурм-СМ</option>
                     </select>
@@ -346,6 +346,17 @@
         </form>
     </div>
 </div>
+<div class="input-with-button">
+    <input type="text" name="city" id="cityInput" placeholder="Населений пункт">
+    <button type="button" id="citySearchBth" class="search-btn">
+        <svg xmls="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+    </button>
+</div>
+
+<div id="searchResults" class="search-results"></div>
 
     <script>
         // ЦЕ ПОТІМ ТРЕБА ВИДАЛИТИ!!!
@@ -372,6 +383,56 @@
         filterApplyBtn.addEventListener('click', () => {
             filtersModal.style.display = 'none';
         });
+        document.getElementById('citySearchBtn').addEventListener('click', function() {
+        const searchQuery = document.getElementById('cityInput').value.trim().toLowerCase();
+        const resultsContainer = document.getElementById('searchResults');
+        
+        if (searchQuery.length > 0) {
+            // Очищаємо попередні результати
+            resultsContainer.innerHTML = '';
+            resultsContainer.style.display = 'block';
+            
+            // Тут лише демо-функціональність для показу інтерфейсу
+            // У реальному додатку тут був би AJAX запит до бекенду
+            const demoResults = [
+                'Львів', 'Львівське', 'Львівка'
+            ].filter(city => city.toLowerCase().startsWith(searchQuery));
+            
+            if (demoResults.length > 0) {
+                demoResults.forEach(city => {
+                    const item = document.createElement('div');
+                    item.className = 'search-result-item';
+                    item.textContent = city;
+                    item.addEventListener('click', function() {
+                        document.getElementById('cityInput').value = city;
+                        resultsContainer.style.display = 'none';
+                    });
+                    resultsContainer.appendChild(item);
+                });
+            } else {
+                const noResults = document.createElement('div');
+                noResults.className = 'search-result-item no-results';
+                noResults.textContent = 'Немає результатів';
+                resultsContainer.appendChild(noResults);
+            }
+        } else {
+            resultsContainer.style.display = 'none';
+        }
+    });
+    
+    // Закриття результатів при кліку поза ними
+    document.addEventListener('click', function(event) {
+        const searchResults = document.getElementById('searchResults');
+        const cityInput = document.getElementById('cityInput');
+        const citySearchBtn = document.getElementById('citySearchBtn');
+        
+        if (event.target !== searchResults && 
+            event.target !== cityInput && 
+            event.target !== citySearchBtn && 
+            !searchResults.contains(event.target)) {
+            searchResults.style.display = 'none';
+        }
+    });
     </script>
     
 </body>
