@@ -16,19 +16,10 @@ class User:
         assert self.validate_phone(), 'Некоректний номер телефону'
         self._password = None
 
-    @property
-    def password(self):
-        return self._password
-
-    @password.setter
-    def password(self, password):
-        self._password = password
-
     def validate_name(self):
         ''' validates name '''
-        # pattern = r'^[A-ZА-Я][a-zа-я]{1,29}}$'
-        # return bool(re.match(pattern, self.full_name))
-        return True
+        pattern = r'^(([A-ZА-Я][a-zа-я]{1,29})\s{0,})+$'
+        return bool(re.match(pattern, self.full_name))
 
     def validate_email(self):
         ''' validates email '''
@@ -38,9 +29,8 @@ class User:
     
     def validate_phone(self):
         ''' validates phone number '''
-        # pattern1 = r'^\+[0-9]{9,12}$'
-        # pattern2 = r'^\+[0-9]{2} \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}$'
-        return True
+        pattern = r'^[0-9]{10}'
+        return re.match(pattern, self.phone_number)
     
     def to_dict(self):
         return {
@@ -59,6 +49,7 @@ class Lawyer(User):
         self.specialization = specialization
         self.region = region
         self.experience_years = experience_years
+        assert int(experience_years) >= 0, 'Некоректна кількість років досвіду'
         self.position = position
         self.doc = qualification_document
         self.password = None

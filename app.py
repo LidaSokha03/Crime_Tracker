@@ -1,6 +1,6 @@
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash, get_flashed_messages
 import csv
 from bson import ObjectId
 import logging
@@ -76,14 +76,24 @@ def registration_applicant():
     '''
     if request.method == 'POST':
         user_data = {
-            "full_name": request.form['full_name'],
-            "email": request.form['email'],
-            "phone_number": request.form['phone'],
-            "location": request.form['location'],
-            "submitter_type": request.form['submitter_type'],
-            "workplace": request.form['workplace']
+            "full_name": request.form['full_name'].strip(),
+            "email": request.form['email'].strip(),
+            "phone_number": request.form['phone'].strip(),
+            "location": request.form['location'].strip(),
+            "submitter_type": request.form['submitter_type'].strip(),
+            "workplace": request.form['workplace'].strip()
         }
-        user_ = user.Applicant(user_data['full_name'], user_data['email'], user_data['location'], user_data['phone_number'], user_data['submitter_type'], user_data['workplace'])
+
+        if database.applicants_collection.find_one({"email": user_data['email']}) or \
+        database.lawyers_collection.find_one({"email": user_data['email']}):
+            flash('Ця пошта вже використовується!', 'danger')
+            return render_template('registration_applicant.html')
+        
+        try:
+            user_ = user.Applicant(user_data['full_name'], user_data['email'], user_data['location'], user_data['phone_number'], user_data['submitter_type'], user_data['workplace'])
+        except Exception as e:
+            flash(f'{e}', 'danger')
+            return render_template('registration_applicant.html')
         session['user_data'] = user_.to_dict()
         return redirect(url_for('password'))
     return render_template('registration_applicant.html')
@@ -102,17 +112,27 @@ def registration_lawyer():
     '''
     if request.method == 'POST':
         user_data = {
-            "full_name": request.form['full_name'],
-            "email": request.form['email'],
-            "phone_number": request.form['phone'],
-            "specialization": request.form['specialization'],
-            "location": request.form['location'],
-            "experience_years": request.form['experience_years'],
-            "position": request.form['position'],
-            "qualification_document": request.form['qualification_document'],
+            "full_name": request.form['full_name'].strip(),
+            "email": request.form['email'].strip(),
+            "phone_number": request.form['phone'].strip(),
+            "specialization": request.form['specialization'].strip(),
+            "location": request.form['location'].strip(),
+            "experience_years": request.form['experience_years'].strip(),
+            "position": request.form['position'].strip(),
+            "qualification_document": request.form['qualification_document'].strip(),
             "submitter_type": 'secret'
         }
-        user_ = user.Lawyer(user_data['full_name'], user_data['email'], user_data['phone_number'], user_data['specialization'], user_data['location'], user_data['experience_years'], user_data['position'], user_data['qualification_document'], user_data['submitter_type'])
+
+        if database.applicants_collection.find_one({"email": user_data['email']}) or \
+        database.lawyers_collection.find_one({"email": user_data['email']}):
+            flash('Ця пошта вже використовується!', 'danger')
+            return render_template('registration_lawyer.html')
+        
+        try:
+            user_ = user.Lawyer(user_data['full_name'], user_data['email'], user_data['phone_number'], user_data['specialization'], user_data['location'], user_data['experience_years'], user_data['position'], user_data['qualification_document'], user_data['submitter_type'])
+        except Exception as e:
+            flash(f'{e}', 'danger')
+            return render_template('registration_lawyer.html')
         session['user_data'] = user_.to_dict()
         return redirect(url_for('password'))
     return render_template('registration_lawyer.html')
