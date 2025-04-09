@@ -12,23 +12,6 @@ import base64
 from bson.binary import Binary
 
 
-#from flask import flash, get_flashed_messages
-#це приклад того, як має виглядати висвітлення помилок
-
-# @app.route('/crime_report', methods=['GET', 'POST'])
-# def crime_report():
-#     if request.method == 'POST':
-#         if not request.form['applicant']:
-#             flash('Поле "Заявник" обов’язкове для заповнення!', 'danger')  # тип danger — червоний alert
-#             return render_template('crime_report.html')  # не перенаправляємо, щоб зберегти введені дані
-
-#         # інші перевірки...
-#         flash('Звіт про злочин успішно надіслано!', 'success')  # зелений alert
-#         return redirect(url_for('crime_report'))
-
-#     return render_template('crime_report.html')
-
-
 app = Flask(__name__)
 app.logger.setLevel(logging.DEBUG)
 app.secret_key = 'super secret key'
@@ -53,8 +36,7 @@ def home():
     '''
     return render_template('main_page.html')
 
-#тут (для фронтів) треба поміняти кнопку з зарегатись як подавач
-#на подавач або звичайний користувач (хз якось гарно сформулювати) і ті сині кнопки тре гарнюнями зробити
+
 @app.route('/register_as', methods=['GET', 'POST'])
 def register_as():
     '''
@@ -184,6 +166,7 @@ def profile():
         return redirect(url_for('register_as'))
 
 #зробити фільтраціюююю
+#все полетіло
 @app.route('/crimes', methods=['GET', 'POST'])
 def crimes():
     '''
@@ -213,15 +196,23 @@ def crimes():
                     image_url = f"data:{content_type};base64,{encoded}"
                     images.append(image_url)
                 except Exception as e:
-                    print(f"[WARN] Skip file: {e}")
+                    print(f"{e}")
                     continue
         crime_data = {
             '_id': str(doc['_id']),
+            'applicant': doc.get('applicant', ''),
+            'applicant_number': doc.get('applicant_number', ''),
+            'location': doc.get('location', ''),
+            'date': doc.get('date', ''),
+            'weapon_type': doc.get('weapon_type', ''),
+            'victims': doc.get('victims', ''),
+            'vict_info': doc.get('vict_info', ''),
             'description': doc.get('description', ''),
             'image_url': images[0] if images else None
         }
         crimes.append(crime_data)
     return render_template('crimes.html', crimes=crimes)
+
 
 def region_to_cities(region):
     file_name = region + '.csv'
@@ -313,7 +304,6 @@ def confirm_password():
 def analyst_page():
     docs = list(database.unvalid_crimes_collection.find())
     crimes = []
-
     for doc in docs:
         images = []
 
@@ -338,6 +328,13 @@ def analyst_page():
                     continue
         crime_data = {
             '_id': str(doc['_id']),
+            'applicant': doc.get('applicant', ''),
+            'applicant_number': doc.get('applicant_number', ''),
+            'location': doc.get('location', ''),
+            'date': doc.get('date', ''),
+            'weapon_type': doc.get('weapon_type', ''),
+            'victims': doc.get('victims', ''),
+            'vict_info': doc.get('vict_info', ''),
             'description': doc.get('description', ''),
             'image_url': images[0] if images else None
         }
@@ -368,7 +365,6 @@ def crime_report():
             'weapon_type': request.form['weapon'],
             'victims': request.form['victims'],
             'vict_info': request.form['vict_info']}
-
         crime_ = crime.Crime(
             crime_info['applicant'],
             crime_info['applicant_number'],
@@ -379,7 +375,6 @@ def crime_report():
             crime_info['weapon_type'],
             crime_info['victims'],
             crime_info['vict_info'])
-
         crime_ = crime_.to_dict()
         act = database.crime_report(crime_)
         return redirect(url_for('crime_report'))
@@ -398,42 +393,40 @@ def home_page():
 #додати перехід на усі злочини на сторінці і пофіксити кнопки
 @app.route('/confirmation_of_crimes', methods=['GET', 'POST'])
 def confirmation_of_crimes():
-    crime = session.get('crime')
+    crime_id = session.get('crime_id')
+    if not crime_id:
+        return redirect(url_for('analyst_page'))
+
+    crime = database.unvalid_crimes_collection.find_one({"_id": ObjectId(crime_id)})
+
+    if not crime:
+        return "Crime not found", 404
+
     if request.method == 'POST':
         if 'confirm' in request.form:
-            database.valid_crimes_collection.insert_one(crime)
-            database.unvalid_crimes_collection.delete_one({"_id": ObjectId(crime['_id'])})
-            session.pop('crime', None)
-            return redirect(url_for('confirmation_of_crimes'))
-
+            try:
+                new_crime = dict(crime)
+                del new_crime['_id']
+                database.valid_crimes_collection.insert_one(new_crime)
+                database.unvalid_crimes_collection.delete_one({"_id": ObjectId(crime_id)})
+                session.pop('crime_id', None)
+                return redirect(url_for('analyst_page'))
+            except Exception as e:
+                print(f"[ERROR] {e}")
+                return "Error", 500
         elif 'reject' in request.form:
-            database.unvalid_crimes_collection.delete_one({"_id": ObjectId(crime['_id'])})
-            session.pop('crime', None)
-            return redirect(url_for('confirmation_of_crimes'))
+            database.unvalid_crimes_collection.delete_one({"_id": ObjectId(crime_id)})
+            session.pop('crime_id', None)
+            return redirect(url_for('analyst_page'))
+
     return render_template('confirmation_of_crimes.html', crime=crime)
 
 
 #не чіпати!! Сторінки такої не існує, це штука чисто для редіректу
 @app.route('/select_crime/<crime_id>', methods=['POST'])
 def select_crime(crime_id):
-    crime = database.unvalid_crimes_collection.find_one({"_id": ObjectId(crime_id)})
-
-    if crime:
-        session['crime'] = {
-            'applicant': crime.get('applicant', ''),
-            'applicant_number': crime.get('applicant_number', ''),
-            'location': crime.get('location', ''),
-            'date': crime.get('date', ''),
-            'description': crime.get('description', ''),
-            'weapon_type': crime.get('weapon_type', ''),
-            'victims': crime.get('victims', ''),
-            'vict_info': crime.get('vict_info', ''),
-            '_id': str(crime['_id']),
-        }
-        return redirect(url_for('confirmation_of_crimes'))
-    else:
-        return "Crime not found", 404
-
+    session['crime_id'] = crime_id
+    return redirect(url_for('confirmation_of_crimes'))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5001, debug=True)

@@ -3,379 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Влучання в житловий будинок у Львові</title>
+    <title>Злочини</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='anya_first.css') }}">
     <style>
-        .image-modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.9);
-            justify-content: center;
-            align-items: center;
+        .crimes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
         }
 
-        .image-modal-content {
-            max-width: 90%;
-            max-height: 90%;
-            position: relative;
-        }
-
-        .image-modal-content img {
-            width: 100%;
-            height: auto;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: -30px;
-            right: 0;
+        .crime-card {
+            background-color: #2c2c2c;
+            padding: 15px;
+            border-radius: 10px;
             color: white;
-            font-size: 35px;
-            cursor: pointer;
         }
 
         .image-container img {
-            cursor: pointer;
-        }
-
-        .filters-modal {
-            display: none;
-            position: fixed;
-            z-index: 1100;
-            left: 0;
-            top: 0;
             width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            justify-content: center;
-            align-items: center;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
         }
 
-        .filters-modal-content {
-            background-color: #3d0707;
-            width: 90%;
-            max-width: 1100px;
-            border-radius: 15px;
-            padding: 30px;
-            border: 1px solid #0c0808;
+        .crime-info p {
+            margin: 5px 0;
+            font-size: 14px;
         }
 
-        .filters-modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 1px solid rgba(6, 5, 5, 0.2);
-            padding-bottom: 15px;
+        .short-desc {
+            font-size: 13px;
+            margin-top: 10px;
         }
 
-        .filters-modal-header h2 {
-            color: white;
-            margin: 0;
-            font-size: 24px;
-        }
-
-        .filters-modal-close {
-            color: white;
-            font-size: 30px;
-            cursor: pointer;
-        }
-
-        .filters-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-        }
-
-        .filter-section {
-            background-color: rgba(0,0,0,0.5);
-            border-radius: 10px;
-            padding: 20px;
-            border: 1px solid rgba(18, 18, 18, 0.3);
-        }
-
-        .filter-section h3 {
-            color: white;
-            text-align: center;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-
-        }
-
-        .filter-section input, 
-        .filter-section select {
-            width: 85%;
-            padding: 10px;
-            margin-bottom: 10px;
-            background-color: #6664646d;
-            border: 1px solid rgba(6, 5, 5, 0.5);
-            color: white;
-            border-radius: 5px;
-        }
-
-        .filter-apply-btn {
-            width: 100%;
-            padding: 15px;
+        .details-btn {
             background-color: #b40c0c;
-            color: white;
             border: none;
+            padding: 8px 12px;
+            color: white;
             border-radius: 5px;
+            margin-top: 10px;
             cursor: pointer;
-            margin-top: 20px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-size: 12px;
+        }
+
+        .details-text {
+            display: none;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+
+        .tags {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tag {
+            background-color: #444;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 12px;
+            color: white;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="filters">
-            <button class="filter-btn">Фільтри</button>
-            <button class="filter-btn">01.05.2024 - 01.06.2024</button>
-            <button class="filter-btn">Шахед-136</button>
-        </div>
-    </div>
-
     <div class="content">
-        {% for crime in crimes %}
-<div class="incident-details">
-    <h1>{{ crime.title }}</h1>
-    <div class="details-grid">
-        <div class="detail"><strong>Дата:</strong> <span>{{ crime.date }}</span></div>
-        <div class="detail"><strong>Тип злочину:</strong> <span>{{ crime.weapon_type }}</span></div>
-        <div class="detail"><strong>Місто:</strong> <span>{{ crime.location }}</span></div>
-        <div class="detail"><strong>К-сть загиблих:</strong> <span>{{ crime.victims }}</span></div>
-        <div class="detail"><strong>К-сть поранених:</strong> <span>{{ crime.vict_info }}</span></div>
-    </div>
-
-    <p class="description">{{ crime.description }}</p>
-
-    <button class="details-btn">Детальніше</button>
-    <div class="details-text" style="display: none;">
-        <p>{{ crime.extra_info_1 }}</p>
-        <p>{{ crime.extra_info_2 }}</p>
-        <p>{{ crime.extra_info_3 }}</p>
-    </div>
-
-    <div class="tags">
-        {% for tag in crime.tags %}
-            <span class="tag">{{ tag }}</span>
-        {% endfor %}
-    </div>
-</div>
-
-<div class="image-gallery">
-    <div class="image-container">
-        <img src="{{ crime['image_url'] }}" alt="Error: image not found" class="crime-image">
-        <div class="gallery-controls">
-            <button class="prev-btn">←</button>
-            <button class="next-btn">→</button>
-        </div>
-    </div>
-</div>
-{% endfor %}
-
-            <script>
-                document.querySelector(".details-btn").addEventListener("click", function() {
-                    let detailsText = document.querySelector(".details-text");
-                    if (detailsText.style.display === "none") {
-                        detailsText.style.display = "block";
-                        this.textContent = "Приховати";
-                    } else {
-                        detailsText.style.display = "none";
-                        this.textContent = "Детальніше";
-                    }
-                });
-            </script>
-                        
-
-            <div class="tags">
-                <span class="tag">Житловий будинок</span>
-                <span class="tag">Ракетний удар</span>
-                <span class="tag">Загиблі</span>
-                <span class="tag">Цивільна інфраструктура</span>
-            </div>
-        </div>
-
-        <div class="image-gallery">
-            <div class="image-container">
-                <img src="static/apartment-building.png" alt="Пошкоджений житловий будинок">
-                <div class="gallery-controls">
-                    <button class="prev-btn">←</button>
-                    <button class="next-btn">→</button>
+        <div class="crimes-grid">
+            {% for crime in crimes %}
+            <div class="crime-card">
+                <div class="image-container">
+                    {% if crime.image_url %}
+                        <img src="{{ crime.image_url }}" alt="Crime image" class="crime-image">
+                    {% else %}
+                        <p style="color: red;">[Зображення відсутнє]</p>
+                    {% endif %}
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="image-modal">
-        <div class="image-modal-content">
-            <span class="close-btn">&times;</span>
-            <img src="" alt="Збільшене зображення">
-        </div>
-    </div>
-
-    <script>
-        // ЦЕ ПОТІМ ТРЕБА ВИДАЛИТИ!!!
-        // Я ВСТАВИЛА ЦЕ ТІЛЬКИ ЩОБ ПОКАЗАТИ ЯК ВОНО МАЄ КЛІКАТИСЬ
-        const images = [
-            'apartment-building.png',
-            'red.png',
-            "romaniuk.jpg"
-        ];
-        let currentImageIndex = 0;
-
-        const imageContainer = document.querySelector('.image-container img');
-        const prevBtn = document.querySelector('.prev-btn');
-        const nextBtn = document.querySelector('.next-btn');
-        const imageModal = document.querySelector('.image-modal');
-        const modalImage = document.querySelector('.image-modal-content img');
-        const closeBtn = document.querySelector('.close-btn');
-
-        // Функція перемикання зображень
-        function changeImage(direction) {
-            currentImageIndex += direction;
-            
-            // Циклічне перемикання
-            if (currentImageIndex >= images.length) {
-                currentImageIndex = 0;
-            } else if (currentImageIndex < 0) {
-                currentImageIndex = images.length - 1;
-            }
-            
-            imageContainer.src = images[currentImageIndex];
-        }
-
-        // Обробники подій для кнопок
-        prevBtn.addEventListener('click', () => changeImage(-1));
-        nextBtn.addEventListener('click', () => changeImage(1));
-
-        // Відкриття модального вікна при кліці на зображення
-        imageContainer.addEventListener('click', () => {
-            imageModal.style.display = 'flex';
-            modalImage.src = imageContainer.src;
-        });
-
-        // Закриття модального вікна
-        closeBtn.addEventListener('click', () => {
-            imageModal.style.display = 'none';
-        });
-
-        // Закриття модального вікна при кліці поза зображенням
-        imageModal.addEventListener('click', (event) => {
-            if (event.target === imageModal) {
-                imageModal.style.display = 'none';  
-            }
-        });
-    </script>
-
-<div class="filters-modal">
-    <div class="filters-modal-content">
-        <div class="filters-modal-header">
-            <h2>Фільтри</h2>
-            <span class="filters-modal-close">&times;</span>
-        </div>
-        <form method="POST">
-            <div class="filters-grid">
-                <div class="filter-section">
-                    <h3>Період</h3>
-                    <input type="date" name="date_from">
-                    <input type="date" name="date_to">
-                </div>
-                <div class="filter-section">
-                    <h3>Локація</h3>
-                    <select name="region">
-                        <option value="">Область</option>
-                        <option>Вінницька</option>
-                        <option>Волинська</option>
-                        <option>Дніпропетровська</option>
-                        <option>Донецька</option>
-                        <option>Житомирська</option>
-                        <option>Закарпатська</option>
-                        <option>Запорізька</option>
-                        <option>Івано-Франківська</option>
-                        <option>Київська</option>
-                        <option>Кіровоградська</option>
-                        <option>Луганська</option>
-                        <option>Львівська</option>
-                        <option>Миколаївська</option>
-                        <option>Одеська</option>
-                        <option>Полтавська</option>
-                        <option>Рівненська</option>
-                        <option>Сумська</option>
-                        <option>Тернопільська</option>
-                        <option>Харківська</option>
-                        <option>Херсонська</option>
-                        <option>Хмельницька</option>
-                        <option>Черкаська</option>
-                        <option>Чернівецька</option>
-                        <option>Чернігівська</option>
-                    </select>
-                    <input type="text" name="city" placeholder="Населений пункт">
-                </div>
-                <div class="filter-section">
-                    <h3>Зброя</h3>
-                    <select multiple name="weapon">
-                        <option>Шахед-136</option>
-                        <option>Кинджал</option>
-                        <option>Іскандер</option>
-                        <option>Калібр</option>
-                        <option>С-300</option>
-                        <option>С-400</option>
-                        <option>Х-101</option>
-                        <option>Х-55</option>
-                        <option>Торната</option>
-                        <option>Ракета \"Оса\"</option>
-                        <option>Crimson</option>
-                        <option>Штурм-СМ</option>
-                    </select>
-                </div>
-                <div class="filter-section">
-                    <h3>Статус Злочину</h3>
-                    <select name="status">
-                        <option value="">Оберіть статус</option>
-                        <option>Підтверджені</option>
-                        <option>В обробці</option>
-                    </select>
-                </div>
-            </div>
-            <button type="submit" class="filter-apply-btn">Застосувати фільтри</button>
-        </form>
-    </div>
-</div>
-
-    <script>
-        // ЦЕ ПОТІМ ТРЕБА ВИДАЛИТИ!!!
-        // Я ВСТАВИЛА ЦЕ ТІЛЬКИ ЩОБ ПОКАЗАТИ ЯК ВОНО МАЄ КЛІКАТИСЬ
-        const filterBtn = document.querySelector('.filter-btn');
-        const filtersModal = document.querySelector('.filters-modal');
-        const filtersModalClose = document.querySelector('.filters-modal-close');
-        const filterApplyBtn = document.querySelector('.filter-apply-btn');
-
-        filterBtn.addEventListener('click', () => {
-            filtersModal.style.display = 'flex';
-        });
-
-        filtersModalClose.addEventListener('click', () => {
-            filtersModal.style.display = 'none';
-        });
-
-        filtersModal.addEventListener('click', (event) => {
-            if (event.target === filtersModal) {
-                filtersModal.style.display = 'none';
-            }
-        });
-
-        filterApplyBtn.addEventListener('click', () => {
-            filtersModal.style.display = 'none';
-        });
-    </script>
+                <div class="crime-info">
+                    <p><strong>Дата:</strong> {{ crime.date }}</p>
+                    <p><strong>Тип злочину:</strong> {{ crime.weapon_type }}</p>
+                    <p><strong>Місто:</strong> {{ crime.location }}</p>
+                    <p><strong>К-сть загиблих:</strong> {{ crime.victims }}</p>
+                    <p><strong>К-сть поранених:</strong> {{ crime.vict_info }}</p>
+                    <p class="short-desc">{{ crime.description }}</p>
     
+                    <button class="details-btn">Детальніше</button>
+                    <div class="details-text hidden">
+                        <p>{{ crime.extra_info_1 }}</p>
+                        <p>{{ crime.extra_info_2 }}</p>
+                        <p>{{ crime.extra_info_3 }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll(".details-btn").forEach((btn) => {
+    btn.addEventListener("click", function() {
+        const detailsText = this.nextElementSibling;
+        const isHidden = detailsText.classList.contains("hidden");
+        detailsText.classList.toggle("hidden");
+        this.textContent = isHidden ? "Приховати" : "Детальніше";
+    });
+});
+    </script>
 </body>
 </html>
