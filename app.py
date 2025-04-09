@@ -43,7 +43,7 @@ except Exception as e:
     print(e)
 
 
-#тут все гуд
+
 @app.route('/', methods=['GET', 'POST'])
 def home():
     '''
@@ -190,7 +190,37 @@ def crimes():
     This function handles the crime report page.
     It retrieves the list of crimes from the database and renders the 'crimes.html' template.
     '''
-    crimes = list(database.valid_crimes_collection.find())
+    docs = list(database.valid_crimes_collection.find())
+    crimes = []
+
+    for doc in docs:
+        images = []
+
+        if 'files' in doc and isinstance(doc['files'], list):
+            for file in doc['files']:
+                try:
+                    file_data = file.get('data')
+                    content_type = file.get('content_type')
+                    if not file_data or not content_type:
+                        continue
+                    if isinstance(file_data, Binary):
+                        file_data = bytes(file_data)
+                    elif isinstance(file_data, str):
+                        file_data = file_data.encode('latin1')
+                    if not isinstance(file_data, bytes):
+                        continue
+                    encoded = base64.b64encode(file_data).decode('utf-8')
+                    image_url = f"data:{content_type};base64,{encoded}"
+                    images.append(image_url)
+                except Exception as e:
+                    print(f"[WARN] Skip file: {e}")
+                    continue
+        crime_data = {
+            '_id': str(doc['_id']),
+            'description': doc.get('description', ''),
+            'image_url': images[0] if images else None
+        }
+        crimes.append(crime_data)
     return render_template('crimes.html', crimes=crimes)
 
 def region_to_cities(region):
@@ -292,16 +322,12 @@ def analyst_page():
                 try:
                     file_data = file.get('data')
                     content_type = file.get('content_type')
-                    # Перевіряємо, чи є потрібні поля
                     if not file_data or not content_type:
                         continue
-                    # Якщо Binary — переводимо в bytes
                     if isinstance(file_data, Binary):
                         file_data = bytes(file_data)
-                    # Якщо str — декодуємо назад у bytes
                     elif isinstance(file_data, str):
-                        file_data = file_data.encode('latin1')  # або 'utf-8' якщо впевнені
-                    # Якщо не байти — пропускаємо
+                        file_data = file_data.encode('latin1')
                     if not isinstance(file_data, bytes):
                         continue
                     encoded = base64.b64encode(file_data).decode('utf-8')
@@ -315,8 +341,6 @@ def analyst_page():
             'description': doc.get('description', ''),
             'image_url': images[0] if images else None
         }
-        print(f"➡️ Зображень: {len(images)}")
-        print(f"➡️ Перше зображення: {images[0] if images else 'немає'}")
         crimes.append(crime_data)
     return render_template('analyst_page.html', crimes=crimes)
 

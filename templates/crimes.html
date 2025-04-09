@@ -143,41 +143,44 @@
     </div>
 
     <div class="content">
-        <div class="incident-details">
-            <h1>Влучання в житловий будинок у Львові</h1>
-            <div class="details-grid">
-                <div class="detail">
-                    <strong>Дата:</strong>
-                    <span>06.07.2023</span>
-                </div>
-                <div class="detail">
-                    <strong>Тип злочину:</strong>
-                    <span>Пошкодження житлового будинку</span>
-                </div>
-                <div class="detail">
-                    <strong>Місто:</strong>
-                    <span>Львів</span>
-                </div>
-                <div class="detail">
-                    <strong>К-сть загиблих:</strong>
-                    <span>10</span>
-                </div>
-                <div class="detail">
-                    <strong>К-сть поранених:</strong>
-                    <span>4,5</span>
-                </div>
-            </div>
+        {% for crime in crimes %}
+<div class="incident-details">
+    <h1>{{ crime.title }}</h1>
+    <div class="details-grid">
+        <div class="detail"><strong>Дата:</strong> <span>{{ crime.date }}</span></div>
+        <div class="detail"><strong>Тип злочину:</strong> <span>{{ crime.weapon_type }}</span></div>
+        <div class="detail"><strong>Місто:</strong> <span>{{ crime.location }}</span></div>
+        <div class="detail"><strong>К-сть загиблих:</strong> <span>{{ crime.victims }}</span></div>
+        <div class="detail"><strong>К-сть поранених:</strong> <span>{{ crime.vict_info }}</span></div>
+    </div>
 
-            <p class="description">
-                Російські окупанти вночі 6 липня завдали найбільш масштабної ракетної атаки по Львову. Унаслідок удару ворога було зруйновано багатоквартирний житловий будинок, а також загинули люди.
-            </p>
+    <p class="description">{{ crime.description }}</p>
 
-            <button class="details-btn">Детальніше</button>
-            <div class="details-text" style="display: none;">
-                <p>Перші звуки вибухів львів'яни почули о 2:30. Вибухи були настільки потужними, що в багатьох будинках тряслися вікна.</p>
-                <p>Після відбою голова Львівської ОВА Максим Козицький повідомив, що російська ракета влучила у багатоквартирний будинок. Там одразу спалахнула пожежа, яку вдалося оперативно ліквідувати.</p>
-                <p>Мер Львова Андрій Садовий уточнив, що в будинок влучили уламки ворожої ракети.</p>
-            </div>
+    <button class="details-btn">Детальніше</button>
+    <div class="details-text" style="display: none;">
+        <p>{{ crime.extra_info_1 }}</p>
+        <p>{{ crime.extra_info_2 }}</p>
+        <p>{{ crime.extra_info_3 }}</p>
+    </div>
+
+    <div class="tags">
+        {% for tag in crime.tags %}
+            <span class="tag">{{ tag }}</span>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="image-gallery">
+    <div class="image-container">
+        <img src="{{ crime['image_url'] }}" alt="Error: image not found" class="crime-image">
+        <div class="gallery-controls">
+            <button class="prev-btn">←</button>
+            <button class="next-btn">→</button>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
             <script>
                 document.querySelector(".details-btn").addEventListener("click", function() {
                     let detailsText = document.querySelector(".details-text");
