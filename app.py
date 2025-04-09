@@ -10,6 +10,7 @@ from classes import crime
 import send_email
 import base64
 from bson.binary import Binary
+import certifi
 
 
 app = Flask(__name__)
@@ -17,7 +18,7 @@ app.logger.setLevel(logging.DEBUG)
 app.secret_key = 'super secret key'
 
 uri = "mongodb+srv://lidasokha:lidasokha0303@cluster0.20mu9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0&tls=true"
-client = MongoClient(uri, server_api=ServerApi('1'))
+client = MongoClient(uri, tlsCAFile=certifi.where(), server_api=ServerApi('1'))
 db = client["crime_tracker_db"]
 try:
     client.admin.command('ping')
@@ -429,4 +430,4 @@ def select_crime(crime_id):
     return redirect(url_for('confirmation_of_crimes'))
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001, debug=True)
+    app.run(debug=True)
