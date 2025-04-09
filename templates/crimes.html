@@ -84,10 +84,10 @@
                 </div>
                 <div class="crime-info">
                     <p><strong>Дата:</strong> {{ crime.date }}</p>
-                    <p><strong>Тип злочину:</strong> {{ crime.weapon_type }}</p>
+                    <p><strong>Зброя, якою завданий злочин:</strong> {{ crime.weapon_type }}</p>
                     <p><strong>Місто:</strong> {{ crime.location }}</p>
-                    <p><strong>К-сть загиблих:</strong> {{ crime.victims }}</p>
-                    <p><strong>К-сть поранених:</strong> {{ crime.vict_info }}</p>
+                    <p><strong>К-сть загиблих і поранених:</strong> {{ crime.victims }}</p>
+                    <p><strong>Детальніше про загиблих і поранених:</strong> {{ crime.vict_info }}</p>
                     <p class="short-desc">{{ crime.description }}</p>
     
                     <button class="details-btn">Детальніше</button>
