@@ -8,6 +8,9 @@ import database
 from classes import user
 from classes import crime
 import send_email
+import base64
+from bson.binary import Binary
+
 
 #from flask import flash, get_flashed_messages
 #це приклад того, як має виглядати висвітлення помилок
@@ -278,13 +281,44 @@ def confirm_password():
 
 @app.route('/analyst_page')
 def analyst_page():
-    '''
-    This function handles the analyst page.
-    It retrieves the list of crimes from the database and renders the 'analyst_page.html' template.
-    '''
-    crimes = list(database.unvalid_crimes_collection.find())
-    return render_template('analyst_page.html', crimes=crimes)
+    docs = list(database.unvalid_crimes_collection.find())
+    crimes = []
 
+    for doc in docs:
+        images = []
+
+        if 'files' in doc and isinstance(doc['files'], list):
+            for file in doc['files']:
+                try:
+                    file_data = file.get('data')
+                    content_type = file.get('content_type')
+                    # Перевіряємо, чи є потрібні поля
+                    if not file_data or not content_type:
+                        continue
+                    # Якщо Binary — переводимо в bytes
+                    if isinstance(file_data, Binary):
+                        file_data = bytes(file_data)
+                    # Якщо str — декодуємо назад у bytes
+                    elif isinstance(file_data, str):
+                        file_data = file_data.encode('latin1')  # або 'utf-8' якщо впевнені
+                    # Якщо не байти — пропускаємо
+                    if not isinstance(file_data, bytes):
+                        continue
+                    encoded = base64.b64encode(file_data).decode('utf-8')
+                    image_url = f"data:{content_type};base64,{encoded}"
+                    images.append(image_url)
+                except Exception as e:
+                    print(f"[WARN] Skip file: {e}")
+                    continue
+        crime_data = {
+            '_id': str(doc['_id']),
+            'description': doc.get('description', ''),
+            'image_url': images[0] if images else None
+        }
+        print(f"➡️ Зображень: {len(images)}")
+        print(f"➡️ Перше зображення: {images[0] if images else 'немає'}")
+        crimes.append(crime_data)
+    return render_template('analyst_page.html', crimes=crimes)
 
 #додати вспливаюче повідомлення про успішну подачу
 #додати валідацію на заповненість полів
@@ -303,18 +337,21 @@ def crime_report():
             'location': request.form['location'],
             'date': request.form['date'],
             'description': request.form['description'],
-            'files': None,
+            'files': [{'filename': f.filename,
+                        'content_type': f.content_type,
+                        'data': Binary(f.read())}
+                    for f in request.files.getlist('files') if f.filename],
             'weapon_type': request.form['weapon'],
             'victims': request.form['victims'],
-            'vict_info': request.form['vict_info']
-        }
+            'vict_info': request.form['vict_info']}
+
         crime_ = crime.Crime(
             crime_info['applicant'],
             crime_info['applicant_number'],
             crime_info['location'],
             crime_info['date'],
             crime_info['description'],
-            None,
+            crime_info['files'],
             crime_info['weapon_type'],
             crime_info['victims'],
             crime_info['vict_info'])
@@ -323,7 +360,6 @@ def crime_report():
         act = database.crime_report(crime_)
         return redirect(url_for('crime_report'))
     return render_template('crime_report.html')
-
 
 #текст злетів
 @app.route('/home_page')
