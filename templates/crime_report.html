@@ -41,13 +41,8 @@
       <div class="form-field">
         <input type="tel" name="phone" placeholder="Контактний номер тел." required><span class="required-mark">*</span>
       </div>
-      
-      <!-- <div class="form-field">
-        <input type="text" name="location" placeholder="Локація (місто, район, вулиця, номер будинку)" required><span class="required-mark">*</span>
-      </div> -->
 
-      <div class="form-field"></div><div class="filter-section">
-        <h3>Локація</h3>
+      <!-- <div class="form-field"><div class="filter-section"><div class="oblast">
         <select name="region">
             <option value="">Область</option>
             <option>Вінницька</option>
@@ -74,7 +69,39 @@
             <option>Черкаська</option>
             <option>Чернівецька</option>
             <option>Чернігівська</option>
-        </select></div>
+        </select></div></div></div><span class="required-mark">*</span> -->
+
+        <div class="form-field"><div class="filter-section"><div class="oblast">
+        <select name="region" required>
+          <option value="" disabled selected>Область</option>
+          <option value="Вінницька">Вінницька</option>
+          <option value="Волинська">Волинська</option>
+          <option value="Дніпропетровська">Дніпропетровська</option>
+          <option value="Донецька">Донецька</option>
+          <option value="Житомирська">Житомирська</option>
+          <option value="Закарпатська">Закарпатська</option>
+          <option value="Запорізька">Запорізька</option>
+          <option value="Івано-Франківська">Івано-Франківська</option>
+          <option value="Київська">Київська</option>
+          <option value="Кіровоградська">Кіровоградська</option>
+          <option value="Луганська">Луганська</option>
+          <option value="Львівська">Львівська</option>
+          <option value="Миколаївська">Миколаївська</option>
+          <option value="Одеська">Одеська</option>
+          <option value="Полтавська">Полтавська</option>
+          <option value="Рівненська">Рівненська</option>
+          <option value="Сумська">Сумська</option>
+          <option value="Тернопільська">Тернопільська</option>
+          <option value="Харківська">Харківська</option>
+          <option value="Херсонська">Херсонська</option>
+          <option value="Хмельницька">Хмельницька</option>
+          <option value="Черкаська">Черкаська</option>
+          <option value="Чернівецька">Чернівецька</option>
+      </select><span class="required-mark">*</span></div></div></div>
+
+        <div class="form-field">
+          <input type="text" name="location" placeholder="Локація (місто, район, вулиця, номер будинку)" required><span class="required-mark">*</span>
+        </div>
       
       <div class="form-field">
         <input type="date" name="date" placeholder="Дата" required><span class="required-mark">*</span>
