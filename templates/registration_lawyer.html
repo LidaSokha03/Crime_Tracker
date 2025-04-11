@@ -21,6 +21,15 @@
                 <div class="form-group">
                     <label class="form-label">ЕЛЕКТРОННА ПОШТА</label>
                     <input type="email" class="form-input" name="email" required>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% for category, message in messages %}
+                            {% if category == 'email_error' and message == 'email_used' %}
+                            <div class="input-error">
+                                <span class="error-text">Електронну пошту не знайдено</span>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endwith %}
                 </div>
                 <div class="form-group">
                     <label class="form-label">КОНТАКТНИЙ ТЕЛЕФОН</label>
