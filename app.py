@@ -13,6 +13,7 @@ from bson.binary import Binary
 import certifi
 
 
+
 app = Flask(__name__)
 app.logger.setLevel(logging.DEBUG)
 app.secret_key = 'super secret key'
@@ -142,6 +143,9 @@ def registration_lawyer():
             return redirect(url_for('password'))
     return render_template('registration_lawyer.html', form_data={})
 
+
+
+    
 #перевірка паролю на нормальність (мін 8 символів) + вспливаючі повідомленння
 @app.route('/password', methods=['GET', 'POST'])
 def password():
@@ -154,7 +158,7 @@ def password():
     if request.method == 'POST':
         user_data = session.get('user_data', None)
         if user_data:
-            user_data['password'] = request.form['confirm_password']
+            user_data['password'] = database.hash_password(request.form['confirm_password'])
             submitter_type = user_data['submitter_type']
             if submitter_type == 'secret':
                 userid = database.add_lawyer(user_data)
@@ -264,15 +268,18 @@ def login():
             flash('email_not_found', 'email_error')
             return render_template('login.html')
         password = request.form['password']
-        user = database.get_user(email, password)
+        user = database.find_user_by_email(email)
         if user:
-            session['user_data'] = user
-            if user['submitter_type'] == 'secret':
-                return redirect(url_for('analyst_page'))
-            return redirect(url_for('home_page'))
-        else:
-            flash('password_error', 'password_error')
-            return render_template('login.html')
+            if not user['password'].startswith("$2".encode('utf-8')):
+                user['password'] = database.hash_password(password)
+            if database.check_password(user['password'], password):
+                session['user_data'] = user
+                if user['submitter_type'] == 'secret':
+                    return redirect(url_for('analyst_page'))
+                return redirect(url_for('home_page'))
+            else:
+                flash('password_error', 'password_error')
+                return render_template('login.html')
     return render_template('login.html')
 
 #якось зробити так, щоб сторінка не обновлялась після кнопки надіслати код
