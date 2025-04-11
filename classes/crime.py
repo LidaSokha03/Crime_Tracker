@@ -2,9 +2,10 @@ class Crime:
     '''
     ...
     '''
-    def __init__(self, applicant, applicant_number, location, date, description, files=None, weapon_type = None, victims = None, vict_info = None):
+    def __init__(self, applicant, applicant_number, region, location, date, description, files=None, weapon_type = None, victims = None, vict_info = None):
         self.applicant = applicant
         self.applicant_number = applicant_number
+        self.region = region
         self.location = location
         self.date = date
         self.description = description
@@ -18,6 +19,7 @@ class Crime:
             'applicant': self.applicant,
             'applicant_number': self.applicant_number,
             'location': self.location,
+            'region': self.region,
             'date': self.date,
             'description': self.description,
             'files': self.files,
