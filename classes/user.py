@@ -7,8 +7,9 @@ class User:
     '''
     ...
     '''
-    def __init__(self, full_name, email, phone_number):
-        self.full_name = full_name
+    def __init__(self, surname, name, email, phone_number):
+        self.surname = surname
+        self.name = name
         assert self.validate_name(), 'Некоректне імʼя'
         self.email = email.strip()
         assert self.validate_email(), 'Некоректний email'
@@ -19,7 +20,12 @@ class User:
     def validate_name(self):
         ''' validates name '''
         pattern = r'^(([A-ZА-Я][a-zа-я]{1,29})\s{0,})+$'
-        return bool(re.match(pattern, self.full_name))
+        return bool(re.match(pattern, self.name))
+
+    def validate_surname(self):
+        ''' validates name '''
+        pattern = r'^(([A-ZА-Я][a-zа-я]{1,29})\s{0,})+$'
+        return bool(re.match(pattern, self.surname))
 
     def validate_email(self):
         ''' validates email '''
@@ -34,7 +40,8 @@ class User:
     
     def to_dict(self):
         return {
-            "full_name": self.full_name,
+            "surname": self.surname,
+            "name": self.name,
             "email": self.email,
             "phone": self.phone_number,
         }
@@ -44,8 +51,8 @@ class Lawyer(User):
     '''
     ...
     '''
-    def __init__(self, full_name, email, phone_number, specialization, region, experience_years, position, qualification_document, submitter_type=None):
-        super().__init__(full_name, email, phone_number)
+    def __init__(self, surname, name, email, phone_number, specialization, region, experience_years, position, qualification_document, submitter_type=None):
+        super().__init__(surname, name, email, phone_number)
         self.specialization = specialization
         self.region = region
         self.experience_years = experience_years
@@ -57,7 +64,8 @@ class Lawyer(User):
     
     def to_dict(self):
         return {
-            "full_name": self.full_name,
+            "surname": self.surname,
+            "name": self.name,
             "email": self.email,
             "phone": self.phone_number,
             "specialization": self.specialization,
@@ -74,8 +82,8 @@ class Applicant(User):
     '''
     ...
     '''
-    def __init__(self, full_name, email, location, phone_number, submitter_type, workplace = None):
-        super().__init__(full_name, email, phone_number)
+    def __init__(self, surname, name, email, location, phone_number, submitter_type, workplace = None):
+        super().__init__(surname, name, email, phone_number)
         self.location = location
         self.submitter_type = submitter_type
         self.workplace = workplace
@@ -83,7 +91,8 @@ class Applicant(User):
 
     def to_dict(self):
         return {
-            "full_name": self.full_name,
+            "surname": self.surname,
+            "name": self.name,
             "email": self.email,
             "phone": self.phone_number,
             "location": self.location,

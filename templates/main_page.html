@@ -39,20 +39,30 @@
             <p>У реальному житті українці не можуть просто вимкнути цей звук. Це може коштувати їм життя.</p>
             <div class="buttons">
                 <button class="action-button" id="playButton">Почути звук війни</button>
+                <button class="action-button" id="stopButton">Залишитися у тишині</button>
                 <audio id="music" src="static/music.mp3"></audio>
-                <script>
-                    document.getElementById("playButton").addEventListener("click", function () {
-                        let audio = document.getElementById("music");
-                        if (audio.paused) {
-                            audio.play();
-                        } else {
-                            audio.pause();
-                            audio.currentTime = 0;
-                        }
-                    });
-                </script>
-                <button class="action-button">Залишитися у тишині</button>
             </div>
+        
+            <script>
+                const audio = document.getElementById("music");
+                const playButton = document.getElementById("playButton");
+                const stopButton = document.getElementById("stopButton");
+        
+                playButton.addEventListener("click", function () {
+                    if (audio.paused) {
+                        audio.play();
+                    } else {
+                        audio.pause();
+                        audio.currentTime = 0;
+                    }
+                });
+        
+                stopButton.addEventListener("click", function () {
+                    audio.pause();
+                    audio.currentTime = 0;
+                });
+            </script>
+        <!-- </div> -->
         </div>
         
         <div class="rules">

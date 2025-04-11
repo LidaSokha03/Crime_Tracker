@@ -31,7 +31,6 @@
             <img src="static/hero_ukraine.png" alt="Error: image not found">
             <p>ВОЄННІ ЗЛОЧИНИ РОСІЇ</p>
         </div>
-
         <div class="air_raid_alert">
             <h1>Повітряна тривога!</h1>
             <p>Чи наважилися б ви почути, як зараз звучать сирени в Україні?</p>
@@ -39,27 +38,29 @@
             <p>У реальному житті українці не можуть просто вимкнути цей звук. Це може коштувати їм життя.</p>
             <div class="buttons">
                 <button class="action-button" id="playButton">Почути звук війни</button>
+                <button class="action-button" id="stopButton">Залишитися у тишині</button>
                 <audio id="music" src="static/music.mp3"></audio>
-                <script>
-                    document.getElementById("playButton").addEventListener("click", function () {
-                        let audio = document.getElementById("music");
-                        if (audio.paused) {
-                            audio.play();
-                        } else {
-                            audio.pause();
-                            audio.currentTime = 0;
-                        }
-                    });
-                </script>
-                <button class="action-button">Залишитися у тишині</button>
             </div>
-        </div>
         
-        <div class="rules">
-            <img src="static/war_rules.png" alt="Error: image not found">
-            <h1>Правила війни</h1>
-            <p>Правила війни — це сукупність міжнародних норм і принципів, які регулюють поводження з цивільними особами, пораненими й полоненими під час збройних конфліктів, а також забороняють невибіркові атаки та воєнні злочини. Ці правила були створені для гуманізації воєн і захисту прав людини.</p>
-            <h6>З 2014 року росія систематично порушує ці норми в Україні.</h6>
+            <script>
+                const audio = document.getElementById("music");
+                const playButton = document.getElementById("playButton");
+                const stopButton = document.getElementById("stopButton");
+        
+                playButton.addEventListener("click", function () {
+                    if (audio.paused) {
+                        audio.play();
+                    } else {
+                        audio.pause();
+                        audio.currentTime = 0;
+                    }
+                });
+        
+                stopButton.addEventListener("click", function () {
+                    audio.pause();
+                    audio.currentTime = 0;
+                });
+            </script>
         </div>
 
         <div class="map">

@@ -25,8 +25,13 @@
         <form id="registration-form" method="POST" action="{{ url_for('registration_applicant') }}">
             <form id="registration-form">
                 <div class="form-group">
-                    <label class="form-label">ПІБ</label>
-                    <input type="text" class="form-input" name="full_name" required>
+                    <label class="form-label">ПРІЗВИЩЕ</label>
+                    <input type="text" class="form-input" name="surname" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">ІМʼЯ</label>
+                    <input type="text" class="form-input" name="name" required>
                 </div>
 
                 <div class="form-group">
@@ -62,14 +67,22 @@
                     <label class="form-label">МІСЦЕ ПРАЦІ (ЯКЩО ЗАСТОСОВНО)</label>
                     <input type="text" class="form-input" name="workplace" placeholder="Необов'язково">
                 </div>
-
+                <div class="form-action">
+                    <button type="submit" name="send_code" value="1" class="submit-button code-button">НАДІСЛАТИ КОД</button>
+                </div>
+            
+                <div class="form-group">
+                    <label for="code">ВВЕДІТЬ КОД</label>
+                    <input type="text" id="code" name="code">
+                </div>
+            
                 <div class="checkbox-container">
                     <input type="checkbox" class="checkbox-input" id="terms" required>
                     <label for="terms" class="checkbox-label">
-                        Я погоджуюсь з обробкою персональних даних відповідно до політики конфіденційності
+                        Я погоджуюсь з обробкою персональних даних...
                     </label>
                 </div>
-
+            
                 <div class="form-footer">
                     <button type="submit" class="submit-button">ЗАРЕЄСТРУВАТИСЯ</button>
                 </div>
