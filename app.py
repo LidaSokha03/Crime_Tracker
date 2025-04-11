@@ -230,21 +230,6 @@ def crimes():
     return render_template('crimes.html', crimes=crimes)
 
 
-def region_to_cities(region):
-    file_name = region + '.csv'
-    return [f'{t} {n}' for t, n in csv.reader(file_name, delimiter=',')]
-
-
-@app.route("/filter-section", methods=["GET", 'POST'])
-def search_cities():
-    region = request.args.get("region")
-    query = request.args.get("query", "").lower()
-
-    cities = region_to_cities(region)
-    filtered = [city for city in cities if city.lower().split()[1].startswith(query)]
-
-    return jsonify({"cities": filtered})
-
 #висвітлювати помилки при вході
 @app.route('/login', methods=['GET', 'POST'])
 def login():
