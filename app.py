@@ -98,18 +98,18 @@ def registration_lawyer():
         if 'send_code' in request.form:
             if database.find_user_by_email(email):
                 flash('Ця пошта вже використовується!', 'danger')
-                return render_template('registration_lawyer.html')
+                return render_template('registration_lawyer.html', form_data=request.form)
             code = send_email.send_email_to_confirm(email)
             session['confirmation_code'] = code
             session['email'] = email
             flash('Код надіслано на вашу пошту.', 'info')
-            return render_template('registration_lawyer.html')
+            return render_template('registration_lawyer.html', form_data=request.form)
         elif 'register' in request.form:
             code_from_page = request.form.get('code', '').strip()
             code_in_session = session.get('confirmation_code')
             if code_from_page != str(code_in_session):
                 flash('Невірний код підтвердження.', 'danger')
-                return render_template('registration_lawyer.html')
+                return render_template('registration_lawyer.html', form_data=request.form)
             user_data = {
                 "full_name": request.form['full_name'].strip(),
                 "email": email,
@@ -128,10 +128,10 @@ def registration_lawyer():
                 )
             except Exception as e:
                 flash(f'Помилка при створенні користувача: {e}', 'danger')
-                return render_template('registration_lawyer.html')
+                return render_template('registration_lawyer.html', form_data=request.form)
             session['user_data'] = user_.to_dict()
             return redirect(url_for('password'))
-    return render_template('registration_lawyer.html')
+    return render_template('registration_lawyer.html', form_data={})
 
 #перевірка паролю на нормальність (мін 8 символів) + вспливаючі повідомленння
 @app.route('/password', methods=['GET', 'POST'])
