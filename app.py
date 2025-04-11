@@ -62,18 +62,18 @@ def registration_applicant():
         if 'send_code' in request.form:
             if database.find_user_by_email(email):
                 flash('Ця пошта вже використовується!', 'danger')
-                return render_template('registration_lawyer.html', form_data=request.form)
+                return render_template('registration_applicant.html', form_data=request.form)
             code = send_email.send_email_to_confirm(email)
             session['confirmation_code'] = code
             session['email'] = email
             flash('Код надіслано на вашу пошту.', 'info')
-            return render_template('registration_lawyer.html', form_data=request.form)
+            return render_template('registration_applicant.html', form_data=request.form)
         elif 'register' in request.form:
             code_from_page = request.form.get('code', '').strip()
             code_in_session = session.get('confirmation_code')
             if code_from_page != str(code_in_session):
                 flash('Невірний код підтвердження.', 'danger')
-                return render_template('registration_lawyer.html', form_data=request.form)
+                return render_template('registration_applicant.html', form_data=request.form)
             user_data = {
             "surname": request.form['surname'],
             "name": request.form['name'],
@@ -93,7 +93,6 @@ def registration_applicant():
     return render_template('registration_applicant.html', form_data={})
 
 
-#поміняти ПІБ на Прізвище, Імʼя спочатку на фронті, потім в класі юзера і в кінці в цьому коді
 #+додати перевірку полів на то чи правильно заповнені і додати ці вспливаючі повідомлення
 @app.route('/registration_lawyer', methods=['GET', 'POST'])
 def registration_lawyer():
