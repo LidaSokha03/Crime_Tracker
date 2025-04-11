@@ -241,6 +241,10 @@ def login():
     '''
     if request.method == 'POST':
         email = request.form['email']
+        if not database.find_user_by_email(email):
+            flash('email_not_found', 'email_error')
+            return render_template('login.html')
+
         password = request.form['password']
         user = database.get_user(email, password)
         if user:

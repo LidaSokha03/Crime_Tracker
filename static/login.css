@@ -143,6 +143,7 @@ label {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 10px;
 }
 
 .links a.forgot-password {
@@ -219,3 +220,33 @@ label {
 .login-btn-outline:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
+
+.action-button {
+    background-color: #000;
+    gap: 15px;
+    color: white;
+    border: none;
+    padding: 10px 10px;
+    padding-bottom: 10px;
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.action-button:hover {
+    background-color: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.input-error {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #ff4d4f;
+    font-size: 0.75rem;
+    margin-top: 5px;
+  }
