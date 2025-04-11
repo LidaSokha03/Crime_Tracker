@@ -106,7 +106,7 @@ body {
 .file-upload svg {
     width: 24px;
     height: 24px;
-    fill: #666;
+    fill: #878787;
 }
 
 .submit-button {
@@ -160,4 +160,31 @@ body {
     order: 3;
     height: 200px;
 }
+}
+
+.oblast {
+    width: 100%;
+    font-size: 16px;
+}
+
+.form-field select {
+    width: 100%;
+    height: 50px;
+    border: none;
+    background-color: white;
+    font-size: 16px;
+    color: black;
+}
+
+.form-field select option[value=""] {
+    color: #878787;
+}
+
+.form-field select:invalid,
+.form-field select option:first-child {
+    color: #878787;
+}
+
+.form-field select option:not(:first-child) {
+    color: black;
 }
