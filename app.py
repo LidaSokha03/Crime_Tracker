@@ -332,7 +332,7 @@ def confirm_password():
 
             if new_password == confirm_pass:
                 email = user['email']
-                database.update_users_password(email, new_password)
+                database.update_users_password(email, database.hash_password(new_password))
                 return redirect(url_for('profile'))
     return render_template('confirm_password.html')
 
