@@ -46,11 +46,8 @@ def register_as():
     '''
     return render_template('register_as.html')
 
-#поміняти ПІБ на Прізвище, Імʼя спочатку на фронті, потім в класі юзера і в кінці в цьому коді
+
 #+додати перевірку полів на то чи правильно заповнені і додати ці вспливаючі повідомлення
-#код для перевірки на пошту
-#тут в вибірку ХТО ТИ було б добре було б додати типу не тока професії,
-# а щей просто мінус якийсь, якщо людина без професії а от дефолт юзер
 #перевірка на то, чи існує акаунт на такій пошті
 @app.route('/registration_applicant', methods=['GET', 'POST'])
 def registration_applicant():
@@ -61,28 +58,40 @@ def registration_applicant():
     If the request method is POST, it redirects to the password page.
     '''
     if request.method == 'POST':
-        user_data = {
-            "full_name": request.form['full_name'].strip(),
-            "email": request.form['email'].strip(),
-            "phone_number": request.form['phone'].strip(),
-            "location": request.form['location'].strip(),
-            "submitter_type": request.form['submitter_type'].strip(),
-            "workplace": request.form['workplace'].strip()
+        email = request.form.get('email', '').strip()
+        if 'send_code' in request.form:
+            if database.find_user_by_email(email):
+                flash('Ця пошта вже використовується!', 'danger')
+                return render_template('registration_lawyer.html', form_data=request.form)
+            code = send_email.send_email_to_confirm(email)
+            session['confirmation_code'] = code
+            session['email'] = email
+            flash('Код надіслано на вашу пошту.', 'info')
+            return render_template('registration_lawyer.html', form_data=request.form)
+        elif 'register' in request.form:
+            code_from_page = request.form.get('code', '').strip()
+            code_in_session = session.get('confirmation_code')
+            if code_from_page != str(code_in_session):
+                flash('Невірний код підтвердження.', 'danger')
+                return render_template('registration_lawyer.html', form_data=request.form)
+            user_data = {
+            "surname": request.form['surname'],
+            "name": request.form['name'],
+            "email": request.form['email'],
+            "phone_number": request.form['phone'],
+            "location": request.form['location'],
+            "submitter_type": request.form['submitter_type'],
+            "workplace": request.form['workplace']
         }
+            try:
+                user_ = user.Applicant(user_data['surname'], user_data['name'], user_data['email'], user_data['location'], user_data['phone_number'], user_data['submitter_type'], user_data['workplace'])
+            except Exception as e:
+                flash(f'Помилка при створенні користувача: {e}', 'danger')
+                return render_template('registration_applicant.html', form_data=request.form)
+            session['user_data'] = user_.to_dict()
+            return redirect(url_for('password'))
+    return render_template('registration_applicant.html', form_data={})
 
-        if database.applicants_collection.find_one({"email": user_data['email']}) or \
-        database.lawyers_collection.find_one({"email": user_data['email']}):
-            flash('Ця пошта вже використовується!', 'danger')
-            return render_template('registration_applicant.html')
-        
-        try:
-            user_ = user.Applicant(user_data['full_name'], user_data['email'], user_data['location'], user_data['phone_number'], user_data['submitter_type'], user_data['workplace'])
-        except Exception as e:
-            flash(f'{e}', 'danger')
-            return render_template('registration_applicant.html')
-        session['user_data'] = user_.to_dict()
-        return redirect(url_for('password'))
-    return render_template('registration_applicant.html')
 
 #поміняти ПІБ на Прізвище, Імʼя спочатку на фронті, потім в класі юзера і в кінці в цьому коді
 #+додати перевірку полів на то чи правильно заповнені і додати ці вспливаючі повідомлення
@@ -111,18 +120,19 @@ def registration_lawyer():
                 flash('Невірний код підтвердження.', 'danger')
                 return render_template('registration_lawyer.html', form_data=request.form)
             user_data = {
-                "full_name": request.form['full_name'].strip(),
+                "surname": request.form['surname'],
+                "name": request.form['name'],
                 "email": email,
-                "phone_number": request.form['phone'].strip(),
-                "specialization": request.form['specialization'].strip(),
-                "location": request.form['location'].strip(),
-                "experience_years": request.form['experience_years'].strip(),
-                "position": request.form['position'].strip(),
+                "phone_number": request.form['phone'],
+                "specialization": request.form['specialization'],
+                "location": request.form['location'],
+                "experience_years": request.form['experience_years'],
+                "position": request.form['position'],
                 "submitter_type": 'secret'
             }
             try:
                 user_ = user.Lawyer(
-                    user_data['full_name'], user_data['email'], user_data['phone_number'],
+                    user_data['surname'], user_data['name'], user_data['email'], user_data['phone_number'],
                     user_data['specialization'], user_data['location'], user_data['experience_years'],
                     user_data['position'], '', user_data['submitter_type']
                 )
@@ -284,15 +294,15 @@ def forgotten_password():
                 code = send_email.send_email_to_confirm(email)
                 session['confirmation_code'] = code
             else:
-                return render_template('forgotten_password.html', message = 'Неправильна пошта')
+                return render_template('forgotten_password.html', message = 'Неправильна пошта', form_data = request.form)
         elif 'code' in request.form:
             code_from_page = request.form['code']
             code_in_session = session.get('confirmation_code')
             if code_from_page == str(code_in_session):
                 return redirect(url_for('confirm_password'))
             else:
-                return render_template('forgotten_password.html')
-    return render_template('forgotten_password.html')
+                return render_template('forgotten_password.html', form_data=request.form)
+    return render_template('forgotten_password.html', form_data={})
 
 #✅
 @app.route('/confirm_password', methods=['GET', 'POST'])
