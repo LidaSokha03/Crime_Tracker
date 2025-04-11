@@ -1,17 +1,17 @@
+import csv
+import logging
+import base64
+from bson.binary import Binary
+import certifi
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
-from flask import Flask, render_template, request, redirect, url_for, session, flash, get_flashed_messages, jsonify
-import csv
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from bson import ObjectId
-import logging
 import database
 from classes import user
 from classes import crime
 import send_email
-import base64
-from bson.binary import Binary
-import certifi
-
+#проблема з send_email
 
 
 app = Flask(__name__)
@@ -28,6 +28,7 @@ except Exception as e:
     print(e)
 
 
+#✅
 @app.route('/', methods=['GET', 'POST'])
 def home():
     '''
@@ -38,6 +39,7 @@ def home():
     return render_template('main_page.html')
 
 
+#✅
 @app.route('/register_as', methods=['GET', 'POST'])
 def register_as():
     '''
@@ -47,6 +49,7 @@ def register_as():
     return render_template('register_as.html')
 
 
+#проблема з регексом
 @app.route('/registration_applicant', methods=['GET', 'POST'])
 def registration_applicant():
     '''
@@ -91,6 +94,7 @@ def registration_applicant():
     return render_template('registration_applicant.html', form_data={})
 
 
+#проблема з регексом
 @app.route('/registration_lawyer', methods=['GET', 'POST'])
 def registration_lawyer():
     '''
@@ -140,6 +144,7 @@ def registration_lawyer():
     return render_template('registration_lawyer.html', form_data={})
 
 
+#✅
 @app.route('/password', methods=['GET', 'POST'])
 def password():
     '''
@@ -177,6 +182,7 @@ def password():
     return render_template('password.html')
 
 
+#✅
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
     '''
@@ -256,7 +262,7 @@ def login():
         password = request.form['password']
         user = database.find_user_by_email(email)
         if user:
-            if not user['password'].startswith("$2".encode('utf-8')):
+            if isinstance(user['password'], str) and not user['password'].startswith("$2"):
                 user['password'] = database.hash_password(password)
             if database.check_password(user['password'], password):
                 session['user_data'] = user
@@ -269,6 +275,7 @@ def login():
     return render_template('login.html')
 
 
+#✅
 @app.route('/forgotten_password', methods=['GET', 'POST'])
 def forgotten_password():
     '''
@@ -278,16 +285,17 @@ def forgotten_password():
     If the user enters the correct confirmation code, it redirects to the password confirmation page.
     '''
     if request.method == 'POST':
-        if 'email' in request.form:
+        if 'send_code' in request.form:
             email = request.form['email']
             user = database.find_user_by_email(email)
             if user:
                 session['user_data'] = user
                 code = send_email.send_email_to_confirm(email)
                 session['confirmation_code'] = code
+                return render_template('forgotten_password.html', form_data=request.form)
             else:
                 return render_template('forgotten_password.html', message = 'Неправильна пошта', form_data = request.form)
-        elif 'code' in request.form:
+        elif 'confirm_code' in request.form:
             code_from_page = request.form['code']
             code_in_session = session.get('confirmation_code')
             if code_from_page == str(code_in_session):
@@ -296,7 +304,8 @@ def forgotten_password():
                 return render_template('forgotten_password.html', form_data=request.form)
     return render_template('forgotten_password.html', form_data={})
 
-#✅
+
+#додати вспливашку про успішно змінений пароль
 @app.route('/confirm_password', methods=['GET', 'POST'])
 def confirm_password():
     '''
@@ -318,11 +327,13 @@ def confirm_password():
 
             if new_password == confirm_pass:
                 email = user['email']
-                database.update_users_password(email, database.hash_password(new_password))
+                database.update_users_password(email, new_password)
                 return redirect(url_for('profile'))
     return render_template('confirm_password.html')
 
-#провірити
+#кнопки зі злочинами (шось придумати)
+#виведення інфромації про злочини негарне (зробити таке ж як і в crimes)
+#пістон з фотками
 @app.route('/analyst_page')
 def analyst_page():
     docs = list(database.unvalid_crimes_collection.find())
@@ -364,9 +375,9 @@ def analyst_page():
         crimes.append(crime_data)
     return render_template('analyst_page.html', crimes=crimes)
 
-#додати вспливаюче повідомлення про успішну подачу
+#вспливаюче вікно про успішну подачу
 #додати валідацію на заповненість полів
-#трошки полетів дизайн
+#пістон з фотками
 @app.route('/crime_report', methods=['GET', 'POST'])
 def crime_report():
     '''
@@ -403,6 +414,7 @@ def crime_report():
         return redirect(url_for('crime_report'))
     return render_template('crime_report.html')
 
+
 #✅
 @app.route('/home_page')
 def home_page():
@@ -411,20 +423,16 @@ def home_page():
     '''
     return render_template('home_page.html')
 
-
-#тут трошки полетів дизайн (або мені здається), бо в нас какашкі повні були з оцим
-#додати перехід на усі злочини на сторінці і пофіксити кнопки
+#передавання локації поміняти
+#мейбі показувати фотки злочину
 @app.route('/confirmation_of_crimes', methods=['GET', 'POST'])
 def confirmation_of_crimes():
     crime_id = session.get('crime_id')
     if not crime_id:
         return redirect(url_for('analyst_page'))
-
     crime = database.unvalid_crimes_collection.find_one({"_id": ObjectId(crime_id)})
-
     if not crime:
         return "Crime not found", 404
-
     if request.method == 'POST':
         if 'confirm' in request.form:
             try:
@@ -445,6 +453,10 @@ def confirmation_of_crimes():
     return render_template('confirmation_of_crimes.html', crime=crime)
 
 
+
+##########################################
+###### helper functions ##################
+##########################################
 @app.route('/select_crime/<crime_id>', methods=['POST'])
 def select_crime(crime_id):
     session['crime_id'] = crime_id

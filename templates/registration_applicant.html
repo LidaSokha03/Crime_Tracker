@@ -23,7 +23,6 @@
                     {% endwith %}
         
         <form id="registration-form" method="POST" action="{{ url_for('registration_applicant') }}">
-            <form id="registration-form">
                 <div class="form-group">
                     <label class="form-label">ПРІЗВИЩЕ</label>
                     <input type="text" class="form-input" name="surname" required value="{{ form_data.get('surname', '') }}">
@@ -85,7 +84,7 @@
                 </div>
             
                 <div class="form-footer">
-                    <button type="submit" class="submit-button">ЗАРЕЄСТРУВАТИСЯ</button>
+                    <button type="submit" name="register" value="1" class="submit-button">ЗАРЕЄСТРУВАТИСЯ</button>
                 </div>
             </form>
         </div>

@@ -10,7 +10,7 @@ class User:
     def __init__(self, surname, name, email, phone_number):
         self.surname = surname
         self.name = name
-        assert self.validate_name(), 'Некоректне імʼя'
+        # assert self.validate_name(), 'Некоректне імʼя'
         self.email = email.strip()
         assert self.validate_email(), 'Некоректний email'
         self.phone_number = phone_number.strip()
@@ -23,7 +23,7 @@ class User:
         return bool(re.match(pattern, self.name))
 
     def validate_surname(self):
-        ''' validates name '''
+        ''' validates surname '''
         pattern = r'^(([A-ZА-Я][a-zа-я]{1,29})\s{0,})+$'
         return bool(re.match(pattern, self.surname))
 
@@ -32,12 +32,12 @@ class User:
         pattern = r"^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]{1,63}(?:\.[a-zA-Z0-9!\
 #$%&'*+/=?^_`{|}~-]{1,63})*@[a-z0-9-]+(?:\.[a-z0-9-]+)*\.(com|org|edu|gov|net|ua)$"
         return bool(re.match(pattern, self.email))
-    
+
     def validate_phone(self):
         ''' validates phone number '''
         pattern = r'^[0-9]{10}'
         return re.match(pattern, self.phone_number)
-    
+
     def to_dict(self):
         return {
             "surname": self.surname,

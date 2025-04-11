@@ -36,7 +36,7 @@ def add_lawyer(user_data):
     '''
     Add a new user to the database.
     '''
-    required_fields = ['full_name', 'email', 'phone']
+    required_fields = ['name', 'surname', 'email', 'phone']
     assert all(field in user_data for field in required_fields), \
         f"Дані користувача неповні. Потрібні поля:{required_fields}"
     try:
@@ -52,7 +52,7 @@ def add_applicant(user_data):
     '''
     Add a new user to the database.
     '''
-    required_fields = ['full_name', 'email', 'phone']
+    required_fields = ['name', 'surname', 'email', 'phone']
     assert all(field in user_data for field in required_fields), \
         f"Дані користувача неповні. Потрібні поля:{required_fields}"
     try:
