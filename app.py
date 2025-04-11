@@ -295,7 +295,7 @@ def forgotten_password():
                 return render_template('forgotten_password.html')
     return render_template('forgotten_password.html')
 
-#перевірка нового паролю на нормальність
+
 @app.route('/confirm_password', methods=['GET', 'POST'])
 def confirm_password():
     '''
@@ -303,12 +303,18 @@ def confirm_password():
     It collects the new password and confirmation password from the form.
     If the passwords match, it updates the user's password in the database and redirects to the profile page.   
     '''
-    #перевірка паролю (мін 8 символів)
     if request.method == 'POST':
         user = session.get('user_data', None)
         if user:
             new_password = request.form['new_password']
             confirm_pass = request.form['confirm_password']
+            if len(new_password) < 8:
+                flash('Пароль повинен містити щонайменше 8 символів.', 'error')
+                return render_template('confirm_password.html')
+            if new_password != confirm_pass:
+                flash('Паролі не співпадають.', 'error')
+                return render_template('confirm_password.html')
+
             if new_password == confirm_pass:
                 email = user['email']
                 database.update_users_password(email, new_password)
@@ -346,7 +352,6 @@ def analyst_page():
             '_id': str(doc['_id']),
             'applicant': doc.get('applicant', ''),
             'applicant_number': doc.get('applicant_number', ''),
-            'region': doc.get('region', ''),
             'location': doc.get('location', ''),
             'date': doc.get('date', ''),
             'weapon_type': doc.get('weapon_type', ''),
@@ -372,7 +377,6 @@ def crime_report():
         crime_info = {
             'applicant': request.form['applicant'],
             'applicant_number': request.form['phone'],
-            'region': request.form['region'],
             'location': request.form['location'],
             'date': request.form['date'],
             'description': request.form['description'],
@@ -386,7 +390,6 @@ def crime_report():
         crime_ = crime.Crime(
             crime_info['applicant'],
             crime_info['applicant_number'],
-            crime_info['region'],
             crime_info['location'],
             crime_info['date'],
             crime_info['description'],
