@@ -11,7 +11,7 @@ import send_email
 import base64
 from bson.binary import Binary
 import certifi
-import bcrypt
+
 
 
 app = Flask(__name__)
@@ -124,22 +124,6 @@ def registration_lawyer():
         return redirect(url_for('password'))
     return render_template('registration_lawyer.html')
 
-def hash_password(password):
-    '''
-    This function hashes the password
-    '''
-    salt = bcrypt.gensalt()
-    hashed = bcrypt.hashpw(password, salt)
-    return hashed
-
-def check_password(hashed_password, password):
-    '''
-    This function checks the password
-    '''
-    if bcrypt.checkpw(password, hashed_password):
-        return True
-    else:
-        return False
 
 
     
@@ -155,7 +139,7 @@ def password():
     if request.method == 'POST':
         user_data = session.get('user_data', None)
         if user_data:
-            user_data['password'] = hash_password(request.form['confirm_password'])
+            user_data['password'] = database.hash_password(request.form['confirm_password'])
             submitter_type = user_data['submitter_type']
             if submitter_type == 'secret':
                 userid = database.add_lawyer(user_data)
@@ -265,15 +249,18 @@ def login():
             flash('email_not_found', 'email_error')
             return render_template('login.html')
         password = request.form['password']
-        user = database.get_user(email, password)
+        user = database.find_user_by_email(email)
         if user:
-            session['user_data'] = user
-            if user['submitter_type'] == 'secret':
-                return redirect(url_for('analyst_page'))
-            return redirect(url_for('home_page'))
-        else:
-            flash('password_error', 'password_error')
-            return render_template('login.html')
+            if not user['password'].startswith("$2"):
+                user['password'] = database.hash_password(password)
+            if database.check_password(user['password'], password):
+                session['user_data'] = user
+                if user['submitter_type'] == 'secret':
+                    return redirect(url_for('analyst_page'))
+                return redirect(url_for('home_page'))
+            else:
+                flash('password_error', 'password_error')
+                return render_template('login.html')
     return render_template('login.html')
 
 #якось зробити так, щоб сторінка не обновлялась після кнопки надіслати код
