@@ -27,7 +27,7 @@ except Exception as e:
     print(e)
 
 
-
+#✅
 @app.route('/', methods=['GET', 'POST'])
 def home():
     '''
@@ -37,7 +37,7 @@ def home():
     '''
     return render_template('main_page.html')
 
-
+#✅
 @app.route('/register_as', methods=['GET', 'POST'])
 def register_as():
     '''
@@ -86,7 +86,6 @@ def registration_applicant():
 
 #поміняти ПІБ на Прізвище, Імʼя спочатку на фронті, потім в класі юзера і в кінці в цьому коді
 #+додати перевірку полів на то чи правильно заповнені і додати ці вспливаючі повідомлення
-#код для перевірки на пошту
 @app.route('/registration_lawyer', methods=['GET', 'POST'])
 def registration_lawyer():
     '''
@@ -163,7 +162,7 @@ def password():
             return redirect(url_for('register_as'))
     return render_template('password.html')
 
-#додати кнопку виходу на home_page
+#✅
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
     '''
@@ -241,7 +240,7 @@ def search_cities():
 
     return jsonify({"cities": filtered})
 
-
+#✅
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     '''
@@ -295,7 +294,7 @@ def forgotten_password():
                 return render_template('forgotten_password.html')
     return render_template('forgotten_password.html')
 
-
+#✅
 @app.route('/confirm_password', methods=['GET', 'POST'])
 def confirm_password():
     '''
@@ -321,7 +320,7 @@ def confirm_password():
                 return redirect(url_for('profile'))
     return render_template('confirm_password.html')
 
-
+#провірити
 @app.route('/analyst_page')
 def analyst_page():
     docs = list(database.unvalid_crimes_collection.find())
@@ -402,7 +401,7 @@ def crime_report():
         return redirect(url_for('crime_report'))
     return render_template('crime_report.html')
 
-#текст злетів
+#✅
 @app.route('/home_page')
 def home_page():
     '''
@@ -444,7 +443,7 @@ def confirmation_of_crimes():
     return render_template('confirmation_of_crimes.html', crime=crime)
 
 
-#не чіпати!! Сторінки такої не існує, це штука чисто для редіректу
+
 @app.route('/select_crime/<crime_id>', methods=['POST'])
 def select_crime(crime_id):
     session['crime_id'] = crime_id
