@@ -241,6 +241,9 @@ def login():
     '''
     if request.method == 'POST':
         email = request.form['email']
+        if not database.find_user_by_email(email):
+            flash('email_not_found', 'email_error')
+            return render_template('login.html')
         password = request.form['password']
         user = database.get_user(email, password)
         if user:
@@ -249,7 +252,8 @@ def login():
                 return redirect(url_for('analyst_page'))
             return redirect(url_for('home_page'))
         else:
-            return 'User not found'
+            flash('password_error', 'password_error')
+            return render_template('login.html')
     return render_template('login.html')
 
 #якось зробити так, щоб сторінка не обновлялась після кнопки надіслати код
