@@ -251,7 +251,7 @@ def login():
         password = request.form['password']
         user = database.find_user_by_email(email)
         if user:
-            if not user['password'].startswith("$2"):
+            if not user['password'].startswith("$2".encode('utf-8')):
                 user['password'] = database.hash_password(password)
             if database.check_password(user['password'], password):
                 session['user_data'] = user

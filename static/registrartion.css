@@ -169,3 +169,12 @@ body::before {
     padding: 10px 0;
     background-color: white;
 }
+
+.input-error {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #ff4d4f;
+    font-size: 0.75rem;
+    margin-top: 5px;
+  }
