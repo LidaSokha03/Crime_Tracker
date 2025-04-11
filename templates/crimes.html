@@ -5,72 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Злочини</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='anya_first.css') }}">
-    <style>
-        .crimes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            padding: 20px;
-        }
-
-        .crime-card {
-            background-color: #2c2c2c;
-            padding: 15px;
-            border-radius: 10px;
-            color: white;
-        }
-
-        .image-container img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-
-        .crime-info p {
-            margin: 5px 0;
-            font-size: 14px;
-        }
-
-        .short-desc {
-            font-size: 13px;
-            margin-top: 10px;
-        }
-
-        .details-btn {
-            background-color: #b40c0c;
-            border: none;
-            padding: 8px 12px;
-            color: white;
-            border-radius: 5px;
-            margin-top: 10px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        .details-text {
-            display: none;
-            font-size: 13px;
-            margin-top: 10px;
-        }
-
-        .tags {
-            margin-top: 10px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .tag {
-            background-color: #444;
-            padding: 3px 8px;
-            border-radius: 5px;
-            font-size: 12px;
-            color: white;
-        }
-    </style>
+    
 </head>
 <body>
+    <div class="header">
+        <div class="filters">
+            <button class="filter-btn">Фільтри</button>
+        </div>
+    </div>
+
     <div class="content">
         <div class="crimes-grid">
             {% for crime in crimes %}
@@ -83,15 +26,33 @@
                     {% endif %}
                 </div>
                 <div class="crime-info">
-                    <p><strong>Дата:</strong> {{ crime.date }}</p>
-                    <p><strong>Зброя, якою завданий злочин:</strong> {{ crime.weapon_type }}</p>
-                    <p><strong>Місто:</strong> {{ crime.location }}</p>
-                    <p><strong>К-сть загиблих і поранених:</strong> {{ crime.victims }}</p>
-                    <p><strong>Детальніше про загиблих і поранених:</strong> {{ crime.vict_info }}</p>
-                    <p class="short-desc">{{ crime.description }}</p>
+                    <!-- <h3>{{ crime.title }}</h3> -->
+                    <div class="details-grid">
+                        <div class="detail">
+                            <strong>Дата:</strong>
+                            <span>{{ crime.date }}</span>
+                        </div>
+                        <div class="detail">
+                            <strong>Тип злочину:</strong>
+                            <span>{{ crime.crime_type }}</span>
+                        </div>
+                        <div class="detail">
+                            <strong>Місто:</strong>
+                            <span>{{ crime.location }}</span>
+                        </div>
+                        <div class="detail">
+                            <strong>К-сть загиблих:</strong>
+                            <span>{{ crime.deceased }}</span>
+                        </div>
+                        <div class="detail">
+                            <strong>К-сть поранених:</strong>
+                            <span>{{ crime.wounded }}</span>
+                        </div>
+                    </div>
+                    <p class="description">{{ crime.description }}</p>
     
                     <button class="details-btn">Детальніше</button>
-                    <div class="details-text hidden">
+                    <div class="details-text" style="display: none;">
                         <p>{{ crime.extra_info_1 }}</p>
                         <p>{{ crime.extra_info_2 }}</p>
                         <p>{{ crime.extra_info_3 }}</p>
@@ -101,16 +62,163 @@
             {% endfor %}
         </div>
     </div>
+    <div class="image-modal">
+        <div class="image-modal-content">
+            <span class="close-btn">&times;</span>
+            <img src="" alt="Збільшене зображення">
+        </div>
+    </div>
 
+    <div class="filters-modal">
+        <div class="filters-modal-content">
+            <div class="filters-modal-header">
+                <h2>Фільтри</h2>
+                <span class="filters-modal-close">&times;</span>
+            </div>
+            <form method="POST">
+                <div class="filters-grid">
+                    <div class="filter-section">
+                        <h3>Період</h3>
+                        <input type="date" name="date_from">
+                        <input type="date" name="date_to">
+                    </div>
+                    <div class="filter-section">
+                        <h3>Локація</h3>
+                        <select name="region">
+                            <option value="">Область</option>
+                            <option>Вінницька</option>
+                            <option>Волинська</option>
+                            <option>Дніпропетровська</option>
+                            <option>Донецька</option>
+                            <option>Житомирська</option>
+                            <option>Закарпатська</option>
+                            <option>Запорізька</option>
+                            <option>Івано-Франківська</option>
+                            <option>Київська</option>
+                            <option>Кіровоградська</option>
+                            <option>Луганська</option>
+                            <option>Львівська</option>
+                            <option>Миколаївська</option>
+                            <option>Одеська</option>
+                            <option>Полтавська</option>
+                            <option>Рівненська</option>
+                            <option>Сумська</option>
+                            <option>Тернопільська</option>
+                            <option>Харківська</option>
+                            <option>Херсонська</option>
+                            <option>Хмельницька</option>
+                            <option>Черкаська</option>
+                            <option>Чернівецька</option>
+                            <option>Чернігівська</option>
+                        </select>
+                        <div class="input-with-button">
+                            <input type="text" name="city" placeholder="Населений пункт">
+                            <button type="button" class="input-btn">+</button>
+                        </div>
+                    </div>
+                    <div class="filter-section">
+                        <h3>Зброя</h3>
+                        <select multiple name="weapon">
+                            <option>Шахед-136</option>
+                            <option>Кинджал</option>
+                            <option>Іскандер</option>
+                            <option>Калібр</option>
+                            <option>С-300</option>
+                            <option>С-400</option>
+                            <option>Х-101</option>
+                            <option>Х-55</option>
+                            <option>Торнадо</option>
+                            <option>Ракета "Оса"</option>
+                            <option>Crimson</option>
+                            <option>Штурм-СМ</option>
+                        </select>
+                    </div>
+                    <div class="filter-section">
+                        <h3>Статус Злочину</h3>
+                        <select name="status">
+                            <option value="">Оберіть статус</option>
+                            <option>Підтверджені</option>
+                            <option>В обробці</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="filter-apply-btn">Застосувати фільтри</button>
+            </form>
+        </div>
+    </div>
     <script>
+        // Функціонал модального вікна зображення
+        const imageContainers = document.querySelectorAll('.image-container img');
+        const imageModal = document.querySelector('.image-modal');
+        const modalImage = document.querySelector('.image-modal-content img');
+        const closeBtn = document.querySelector('.close-btn');
+
+        // Відкриття модального вікна при кліці на зображення
+        imageContainers.forEach(img => {
+            img.addEventListener('click', () => {
+                imageModal.style.display = 'flex';
+                modalImage.src = img.src;
+            });
+        });
+
+        // Закриття модального вікна
+        closeBtn.addEventListener('click', () => {
+            imageModal.style.display = 'none';
+        });
+
+        // Закриття модального вікна при кліці поза зображенням
+        imageModal.addEventListener('click', (event) => {
+            if (event.target === imageModal) {
+                imageModal.style.display = 'none';  
+            }
+        });
+        
+        // Функціонал кнопки "Детальніше"
         document.querySelectorAll(".details-btn").forEach((btn) => {
-    btn.addEventListener("click", function() {
-        const detailsText = this.nextElementSibling;
-        const isHidden = detailsText.classList.contains("hidden");
-        detailsText.classList.toggle("hidden");
-        this.textContent = isHidden ? "Приховати" : "Детальніше";
-    });
-});
+            btn.addEventListener("click", function() {
+                let detailsText = this.nextElementSibling;
+                if (detailsText.style.display === "none") {
+                    detailsText.style.display = "block";
+                    this.textContent = "Приховати";
+                } else {
+                    detailsText.style.display = "none";
+                    this.textContent = "Детальніше";
+                }
+            });
+        });
+
+        // Функціонал фільтрів
+        const filterBtn = document.querySelector('.filter-btn');
+        const filtersModal = document.querySelector('.filters-modal');
+        const filtersModalClose = document.querySelector('.filters-modal-close');
+        const filterApplyBtn = document.querySelector('.filter-apply-btn');
+
+        filterBtn.addEventListener('click', () => {
+            filtersModal.style.display = 'flex';
+        });
+
+        filtersModalClose.addEventListener('click', () => {
+            filtersModal.style.display = 'none';
+        });
+
+        filtersModal.addEventListener('click', (event) => {
+            if (event.target === filtersModal) {
+                filtersModal.style.display = 'none';
+            }
+        });
+
+        filterApplyBtn.addEventListener('click', () => {
+            // Тут може бути обробка форми, але для прикладу просто закриваємо вікно
+            filtersModal.style.display = 'none';
+        });
+
+        // Галерея зображень (для майбутньої реалізації)
+        document.querySelectorAll('.prev-btn, .next-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Щоб не відкривалось модальне вікно
+                // Тут може бути функціонал для перемикання зображень
+            });
+        });
     </script>
 </body>
 </html>
