@@ -27,7 +27,6 @@ except Exception as e:
     print(e)
 
 
-#✅
 @app.route('/', methods=['GET', 'POST'])
 def home():
     '''
@@ -37,7 +36,7 @@ def home():
     '''
     return render_template('main_page.html')
 
-#✅
+
 @app.route('/register_as', methods=['GET', 'POST'])
 def register_as():
     '''
@@ -47,8 +46,6 @@ def register_as():
     return render_template('register_as.html')
 
 
-#+додати перевірку полів на то чи правильно заповнені і додати ці вспливаючі повідомлення
-#перевірка на то, чи існує акаунт на такій пошті
 @app.route('/registration_applicant', methods=['GET', 'POST'])
 def registration_applicant():
     '''
@@ -93,7 +90,6 @@ def registration_applicant():
     return render_template('registration_applicant.html', form_data={})
 
 
-#+додати перевірку полів на то чи правильно заповнені і додати ці вспливаючі повідомлення
 @app.route('/registration_lawyer', methods=['GET', 'POST'])
 def registration_lawyer():
     '''
@@ -142,7 +138,7 @@ def registration_lawyer():
             return redirect(url_for('password'))
     return render_template('registration_lawyer.html', form_data={})
 
-#перевірка паролю на нормальність (мін 8 символів) + вспливаючі повідомленння
+
 @app.route('/password', methods=['GET', 'POST'])
 def password():
     '''
@@ -154,6 +150,14 @@ def password():
     if request.method == 'POST':
         user_data = session.get('user_data', None)
         if user_data:
+            password = request.form['password']
+            confirm_pass = request.form['confirm_password']
+            if len(password) < 8:
+                flash('Пароль повинен містити щонайменше 8 символів.', 'error')
+                return render_template('confirm_password.html')
+            if password != confirm_pass:
+                flash('Паролі не співпадають.', 'error')
+                return render_template('confirm_password.html')
             user_data['password'] = request.form['confirm_password']
             submitter_type = user_data['submitter_type']
             if submitter_type == 'secret':
@@ -171,7 +175,7 @@ def password():
             return redirect(url_for('register_as'))
     return render_template('password.html')
 
-#✅
+
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
     '''
@@ -234,21 +238,6 @@ def crimes():
     return render_template('crimes.html', crimes=crimes)
 
 
-def region_to_cities(region):
-    file_name = region + '.csv'
-    return [f'{t} {n}' for t, n in csv.reader(file_name, delimiter=',')]
-
-
-@app.route("/filter-section", methods=["GET", 'POST'])
-def search_cities():
-    region = request.args.get("region")
-    query = request.args.get("query", "").lower()
-
-    cities = region_to_cities(region)
-    filtered = [city for city in cities if city.lower().split()[1].startswith(query)]
-
-    return jsonify({"cities": filtered})
-
 #✅
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -275,7 +264,7 @@ def login():
             return render_template('login.html')
     return render_template('login.html')
 
-#якось зробити так, щоб сторінка не обновлялась після кнопки надіслати код
+
 @app.route('/forgotten_password', methods=['GET', 'POST'])
 def forgotten_password():
     '''
@@ -452,11 +441,27 @@ def confirmation_of_crimes():
     return render_template('confirmation_of_crimes.html', crime=crime)
 
 
-
 @app.route('/select_crime/<crime_id>', methods=['POST'])
 def select_crime(crime_id):
     session['crime_id'] = crime_id
     return redirect(url_for('confirmation_of_crimes'))
+
+
+def region_to_cities(region):
+    file_name = region + '.csv'
+    return [f'{t} {n}' for t, n in csv.reader(file_name, delimiter=',')]
+
+
+@app.route("/filter-section", methods=["GET", 'POST'])
+def search_cities():
+    region = request.args.get("region")
+    query = request.args.get("query", "").lower()
+
+    cities = region_to_cities(region)
+    filtered = [city for city in cities if city.lower().split()[1].startswith(query)]
+
+    return jsonify({"cities": filtered})
+
 
 if __name__ == '__main__':
     app.run(debug=True)
