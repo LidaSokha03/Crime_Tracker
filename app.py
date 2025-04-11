@@ -13,6 +13,7 @@ from bson.binary import Binary
 import certifi
 
 
+
 app = Flask(__name__)
 app.logger.setLevel(logging.DEBUG)
 app.secret_key = 'super secret key'
@@ -253,15 +254,18 @@ def login():
             flash('email_not_found', 'email_error')
             return render_template('login.html')
         password = request.form['password']
-        user = database.get_user(email, password)
+        user = database.find_user_by_email(email)
         if user:
-            session['user_data'] = user
-            if user['submitter_type'] == 'secret':
-                return redirect(url_for('analyst_page'))
-            return redirect(url_for('home_page'))
-        else:
-            flash('password_error', 'password_error')
-            return render_template('login.html')
+            if not user['password'].startswith("$2".encode('utf-8')):
+                user['password'] = database.hash_password(password)
+            if database.check_password(user['password'], password):
+                session['user_data'] = user
+                if user['submitter_type'] == 'secret':
+                    return redirect(url_for('analyst_page'))
+                return redirect(url_for('home_page'))
+            else:
+                flash('password_error', 'password_error')
+                return render_template('login.html')
     return render_template('login.html')
 
 
@@ -314,7 +318,7 @@ def confirm_password():
 
             if new_password == confirm_pass:
                 email = user['email']
-                database.update_users_password(email, new_password)
+                database.update_users_password(email, database.hash_password(new_password))
                 return redirect(url_for('profile'))
     return render_template('confirm_password.html')
 
