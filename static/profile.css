@@ -9,6 +9,41 @@ body {
     height: 100vh;
 }
 
+.navigation {
+    background-color: #000;
+    color: white;
+    padding: 10px 20px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+}
+
+.navigation h3 {
+    font-size: 20px;
+    cursor: pointer;
+    color: white;
+}
+
+.navigation h3:hover {
+    text-decoration: underline;
+}
+
+.navigation a {
+    color: white;
+    text-decoration: none;
+}
+
+.navigation a:visited {
+    color: white;
+}
+
+.navigation a:hover {
+    text-decoration: underline;
+    color: white;
+}
+
 /* Стилі для кнопки повернення */
 .home-button {
     position: absolute;
