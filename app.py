@@ -346,6 +346,7 @@ def analyst_page():
             '_id': str(doc['_id']),
             'applicant': doc.get('applicant', ''),
             'applicant_number': doc.get('applicant_number', ''),
+            'region': doc.get('region', ''),
             'location': doc.get('location', ''),
             'date': doc.get('date', ''),
             'weapon_type': doc.get('weapon_type', ''),
@@ -371,6 +372,7 @@ def crime_report():
         crime_info = {
             'applicant': request.form['applicant'],
             'applicant_number': request.form['phone'],
+            'region': request.form['region'],
             'location': request.form['location'],
             'date': request.form['date'],
             'description': request.form['description'],
@@ -384,6 +386,7 @@ def crime_report():
         crime_ = crime.Crime(
             crime_info['applicant'],
             crime_info['applicant_number'],
+            crime_info['region'],
             crime_info['location'],
             crime_info['date'],
             crime_info['description'],
