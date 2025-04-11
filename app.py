@@ -167,6 +167,21 @@ def profile():
         return redirect(url_for('register_as'))
 
 #зробити фільтраціюююю
+def region_to_cities(region):
+    file_name = 'Crime_Tracker/locations/' + region + '.csv'
+    with open(file_name, 'r', encoding='utf-8') as file_name:
+        return sorted([f'{t} {n}' for t, n in csv.reader(file_name, delimiter=',')], key=lambda x: x.split()[1])
+
+@app.route("/filter-section", methods=["GET", 'POST'])
+def search_cities():
+    region = request.args.get("region")
+    query = request.args.get("query", "").lower()
+
+    cities = region_to_cities(region)
+    filtered = [city for city in cities if city.lower().split()[1].startswith(query)]
+
+    return jsonify({"cities": filtered})
+
 #все полетіло
 @app.route('/crimes', methods=['GET', 'POST'])
 def crimes():
