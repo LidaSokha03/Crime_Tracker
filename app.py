@@ -1,6 +1,6 @@
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
-from flask import Flask, render_template, request, redirect, url_for, session, flash, get_flashed_messages
+from flask import Flask, render_template, request, redirect, url_for, session, flash, get_flashed_messages, jsonify
 import csv
 from bson import ObjectId
 import logging
@@ -86,41 +86,52 @@ def registration_applicant():
 
 #поміняти ПІБ на Прізвище, Імʼя спочатку на фронті, потім в класі юзера і в кінці в цьому коді
 #+додати перевірку полів на то чи правильно заповнені і додати ці вспливаючі повідомлення
-#+розібратись з фотками
 #код для перевірки на пошту
 @app.route('/registration_lawyer', methods=['GET', 'POST'])
 def registration_lawyer():
     '''
     This function handles the registration process for lawyers.
     It collects user data from the form and creates a Lawyer object.
-    The user data is stored in the session for later use.
-    If the request method is POST, it redirects to the password page.
+    Sends a confirmation code to the provided email, and if confirmed, redirects to password page.
     '''
     if request.method == 'POST':
-        user_data = {
-            "full_name": request.form['full_name'].strip(),
-            "email": request.form['email'].strip(),
-            "phone_number": request.form['phone'].strip(),
-            "specialization": request.form['specialization'].strip(),
-            "location": request.form['location'].strip(),
-            "experience_years": request.form['experience_years'].strip(),
-            "position": request.form['position'].strip(),
-            "qualification_document": request.form['qualification_document'].strip(),
-            "submitter_type": 'secret'
-        }
-
-        if database.applicants_collection.find_one({"email": user_data['email']}) or \
-        database.lawyers_collection.find_one({"email": user_data['email']}):
-            flash('Ця пошта вже використовується!', 'danger')
+        email = request.form.get('email', '').strip()
+        if 'send_code' in request.form:
+            if database.find_user_by_email(email):
+                flash('Ця пошта вже використовується!', 'danger')
+                return render_template('registration_lawyer.html')
+            code = send_email.send_email_to_confirm(email)
+            session['confirmation_code'] = code
+            session['email'] = email
+            flash('Код надіслано на вашу пошту.', 'info')
             return render_template('registration_lawyer.html')
-        
-        try:
-            user_ = user.Lawyer(user_data['full_name'], user_data['email'], user_data['phone_number'], user_data['specialization'], user_data['location'], user_data['experience_years'], user_data['position'], user_data['qualification_document'], user_data['submitter_type'])
-        except Exception as e:
-            flash(f'{e}', 'danger')
-            return render_template('registration_lawyer.html')
-        session['user_data'] = user_.to_dict()
-        return redirect(url_for('password'))
+        elif 'register' in request.form:
+            code_from_page = request.form.get('code', '').strip()
+            code_in_session = session.get('confirmation_code')
+            if code_from_page != str(code_in_session):
+                flash('Невірний код підтвердження.', 'danger')
+                return render_template('registration_lawyer.html')
+            user_data = {
+                "full_name": request.form['full_name'].strip(),
+                "email": email,
+                "phone_number": request.form['phone'].strip(),
+                "specialization": request.form['specialization'].strip(),
+                "location": request.form['location'].strip(),
+                "experience_years": request.form['experience_years'].strip(),
+                "position": request.form['position'].strip(),
+                "submitter_type": 'secret'
+            }
+            try:
+                user_ = user.Lawyer(
+                    user_data['full_name'], user_data['email'], user_data['phone_number'],
+                    user_data['specialization'], user_data['location'], user_data['experience_years'],
+                    user_data['position'], '', user_data['submitter_type']
+                )
+            except Exception as e:
+                flash(f'Помилка при створенні користувача: {e}', 'danger')
+                return render_template('registration_lawyer.html')
+            session['user_data'] = user_.to_dict()
+            return redirect(url_for('password'))
     return render_template('registration_lawyer.html')
 
 #перевірка паролю на нормальність (мін 8 символів) + вспливаючі повідомленння
@@ -230,7 +241,7 @@ def search_cities():
 
     return jsonify({"cities": filtered})
 
-#висвітлювати помилки при вході
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     '''

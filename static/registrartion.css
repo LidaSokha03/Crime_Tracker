@@ -169,3 +169,13 @@ body::before {
     padding: 10px 0;
     background-color: white;
 }
+
+.code-button {
+    width: auto; /* Автоматична ширина */
+    padding: 8px 16px; /* Менший padding */
+    font-size: 13px; /* Зменшений розмір шрифту */
+    font-weight: 500; /* Тонший шрифт */
+    background-color: #b30000; /* Трошки світліший червоний */
+    margin: 15px auto; /* Центрування кнопки */
+    display: block;
+}
