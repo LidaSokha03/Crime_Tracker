@@ -5,12 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Злочини</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='anya_first.css') }}">
-    
 </head>
 <body>
     <div class="header">
+        <div class="logo-container">
+            <h1 class="svidoc">SVI.DOC</h1>
+        </div>
         <div class="filters">
-            <button class="filter-btn">Фільтри</button>
+            <a href="/" class="filter-btn">Головна сторінка</a>
+            <a href="#" class="filter-btn" id="filter-button">Фільтри</a>
         </div>
     </div>
 
@@ -18,50 +21,56 @@
         <div class="crimes-grid">
             {% for crime in crimes %}
             <div class="crime-card">
-                <div class="image-container">
-                    {% if crime.image_url %}
-                        <img src="{{ crime.image_url }}" alt="Crime image" class="crime-image">
-                    {% else %}
-                        <p style="color: red;">[Зображення відсутнє]</p>
-                    {% endif %}
-                </div>
-                <div class="crime-info">
-                    <!-- <h3>{{ crime.title }}</h3> -->
-                    <div class="details-grid">
-                        <div class="detail">
-                            <strong>Дата:</strong>
-                            <span>{{ crime.date }}</span>
+                <div class="crime-content">
+                    <div class="crime-info">
+                        <div class="details-grid">
+                            <div class="detail">
+                                <strong>Дата:</strong>
+                                <span>{{ crime.date }}</span>
+                            </div>
+                            <div class="detail">
+                                <strong>Тип злочину:</strong>
+                                <span>{{ crime.crime_type }}</span>
+                            </div>
+                            <div class="detail">
+                                <strong>Місто:</strong>
+                                <span>{{ crime.location }}</span>
+                            </div>
+                            <div class="detail">
+                                <strong>К-сть загиблих:</strong>
+                                <span>{{ crime.deceased }}</span>
+                            </div>
+                            <div class="detail">
+                                <strong>К-сть поранених:</strong>
+                                <span>{{ crime.wounded }}</span>
+                            </div>
                         </div>
-                        <div class="detail">
-                            <strong>Тип злочину:</strong>
-                            <span>{{ crime.crime_type }}</span>
+                        <p class="description">{{ crime.description }}</p>
+                        <button class="details-btn">Детальніше</button>
+                        <div class="details-text" style="display: none;">
+                            <p>{{ crime.extra_info_1 }}</p>
+                            <p>{{ crime.extra_info_2 }}</p>
+                            <p>{{ crime.extra_info_3 }}</p>
                         </div>
-                        <div class="detail">
-                            <strong>Місто:</strong>
-                            <span>{{ crime.location }}</span>
-                        </div>
-                        <div class="detail">
-                            <strong>К-сть загиблих:</strong>
-                            <span>{{ crime.deceased }}</span>
-                        </div>
-                        <div class="detail">
-                            <strong>К-сть поранених:</strong>
-                            <span>{{ crime.wounded }}</span>
+                        <div class="tags">
+                            {% for tag in crime.tags %}
+                            <span class="tag">{{ tag }}</span>
+                            {% endfor %}
                         </div>
                     </div>
-                    <p class="description">{{ crime.description }}</p>
-    
-                    <button class="details-btn">Детальніше</button>
-                    <div class="details-text" style="display: none;">
-                        <p>{{ crime.extra_info_1 }}</p>
-                        <p>{{ crime.extra_info_2 }}</p>
-                        <p>{{ crime.extra_info_3 }}</p>
+                    <div class="image-container">
+                        {% if crime.image_url %}
+                            <img src="{{ crime.image_url }}" alt="Crime image" class="crime-image">
+                        {% else %}
+                            <p style="color: red;">[Зображення відсутнє]</p>
+                        {% endif %}
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
     </div>
+
     <div class="image-modal">
         <div class="image-modal-content">
             <span class="close-btn">&times;</span>
@@ -118,7 +127,8 @@
                     </div>
                     <div class="filter-section">
                         <h3>Зброя</h3>
-                        <select multiple name="weapon">
+                        <select name="weapon">
+                            <option value="">Оберіть зброю</option>
                             <option>Шахед-136</option>
                             <option>Кинджал</option>
                             <option>Іскандер</option>
@@ -146,6 +156,7 @@
             </form>
         </div>
     </div>
+
     <script>
         // Функціонал модального вікна зображення
         const imageContainers = document.querySelectorAll('.image-container img');
@@ -188,12 +199,13 @@
         });
 
         // Функціонал фільтрів
-        const filterBtn = document.querySelector('.filter-btn');
+        const filterBtn = document.querySelector('#filter-button');
         const filtersModal = document.querySelector('.filters-modal');
         const filtersModalClose = document.querySelector('.filters-modal-close');
         const filterApplyBtn = document.querySelector('.filter-apply-btn');
 
-        filterBtn.addEventListener('click', () => {
+        filterBtn.addEventListener('click', (e) => {
+            e.preventDefault();
             filtersModal.style.display = 'flex';
         });
 
