@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="uk">
 <head>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
@@ -41,5 +41,86 @@
             </div>
         </section>
     </div>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сторінка Судового Аналітика</title>
+    <link rel="stylesheet" href="static/css_forenscic_analyst.css">
+</head>
+<body>
+    <div class="content">
+        <header>
+            <h1>Сторінка Судового Аналітика</h1>
+            <div class="subheader">
+            <a href="{{ url_for('crimes') }}" class="btn">Підтверджені злочини</a>
+            <p>Непідтверджені злочини</p>
+        </div>
+        </header>
+    <div class="section-header">Непідтверджені злочини</div>
+
+    <div class="crimes-grid">
+        {% for crime in crimes %}
+            <div class="crime-card" data-type="{{ crime.weapon_category }}">
+                <div class="image-container">
+                    {% if crime.image_url %}
+                    <img src="{{ crime.image_url }}" alt="Зображення місця злочину" class="crime-image">
+                    {% else %}
+                <div style="height: 300px; background-color: #333; border-radius: 8px; display: flex; justify-content: center; align-items: center;">
+                    <p>Зображення відсутнє</p>
+                </div>
+                {% endif %}
+                </div>
+                <div class="crime-info">
+                    <p><strong>Дата:</strong> {{ crime.date }}</p>
+                    <p><strong>Зброя, якою завданий злочин:</strong> {{ crime.weapon_type }}</p>
+                    <p><strong>Місто:</strong> {{ crime.location }}</p>
+                    <p><strong>К-сть загиблих і поранених:</strong> {{ crime.victims }}</p>
+                    <p><strong>Детальніше про загиблих і поранених:</strong> {{ crime.vict_info }}</p>
+                    <p class="short-desc">{{ crime.description }}</p>
+                    <button class="details-btn">Детальніше</button>
+                    <div class="details-text hidden">
+                        <p>{{ crime.extra_info_1 }}</p>
+                        <p>{{ crime.extra_info_2 }}</p>
+                        <p>{{ crime.extra_info_3 }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll(".details-btn").forEach((btn) => {
+            btn.addEventListener("click", function() {
+                const detailsText = this.nextElementSibling;
+                detailsText.classList.toggle("hidden");
+                this.textContent = detailsText.classList.contains("hidden") ? "Детальніше" : "Приховати";
+            });
+        });
+
+        document.querySelectorAll(".toggle-btn").forEach((btn) => {
+            btn.addEventListener("click", function() {
+
+                document.querySelectorAll(".toggle-btn").forEach(b => b.classList.remove("active"));
+                this.classList.add("active");
+                
+                const filter = this.getAttribute("data-filter");
+                
+                document.querySelectorAll(".crime-card").forEach((card) => {
+                    if (filter === "all" || card.getAttribute("data-type") === filter) {
+                        card.style.display = "block";
+                    } else {
+                        card.style.display = "none";
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
