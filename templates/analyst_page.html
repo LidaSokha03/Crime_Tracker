@@ -80,17 +80,13 @@
                     <p><strong>Місто:</strong> {{ crime.location }}</p>
                     <p><strong>К-сть загиблих і поранених:</strong> {{ crime.victims }}</p>
                     <p><strong>Опис злочину:</strong></p>
-                    <p class="short-desc">{{ crime.description }}</p>
+                    <p class="short-desc">{{ crime.description[:100] }}{% if crime.description|length > 100 %}...{% endif %}</p>
+                    <p class="full-desc hidden">{{ crime.description }}</p>
                     <div class="button-container">
                         <button class="details-btn">Детальніше</button>
                         <form method="POST" action="{{ url_for('select_crime', crime_id=crime['_id']) }}">
                             <button type="submit" class="more-button">Підтвердження</button>
                           </form>
-                      </div>
-                      <div class="details-text hidden">
-                        <p>{{ crime.extra_info_1 }}</p>
-                        <p>{{ crime.extra_info_2 }}</p>
-                        <p>{{ crime.extra_info_3 }}</p>
                       </div>
                 </div>
             </div>
@@ -125,5 +121,33 @@
             });
         });
     </script>
+    <script>
+        document.querySelectorAll(".details-btn").forEach((btn) => {
+            btn.addEventListener("click", function () {
+                const card = this.closest(".crime-card");
+                const shortDesc = card.querySelector(".short-desc");
+                const fullDesc = card.querySelector(".full-desc");
+                const extraInfo = card.querySelector(".details-text");
+    
+                const isHidden = fullDesc.classList.contains("hidden");
+
+                if (isHidden) {
+                    shortDesc.style.display = "none";
+                    fullDesc.classList.remove("hidden");
+                    this.textContent = "Приховати";
+                } else {
+                    shortDesc.style.display = "block";
+                    fullDesc.classList.add("hidden");
+                    this.textContent = "Детальніше";
+                }
+
+                if (extraInfo) {
+                    extraInfo.classList.toggle("hidden", isHidden);
+                }
+            });
+        });
+    </script>
+    
+    
 </body>
 </html>
