@@ -38,20 +38,20 @@
                                 <span>{{ crime.date }}</span>
                             </div>
                             <div class="detail">
-                                <strong>Тип злочину:</strong>
-                                <span>{{ crime.crime_type }}</span>
+                                <strong>Область:</strong>
+                                <span>{{ crime.region }}</span>
                             </div>
                             <div class="detail">
-                                <strong>Місто:</strong>
+                                <strong>Населений пункт:</strong>
                                 <span>{{ crime.location }}</span>
                             </div>
                             <div class="detail">
-                                <strong>К-сть загиблих:</strong>
-                                <span>{{ crime.deceased }}</span>
+                                <strong>К-сть жертв:</strong>
+                                <span>{{ crime.victims }}</span>
                             </div>
                             <div class="detail">
-                                <strong>К-сть поранених:</strong>
-                                <span>{{ crime.wounded }}</span>
+                                <strong>Інформація про жертв:</strong>
+                                <span>{{ crime.vict_info }}</span>
                             </div>
                         </div>
                         <p class="description">{{ crime.description }}</p>
@@ -60,11 +60,6 @@
                             <p>{{ crime.extra_info_1 }}</p>
                             <p>{{ crime.extra_info_2 }}</p>
                             <p>{{ crime.extra_info_3 }}</p>
-                        </div>
-                        <div class="tags">
-                            {% for tag in crime.tags %}
-                            <span class="tag">{{ tag }}</span>
-                            {% endfor %}
                         </div>
                     </div>
                     <div class="image-container">
