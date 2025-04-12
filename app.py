@@ -1,12 +1,17 @@
+'''
+This is a Flask application for a crime tracking system.
+It allows users to register as applicants or lawyers, report crimes, and manage their profiles.
+The application uses MongoDB for data storage
+'''
 import csv
 import logging
 import base64
+from bson import ObjectId
 from bson.binary import Binary
 import certifi
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, Response
-from bson import ObjectId
 import database
 from classes import user
 from classes import crime
@@ -339,6 +344,10 @@ def confirm_password():
 #✅
 @app.route('/analyst_page')
 def analyst_page():
+    '''
+    This function handles the analyst page.
+    It retrieves the list of unvalidated crimes from the database and renders the 'analyst_page.html' template.
+    '''
     docs = list(database.unvalid_crimes_collection.find())
     crimes = []
     for doc in docs:
@@ -429,6 +438,10 @@ def home_page():
 #✅
 @app.route('/confirmation_of_crimes', methods=['GET', 'POST'])
 def confirmation_of_crimes():
+    '''
+    This function handles the confirmation of crimes.
+    It retrieves the crime data from the session and renders the 'confirmation_of_crimes.html' template.
+    '''
     crime_id = session.get('crime_id')
     if not crime_id:
         return redirect(url_for('analyst_page'))
@@ -470,17 +483,26 @@ def confirmation_of_crimes():
 ##########################################
 @app.route('/select_crime/<crime_id>', methods=['POST'])
 def select_crime(crime_id):
+    '''
+    This function handles the selection of a crime for confirmation.
+    '''
     session['crime_id'] = crime_id
     return redirect(url_for('confirmation_of_crimes'))
 
 
 def region_to_cities(region):
+    '''
+    This function retrieves the list of cities for a given region from a CSV file.
+    '''
     file_name = region + '.csv'
     return [f'{t} {n}' for t, n in csv.reader(file_name, delimiter=',')]
 
 
 @app.route("/filter-section", methods=["GET", 'POST'])
 def search_cities():
+    '''
+    This function handles the search for cities based on the selected region and query.
+    '''
     region = request.args.get("region")
     query = request.args.get("query", "").lower()
 
@@ -491,6 +513,9 @@ def search_cities():
 
 @app.route('/image/<crime_id>')
 def get_image(crime_id):
+    '''
+    This function retrieves the first image of a crime from the database.
+    '''
     crime = database.unvalid_crimes_collection.find_one({'_id': ObjectId(crime_id)})
     if crime and 'images' in crime and len(crime['images']) > 0:
         return Response(crime['images'][0], mimetype='image/jpeg')
