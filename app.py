@@ -420,8 +420,8 @@ def home_page():
     '''
     return render_template('home_page.html')
 
-#передавання локації поміняти
-#мейбі показувати фотки злочину
+
+#✅
 @app.route('/confirmation_of_crimes', methods=['GET', 'POST'])
 def confirmation_of_crimes():
     crime_id = session.get('crime_id')

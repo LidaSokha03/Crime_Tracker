@@ -49,7 +49,7 @@
                 </div>
 
                 <div class="form-field">
-                  <p><strong>Регіон:</strong> {{ crime['region'] }}</p>
+                  <p><strong>Область:</strong> {{ crime['region'] }}</p>
               </div>
             
                 <div class="form-field">
@@ -59,23 +59,24 @@
                 <div class="form-field">
                     <p><strong>Дата:</strong> {{ crime['date'] }}</p>
                 </div>
+
+                <div class="form-field">
+                  <p><strong>Тип зброї:</strong> {{ crime['weapon_type'] }}</p>
+                </div>
+                
+                <div class="form-field">
+                  <p><strong>Кількість поранених/жертв:</strong> {{ crime['victims'] }}</p>
+              </div>
+              
+              <div class="form-field">
+                  <p><strong>Додаткова інформація про жертв:</strong> {{ crime['vict_info'] }}</p>
+              </div>
             </div>
+
           
             <div class="form-right">
                 <div class="form-field">
                     <p><strong>Опис злочину:</strong> {{ crime['description'] }}</p>
-                </div>
-
-                <div class="form-field">
-                    <p><strong>Тип зброї:</strong> {{ crime['weapon_type'] }}</p>
-                </div>
-
-                <div class="form-field">
-                    <p><strong>Кількість поранених/жертв:</strong> {{ crime['victims'] }}</p>
-                </div>
-                
-                <div class="form-field">
-                    <p><strong>Додаткова інформація:</strong> {{ crime['vict_info'] }}</p>
                 </div>
             </div>
         </div>
