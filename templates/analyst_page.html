@@ -58,8 +58,6 @@
         <header>
             <h1>Сторінка Судового Аналітика</h1>
             <div class="subheader">
-            <a href="{{ url_for('crimes') }}" class="btn">Підтверджені злочини</a>
-            <p>Непідтверджені злочини</p>
         </div>
         </header>
     <div class="section-header">Непідтверджені злочини</div>
@@ -81,14 +79,19 @@
                     <p><strong>Зброя, якою завданий злочин:</strong> {{ crime.weapon_type }}</p>
                     <p><strong>Місто:</strong> {{ crime.location }}</p>
                     <p><strong>К-сть загиблих і поранених:</strong> {{ crime.victims }}</p>
-                    <p><strong>Детальніше про загиблих і поранених:</strong> {{ crime.vict_info }}</p>
+                    <p><strong>Опис злочину:</strong></p>
                     <p class="short-desc">{{ crime.description }}</p>
-                    <button class="details-btn">Детальніше</button>
-                    <div class="details-text hidden">
+                    <div class="button-container">
+                        <button class="details-btn">Детальніше</button>
+                        <form method="POST" action="{{ url_for('select_crime', crime_id=crime['_id']) }}">
+                            <button type="submit" class="more-button">Підтвердження</button>
+                          </form>
+                      </div>
+                      <div class="details-text hidden">
                         <p>{{ crime.extra_info_1 }}</p>
                         <p>{{ crime.extra_info_2 }}</p>
                         <p>{{ crime.extra_info_3 }}</p>
-                    </div>
+                      </div>
                 </div>
             </div>
             {% endfor %}

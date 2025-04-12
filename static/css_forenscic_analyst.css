@@ -31,7 +31,6 @@ h1 {
     text-transform: uppercase;
     margin-bottom: 20px;
     text-align: center;
-    /* padding-left: 150px;
 }
 
 .subheader {
@@ -283,3 +282,56 @@ h1 {
 .toggle-btn.active {
     background-color: #b40c0c;
 }
+
+/* .more-button {
+    background-color: #b40c0c;
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    float: right;
+    margin-top: 15px;
+    margin-right: 20px; */
+
+.more-button {
+    background-color: #b40c0c;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 15px;
+    margin-right: 20px;
+    align-items: center;
+}
+  
+  form {
+    display: inline;
+    float: right;
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+    clear: both;
+    gap: 20px;
+  }
+
+  .details-btn {
+    background-color: #b40c0c;
+    border: none;
+    padding: 8px 16px;
+    color: white;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+  }
