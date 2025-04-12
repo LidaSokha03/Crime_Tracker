@@ -196,7 +196,7 @@ def profile():
         return redirect(url_for('register_as'))
 
 
-#все полетіло
+#фільтрація
 @app.route('/crimes', methods=['GET', 'POST'])
 def crimes():
     '''
