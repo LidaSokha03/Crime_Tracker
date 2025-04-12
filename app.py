@@ -64,7 +64,7 @@ def registration_applicant():
             if database.find_user_by_email(email):
                 flash('Ця пошта вже використовується!', 'danger')
                 return render_template('registration_applicant.html', form_data=request.form)
-            code = send_email.send_email_to_confirm(email)
+            code = send_email.send_email_to_confirm(email, request.form['name'], request.form['surname'])
             session['confirmation_code'] = code
             session['email'] = email
             flash('Код надіслано на вашу пошту.', 'info')
@@ -108,7 +108,7 @@ def registration_lawyer():
             if database.find_user_by_email(email):
                 flash('Ця пошта вже використовується!', 'danger')
                 return render_template('registration_lawyer.html', form_data=request.form)
-            code = send_email.send_email_to_confirm(email)
+            code = send_email.send_email_to_confirm(email, request.form['name'], request.form['surname'])
             session['confirmation_code'] = code
             session['email'] = email
             flash('Код надіслано на вашу пошту.', 'info')
@@ -290,7 +290,7 @@ def forgotten_password():
             user = database.find_user_by_email(email)
             if user:
                 session['user_data'] = user
-                code = send_email.send_email_to_confirm(email)
+                code = send_email.send_email_to_confirm(email, user['name'], user['surname'])
                 session['confirmation_code'] = code
                 return render_template('forgotten_password.html', form_data=request.form)
             else:
