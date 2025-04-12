@@ -9,6 +9,41 @@ body {
     height: 100vh;
 }
 
+.navigation {
+    background-color: #000;
+    color: white;
+    padding: 10px 20px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+}
+
+.navigation h3 {
+    font-size: 20px;
+    cursor: pointer;
+    color: white;
+}
+
+.navigation h3:hover {
+    text-decoration: underline;
+}
+
+.navigation a {
+    color: white;
+    text-decoration: none;
+}
+
+.navigation a:visited {
+    color: white;
+}
+
+.navigation a:hover {
+    text-decoration: underline;
+    color: white;
+}
+
 /* Стилі для кнопки повернення */
 .home-button {
     position: absolute;
@@ -76,4 +111,23 @@ h1 {
 .info-label {
     font-weight: bold;
     color: #333;
+}
+
+#flash-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+  
+.flash-message {
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: opacity 0.5s ease-out;
 }

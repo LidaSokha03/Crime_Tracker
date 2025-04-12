@@ -22,13 +22,30 @@
             <div class="background-image"></div>
             <div class="login-form">
                 <div class="title">ВХІД В ОСОБИСТИЙ КАБІНЕТ</div>
-                
                 <form method="POST" action="{{ url_for('login') }}">
                     <label for="email">ПОШТА</label>
                     <input type="email" id="email" name="email" required>
-                    
-                    <label for="password">ПАРОЛЬ</label>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% for category, message in messages %}
+                            {% if category == 'email_error' and message == 'email_not_found' %}
+                            <div class="input-error">
+                                <span class="error-text">Електронну пошту не знайдено</span>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endwith %}
+
+                    <div><label for="password">ПАРОЛЬ</label></div>
                     <input type="password" id="password" name="password" required>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% for category, message in messages %}
+                            {% if category == 'password_error' and message == 'password_error' %}
+                            <div class="input-error">
+                                <span class="error-text">Неправильний пароль</span>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endwith %}
                     
                     <button type="submit" class="submit-btn">УВІЙТИ</button>
                 </form>

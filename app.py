@@ -1,16 +1,17 @@
+import csv
+import logging
+import base64
+from bson.binary import Binary
+import certifi
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
-from flask import Flask, render_template, request, redirect, url_for, session, flash, get_flashed_messages
-import csv
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, Response
 from bson import ObjectId
-import logging
 import database
 from classes import user
 from classes import crime
 import send_email
-import base64
-from bson.binary import Binary
-import certifi
+#проблема з send_email
 
 
 app = Flask(__name__)
@@ -27,7 +28,7 @@ except Exception as e:
     print(e)
 
 
-
+#✅
 @app.route('/', methods=['GET', 'POST'])
 def home():
     '''
@@ -38,6 +39,7 @@ def home():
     return render_template('main_page.html')
 
 
+#✅
 @app.route('/register_as', methods=['GET', 'POST'])
 def register_as():
     '''
@@ -46,12 +48,8 @@ def register_as():
     '''
     return render_template('register_as.html')
 
-#поміняти ПІБ на Прізвище, Імʼя спочатку на фронті, потім в класі юзера і в кінці в цьому коді
-#+додати перевірку полів на то чи правильно заповнені і додати ці вспливаючі повідомлення
-#код для перевірки на пошту
-#тут в вибірку ХТО ТИ було б добре було б додати типу не тока професії,
-# а щей просто мінус якийсь, якщо людина без професії а от дефолт юзер
-#перевірка на то, чи існує акаунт на такій пошті
+
+#проблема з регексом
 @app.route('/registration_applicant', methods=['GET', 'POST'])
 def registration_applicant():
     '''
@@ -61,69 +59,92 @@ def registration_applicant():
     If the request method is POST, it redirects to the password page.
     '''
     if request.method == 'POST':
-        user_data = {
-            "full_name": request.form['full_name'].strip(),
-            "email": request.form['email'].strip(),
-            "phone_number": request.form['phone'].strip(),
-            "location": request.form['location'].strip(),
-            "submitter_type": request.form['submitter_type'].strip(),
-            "workplace": request.form['workplace'].strip()
+        email = request.form.get('email', '').strip()
+        if 'send_code' in request.form:
+            if database.find_user_by_email(email):
+                flash('Ця пошта вже використовується!', 'danger')
+                return render_template('registration_applicant.html', form_data=request.form)
+            code = send_email.send_email_to_confirm(email, request.form['name'], request.form['surname'])
+            session['confirmation_code'] = code
+            session['email'] = email
+            flash('Код надіслано на вашу пошту.', 'info')
+            return render_template('registration_applicant.html', form_data=request.form)
+        elif 'register' in request.form:
+            code_from_page = request.form.get('code', '').strip()
+            code_in_session = session.get('confirmation_code')
+            if code_from_page != str(code_in_session):
+                flash('Невірний код підтвердження.', 'danger')
+                return render_template('registration_applicant.html', form_data=request.form)
+            user_data = {
+            "surname": request.form['surname'],
+            "name": request.form['name'],
+            "email": request.form['email'],
+            "phone_number": request.form['phone'],
+            "location": request.form['location'],
+            "submitter_type": request.form['submitter_type'],
+            "workplace": request.form['workplace']
         }
+            try:
+                user_ = user.Applicant(user_data['surname'], user_data['name'], user_data['email'], user_data['location'], user_data['phone_number'], user_data['submitter_type'], user_data['workplace'])
+            except Exception as e:
+                flash(f'Помилка при створенні користувача: {e}', 'danger')
+                return render_template('registration_applicant.html', form_data=request.form)
+            session['user_data'] = user_.to_dict()
+            return redirect(url_for('password'))
+    return render_template('registration_applicant.html', form_data={})
 
-        if database.applicants_collection.find_one({"email": user_data['email']}) or \
-        database.lawyers_collection.find_one({"email": user_data['email']}):
-            flash('Ця пошта вже використовується!', 'danger')
-            return render_template('registration_applicant.html')
-        
-        try:
-            user_ = user.Applicant(user_data['full_name'], user_data['email'], user_data['location'], user_data['phone_number'], user_data['submitter_type'], user_data['workplace'])
-        except Exception as e:
-            flash(f'{e}', 'danger')
-            return render_template('registration_applicant.html')
-        session['user_data'] = user_.to_dict()
-        return redirect(url_for('password'))
-    return render_template('registration_applicant.html')
 
-#поміняти ПІБ на Прізвище, Імʼя спочатку на фронті, потім в класі юзера і в кінці в цьому коді
-#+додати перевірку полів на то чи правильно заповнені і додати ці вспливаючі повідомлення
-#+розібратись з фотками
-#код для перевірки на пошту
+#проблема з регексом
 @app.route('/registration_lawyer', methods=['GET', 'POST'])
 def registration_lawyer():
     '''
     This function handles the registration process for lawyers.
     It collects user data from the form and creates a Lawyer object.
-    The user data is stored in the session for later use.
-    If the request method is POST, it redirects to the password page.
+    Sends a confirmation code to the provided email, and if confirmed, redirects to password page.
     '''
     if request.method == 'POST':
-        user_data = {
-            "full_name": request.form['full_name'].strip(),
-            "email": request.form['email'].strip(),
-            "phone_number": request.form['phone'].strip(),
-            "specialization": request.form['specialization'].strip(),
-            "location": request.form['location'].strip(),
-            "experience_years": request.form['experience_years'].strip(),
-            "position": request.form['position'].strip(),
-            "qualification_document": request.form['qualification_document'].strip(),
-            "submitter_type": 'secret'
-        }
+        email = request.form.get('email', '').strip()
+        if 'send_code' in request.form:
+            if database.find_user_by_email(email):
+                flash('Ця пошта вже використовується!', 'danger')
+                return render_template('registration_lawyer.html', form_data=request.form)
+            code = send_email.send_email_to_confirm(email, request.form['name'], request.form['surname'])
+            session['confirmation_code'] = code
+            session['email'] = email
+            flash('Код надіслано на вашу пошту.', 'info')
+            return render_template('registration_lawyer.html', form_data=request.form)
+        elif 'register' in request.form:
+            code_from_page = request.form.get('code', '').strip()
+            code_in_session = session.get('confirmation_code')
+            if code_from_page != str(code_in_session):
+                flash('Невірний код підтвердження.', 'danger')
+                return render_template('registration_lawyer.html', form_data=request.form)
+            user_data = {
+                "surname": request.form['surname'],
+                "name": request.form['name'],
+                "email": email,
+                "phone_number": request.form['phone'],
+                "specialization": request.form['specialization'],
+                "location": request.form['location'],
+                "experience_years": request.form['experience_years'],
+                "position": request.form['position'],
+                "submitter_type": 'secret'
+            }
+            try:
+                user_ = user.Lawyer(
+                    user_data['surname'], user_data['name'], user_data['email'], user_data['phone_number'],
+                    user_data['specialization'], user_data['location'], user_data['experience_years'],
+                    user_data['position'], '', user_data['submitter_type']
+                )
+            except Exception as e:
+                flash(f'Помилка при створенні користувача: {e}', 'danger')
+                return render_template('registration_lawyer.html', form_data=request.form)
+            session['user_data'] = user_.to_dict()
+            return redirect(url_for('password'))
+    return render_template('registration_lawyer.html', form_data={})
 
-        if database.applicants_collection.find_one({"email": user_data['email']}) or \
-        database.lawyers_collection.find_one({"email": user_data['email']}):
-            flash('Ця пошта вже використовується!', 'danger')
-            return render_template('registration_lawyer.html')
-        
-        try:
-            user_ = user.Lawyer(user_data['full_name'], user_data['email'], user_data['phone_number'], user_data['specialization'], user_data['location'], user_data['experience_years'], user_data['position'], user_data['qualification_document'], user_data['submitter_type'])
-        except Exception as e:
-            flash(f'{e}', 'danger')
-            return render_template('registration_lawyer.html')
-        session['user_data'] = user_.to_dict()
-        return redirect(url_for('password'))
-    return render_template('registration_lawyer.html')
 
-#перевірка паролю на нормальність (мін 8 символів) + вспливаючі повідомленння
+#✅
 @app.route('/password', methods=['GET', 'POST'])
 def password():
     '''
@@ -135,6 +156,14 @@ def password():
     if request.method == 'POST':
         user_data = session.get('user_data', None)
         if user_data:
+            password = request.form['password']
+            confirm_pass = request.form['confirm_password']
+            if len(password) < 8:
+                flash('Пароль повинен містити щонайменше 8 символів.', 'error')
+                return render_template('confirm_password.html')
+            if password != confirm_pass:
+                flash('Паролі не співпадають.', 'error')
+                return render_template('confirm_password.html')
             user_data['password'] = request.form['confirm_password']
             submitter_type = user_data['submitter_type']
             if submitter_type == 'secret':
@@ -152,7 +181,8 @@ def password():
             return redirect(url_for('register_as'))
     return render_template('password.html')
 
-#додати кнопку виходу на home_page
+
+#✅
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
     '''
@@ -230,7 +260,11 @@ def crimes():
     return render_template('crimes.html', crimes=crimes)
 
 
-#висвітлювати помилки при вході
+
+
+
+#✅
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     '''
@@ -241,18 +275,26 @@ def login():
     '''
     if request.method == 'POST':
         email = request.form['email']
+        if not database.find_user_by_email(email):
+            flash('email_not_found', 'email_error')
+            return render_template('login.html')
         password = request.form['password']
-        user = database.get_user(email, password)
+        user = database.find_user_by_email(email)
         if user:
-            session['user_data'] = user
-            if user['submitter_type'] == 'secret':
-                return redirect(url_for('analyst_page'))
-            return redirect(url_for('home_page'))
-        else:
-            return 'User not found'
+            if isinstance(user['password'], str) and not user['password'].startswith("$2"):
+                user['password'] = database.hash_password(password)
+            if database.check_password(user['password'], password):
+                session['user_data'] = user
+                if user['submitter_type'] == 'secret':
+                    return redirect(url_for('analyst_page'))
+                return redirect(url_for('home_page'))
+            else:
+                flash('password_error', 'password_error')
+                return render_template('login.html')
     return render_template('login.html')
 
-#якось зробити так, щоб сторінка не обновлялась після кнопки надіслати код
+
+#✅
 @app.route('/forgotten_password', methods=['GET', 'POST'])
 def forgotten_password():
     '''
@@ -262,25 +304,27 @@ def forgotten_password():
     If the user enters the correct confirmation code, it redirects to the password confirmation page.
     '''
     if request.method == 'POST':
-        if 'email' in request.form:
+        if 'send_code' in request.form:
             email = request.form['email']
             user = database.find_user_by_email(email)
             if user:
                 session['user_data'] = user
-                code = send_email.send_email_to_confirm(email)
+                code = send_email.send_email_to_confirm(email, user['name'], user['surname'])
                 session['confirmation_code'] = code
+                return render_template('forgotten_password.html', form_data=request.form)
             else:
-                return render_template('forgotten_password.html', message = 'Неправильна пошта')
-        elif 'code' in request.form:
+                return render_template('forgotten_password.html', message = 'Неправильна пошта', form_data = request.form)
+        elif 'confirm_code' in request.form:
             code_from_page = request.form['code']
             code_in_session = session.get('confirmation_code')
             if code_from_page == str(code_in_session):
                 return redirect(url_for('confirm_password'))
             else:
-                return render_template('forgotten_password.html')
-    return render_template('forgotten_password.html')
+                return render_template('forgotten_password.html', form_data=request.form)
+    return render_template('forgotten_password.html', form_data={})
 
-#перевірка нового паролю на нормальність
+
+#✅
 @app.route('/confirm_password', methods=['GET', 'POST'])
 def confirm_password():
     '''
@@ -288,19 +332,26 @@ def confirm_password():
     It collects the new password and confirmation password from the form.
     If the passwords match, it updates the user's password in the database and redirects to the profile page.   
     '''
-    #перевірка паролю (мін 8 символів)
     if request.method == 'POST':
         user = session.get('user_data', None)
         if user:
             new_password = request.form['new_password']
             confirm_pass = request.form['confirm_password']
+            if len(new_password) < 8:
+                flash('Пароль повинен містити щонайменше 8 символів.', 'error')
+                return render_template('confirm_password.html')
+            if new_password != confirm_pass:
+                flash('Паролі не співпадають.', 'error')
+                return render_template('confirm_password.html')
             if new_password == confirm_pass:
                 email = user['email']
                 database.update_users_password(email, new_password)
+                flash('Пароль успішно змінено!', 'success')
                 return redirect(url_for('profile'))
     return render_template('confirm_password.html')
 
-
+#кнопки зі злочинами (шось придумати)
+#виведення інфромації про злочини негарне (зробити таке ж як і в crimes)
 @app.route('/analyst_page')
 def analyst_page():
     docs = list(database.unvalid_crimes_collection.find())
@@ -312,15 +363,12 @@ def analyst_page():
             for file in doc['files']:
                 try:
                     file_data = file.get('data')
-                    content_type = file.get('content_type')
+                    content_type = file.get('content_type', 'image/jpeg')
                     if not file_data or not content_type:
                         continue
                     if isinstance(file_data, Binary):
                         file_data = bytes(file_data)
-                    elif isinstance(file_data, str):
-                        file_data = file_data.encode('latin1')
-                    if not isinstance(file_data, bytes):
-                        continue
+
                     encoded = base64.b64encode(file_data).decode('utf-8')
                     image_url = f"data:{content_type};base64,{encoded}"
                     images.append(image_url)
@@ -342,9 +390,8 @@ def analyst_page():
         crimes.append(crime_data)
     return render_template('analyst_page.html', crimes=crimes)
 
-#додати вспливаюче повідомлення про успішну подачу
+
 #додати валідацію на заповненість полів
-#трошки полетів дизайн
 @app.route('/crime_report', methods=['GET', 'POST'])
 def crime_report():
     '''
@@ -356,6 +403,7 @@ def crime_report():
         crime_info = {
             'applicant': request.form['applicant'],
             'applicant_number': request.form['phone'],
+            'region': request.form['region'],
             'location': request.form['location'],
             'date': request.form['date'],
             'description': request.form['description'],
@@ -369,6 +417,7 @@ def crime_report():
         crime_ = crime.Crime(
             crime_info['applicant'],
             crime_info['applicant_number'],
+            crime_info['region'],
             crime_info['location'],
             crime_info['date'],
             crime_info['description'],
@@ -378,10 +427,13 @@ def crime_report():
             crime_info['vict_info'])
         crime_ = crime_.to_dict()
         act = database.crime_report(crime_)
-        return redirect(url_for('crime_report'))
+        if act:
+            flash('Звіт про злочин успішно подано!', 'success')
+            return redirect(url_for('home_page'))
     return render_template('crime_report.html')
 
-#текст злетів
+
+#✅
 @app.route('/home_page')
 def home_page():
     '''
@@ -389,20 +441,16 @@ def home_page():
     '''
     return render_template('home_page.html')
 
-
-#тут трошки полетів дизайн (або мені здається), бо в нас какашкі повні були з оцим
-#додати перехід на усі злочини на сторінці і пофіксити кнопки
+#передавання локації поміняти
+#мейбі показувати фотки злочину
 @app.route('/confirmation_of_crimes', methods=['GET', 'POST'])
 def confirmation_of_crimes():
     crime_id = session.get('crime_id')
     if not crime_id:
         return redirect(url_for('analyst_page'))
-
     crime = database.unvalid_crimes_collection.find_one({"_id": ObjectId(crime_id)})
-
     if not crime:
         return "Crime not found", 404
-
     if request.method == 'POST':
         if 'confirm' in request.form:
             try:
@@ -423,11 +471,37 @@ def confirmation_of_crimes():
     return render_template('confirmation_of_crimes.html', crime=crime)
 
 
-#не чіпати!! Сторінки такої не існує, це штука чисто для редіректу
+
+##########################################
+###### helper functions ##################
+##########################################
 @app.route('/select_crime/<crime_id>', methods=['POST'])
 def select_crime(crime_id):
     session['crime_id'] = crime_id
     return redirect(url_for('confirmation_of_crimes'))
+
+
+def region_to_cities(region):
+    file_name = region + '.csv'
+    return [f'{t} {n}' for t, n in csv.reader(file_name, delimiter=',')]
+
+
+@app.route("/filter-section", methods=["GET", 'POST'])
+def search_cities():
+    region = request.args.get("region")
+    query = request.args.get("query", "").lower()
+
+    cities = region_to_cities(region)
+    filtered = [city for city in cities if city.lower().split()[1].startswith(query)]
+
+    return jsonify({"cities": filtered})
+
+@app.route('/image/<crime_id>')
+def get_image(crime_id):
+    crime = database.unvalid_crimes_collection.find_one({'_id': ObjectId(crime_id)})
+    if crime and 'images' in crime and len(crime['images']) > 0:
+        return Response(crime['images'][0], mimetype='image/jpeg')
+    return 'Зображення не знайдено', 404
 
 if __name__ == '__main__':
     app.run(debug=True)

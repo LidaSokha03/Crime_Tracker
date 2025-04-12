@@ -24,7 +24,6 @@
 </head>
 
 <body>
-
   <div class="form-container">
     <h1 class="header">Подання інформації про злочин</h1>
 
@@ -41,10 +40,67 @@
       <div class="form-field">
         <input type="tel" name="phone" placeholder="Контактний номер тел." required><span class="required-mark">*</span>
       </div>
-      
-      <div class="form-field">
-        <input type="text" name="location" placeholder="Локація (місто, район, вулиця, номер будинку)" required><span class="required-mark">*</span>
-      </div>
+
+      <!-- <div class="form-field"><div class="filter-section"><div class="oblast">
+        <select name="region">
+            <option value="">Область</option>
+            <option>Вінницька</option>
+            <option>Волинська</option>
+            <option>Дніпропетровська</option>
+            <option>Донецька</option>
+            <option>Житомирська</option>
+            <option>Закарпатська</option>
+            <option>Запорізька</option>
+            <option>Івано-Франківська</option>
+            <option>Київська</option>
+            <option>Кіровоградська</option>
+            <option>Луганська</option>
+            <option>Львівська</option>
+            <option>Миколаївська</option>
+            <option>Одеська</option>
+            <option>Полтавська</option>
+            <option>Рівненська</option>
+            <option>Сумська</option>
+            <option>Тернопільська</option>
+            <option>Харківська</option>
+            <option>Херсонська</option>
+            <option>Хмельницька</option>
+            <option>Черкаська</option>
+            <option>Чернівецька</option>
+            <option>Чернігівська</option>
+        </select></div></div></div><span class="required-mark">*</span> -->
+
+        <div class="form-field"><div class="filter-section"><div class="oblast">
+        <select name="region" required>
+          <option value="" disabled selected>Область</option>
+          <option value="Вінницька">Вінницька</option>
+          <option value="Волинська">Волинська</option>
+          <option value="Дніпропетровська">Дніпропетровська</option>
+          <option value="Донецька">Донецька</option>
+          <option value="Житомирська">Житомирська</option>
+          <option value="Закарпатська">Закарпатська</option>
+          <option value="Запорізька">Запорізька</option>
+          <option value="Івано-Франківська">Івано-Франківська</option>
+          <option value="Київська">Київська</option>
+          <option value="Кіровоградська">Кіровоградська</option>
+          <option value="Луганська">Луганська</option>
+          <option value="Львівська">Львівська</option>
+          <option value="Миколаївська">Миколаївська</option>
+          <option value="Одеська">Одеська</option>
+          <option value="Полтавська">Полтавська</option>
+          <option value="Рівненська">Рівненська</option>
+          <option value="Сумська">Сумська</option>
+          <option value="Тернопільська">Тернопільська</option>
+          <option value="Харківська">Харківська</option>
+          <option value="Херсонська">Херсонська</option>
+          <option value="Хмельницька">Хмельницька</option>
+          <option value="Черкаська">Черкаська</option>
+          <option value="Чернівецька">Чернівецька</option>
+      </select><span class="required-mark">*</span></div></div></div>
+
+        <div class="form-field">
+          <input type="text" name="location" placeholder="Локація (місто, район, вулиця, номер будинку)" required><span class="required-mark">*</span>
+        </div>
       
       <div class="form-field">
         <input type="date" name="date" placeholder="Дата" required><span class="required-mark">*</span>
@@ -107,7 +163,7 @@
 
     if (input.files.length !== 3) {
       alert("Потрібно вибрати рівно 3 фотографії.");
-      input.value = ''; // скидаємо файли
+      input.value = '';
       return;
     }
 

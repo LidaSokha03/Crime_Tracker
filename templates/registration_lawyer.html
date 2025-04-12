@@ -4,103 +4,104 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Форма реєстрації</title>
-    <link rel="stylesheet" href="static/registrartion.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='registrartion.css') }}">
 </head>
 <body>
     <div class="form-container">
         <div class="form-header">
             <h1 class="form-title">СТВОРИТИ ОБЛІКОВИЙ ЗАПИС</h1>
         </div>
-        
+     
+        {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% for category, message in messages %}
+                            {% if category == 'danger' %}
+                            <div class="input-error">
+                                <span class="error-text">{{ message }}</span>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endwith %}
+
         <div class="form-scrollable">
             <form id="registration-form" method="POST" action="{{ url_for('registration_lawyer') }}">
                 <div class="form-group">
-                    <label class="form-label">ПІБ</label>
-                    <input type="text" class="form-input" name="full_name" required>
+                    <label class="form-label">ПРІЗВИЩЕ</label>
+                    <input type="text" class="form-input" name="surname" required value="{{ form_data.get('surname', '') }}">
                 </div>
-
+                <div class="form-group">
+                    <label class="form-label">ІМʼЯ</label>
+                    <input type="text" class="form-input" name="name" required value="{{ form_data.get('name', '') }}">
+                </div>
                 <div class="form-group">
                     <label class="form-label">ЕЛЕКТРОННА ПОШТА</label>
-                    <input type="email" class="form-input" name="email" required>
+                    <input type="email" class="form-input" name="email" required value="{{ form_data.get('email', '') }}">
                 </div>
-
                 <div class="form-group">
                     <label class="form-label">КОНТАКТНИЙ ТЕЛЕФОН</label>
-                    <input type="tel" class="form-input" name="phone" required>
+                    <input type="tel" class="form-input" name="phone" required value="{{ form_data.get('phone', '') }}">
                 </div>
-
                 <div class="form-group">
                     <label class="form-label">СПЕЦІАЛІЗАЦІЯ</label>
-                    <input type="text" class="form-input" name="specialization" required>
+                    <input type="text" class="form-input" name="specialization" required value="{{ form_data.get('specialization', '') }}">
                 </div>
-
                 <div class="form-group">
                     <label class="form-label">МІСЦЕ ПРАЦІ</label>
-                    <input type="text" class="form-input" name="workplace" required>
+                    <input type="text" class="form-input" name="location" required value="{{ form_data.get('location', '') }}">
                 </div>
-
                 <div class="form-group">
                     <label class="form-label">РЕГІОН</label>
-                    <input type="text" class="form-input" name="location" required>
+                    <input type="text" class="form-input" name="region" required value="{{ form_data.get('region', '') }}">
                 </div>
-
                 <div class="form-group">
                     <label class="form-label">ДОСВІД РОБОТИ З ВОЄННИМИ ЗЛОЧИНЦЯМИ (РОКИ)</label>
-                    <input type="number" class="form-input" name="experience_years" required>
+                    <input type="number" class="form-input" name="experience_years" required value="{{ form_data.get('experience_years', '') }}">
                 </div>
-
                 <div class="form-group">
                     <label class="form-label">ПОСАДА</label>
-                    <input type="text" class="form-input" name="position" required>
+                    <input type="text" class="form-input" name="position" required value="{{ form_data.get('position', '') }}">
                 </div>
-
+                <div class="form-action">
+                    <button type="submit" name="send_code" value="1" class="submit-button code-button">НАДІСЛАТИ КОД</button>
+                </div>
                 <div class="form-group">
-                    <label class="form-label">ДОКУМЕНТ, ЩО ПІДТВЕРДЖУЄ КВАЛІФІКАЦІЮ</label>
-                    <div class="upload-area" id="upload-area">
-                        <img src="upload-icon.svg" alt="Upload" class="upload-icon" id="upload-icon">
-                        <p class="upload-text">Натисніть щоб завантажити</p>
-                        <img src="" alt="Preview" class="img-preview" id="img-preview">
-                        <input type="file" class="file-input" id="file-input" name="qualification_document" accept="image/*" required>
-                    </div>
+                    <label for="code">ВВЕДІТЬ КОД</label>
+                    <input type="text" id="code" name="code">
                 </div>
-
                 <div class="checkbox-container">
                     <input type="checkbox" class="checkbox-input" id="terms" required>
                     <label for="terms" class="checkbox-label">
                         Я погоджуюсь з обробкою персональних даних відповідно до політики конфіденційності
                     </label>
                 </div>
-
                 <div class="form-footer">
-                    <button type="submit" class="submit-button">ЗАРЕЄСТРУВАТИСЯ</button>
+                    <button type="submit" name="register" value="1" class="submit-button">ЗАРЕЄСТРУВАТИСЯ</button>
                 </div>
             </form>
         </div>
     </div>
 
     <script>
-        // ЦЕ ПОТІМ ТРЕБА ВИДАЛИТИ!!!
-        // Я ВСТАВИЛА ЦЕ ТІЛЬКИ ЩОБ ПОКАЗАТИ ЯК ВОНО МАЄ КЛІКАТИСЬ
-
-        // Скрипт для відображення превʼю завантаженого фото
-        document.getElementById('file-input').addEventListener('change', function(e) {
+    const fileInput = document.getElementById('file-input');
+    if (fileInput) {
+        fileInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 const preview = document.getElementById('img-preview');
                 const uploadIcon = document.getElementById('upload-icon');
                 const uploadText = document.querySelector('.upload-text');
-                
+
                 reader.onload = function(event) {
                     preview.src = event.target.result;
                     preview.style.display = 'block';
                     uploadIcon.style.display = 'none';
                     uploadText.style.display = 'none';
                 }
-                
+
                 reader.readAsDataURL(file);
             }
         });
+    }
     </script>
 </body>
 </html>

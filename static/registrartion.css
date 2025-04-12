@@ -169,3 +169,32 @@ body::before {
     padding: 10px 0;
     background-color: white;
 }
+
+
+.input-error {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #ff4d4f;
+    font-size: 0.75rem;
+    margin-top: 5px;
+  }
+=======
+.code-button {
+    width: auto; /* Автоматична ширина */
+    padding: 8px 16px; /* Менший padding */
+    font-size: 13px; /* Зменшений розмір шрифту */
+    font-weight: 500; /* Тонший шрифт */
+    background-color: #b30000; /* Трошки світліший червоний */
+    margin: 15px auto; /* Центрування кнопки */
+    display: block;
+}
+
+.input-error {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #ff4d4f;
+    font-size: 0.75rem;
+    margin-top: 5px;
+  }

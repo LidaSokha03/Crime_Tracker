@@ -1,43 +1,34 @@
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
+import sib_api_v3_sdk
+from sib_api_v3_sdk.rest import ApiException
+from pprint import pprint
 import random
 
+def send_email(to_email, subject, text, name, surname):
+    configuration = sib_api_v3_sdk.Configuration()
+    configuration.api_key['api-key'] = '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'
 
-def send_email(to_email, subject, text):
-    from_email = 'MS_4JTXDW@trial-r83ql3pwjozgzw1j.mlsender.net'
-    password = 'mssp.nlJUVvZ.z86org8o27k4ew13.PVlAkvb'
+    api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
 
-    server= "smtp.mailersend.net"
-    port= 587
-    my_server = smtplib.SMTP(server, port)
-    my_server.ehlo()
-    my_server.starttls()
+    send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
+        to=[{"email": to_email, "name": f"{name} {surname}"}],
+        template_id=None, 
+        subject=subject,
+        html_content=f"<html><body><h1>{text}</h1></body></html>",
+        text_content=text,
+        sender={"name": "Crime Tracker", "email": "crimetracker2402@gmail.com"}
+    )
 
-    my_server.login(from_email, password)
+    try:
+        response = api_instance.send_transac_email(send_smtp_email)
+        pprint(response)
+        print("Лист успішно надіслано!")
+    except ApiException as e:
+        print("Виникла помилка при надсиланні:", e)
 
-    message = MIMEMultipart("alternative")
-
-    message["From"] = from_email
-    message["To"] = to_email
-    message["Subject"] = subject
-
-    message.attach(MIMEText(text))
-
-    my_server.sendmail(
-                    from_addr= from_email,
-                    to_addrs = to_email,
-                    msg=message.as_string()
-                )
-    
-def send_email_to_recover_password(to_email, link):
-    subject = 'CRIME TRACKER'
-    text = f'Щоб скинути пароль перейдіть за посиланням:\n{link}'
-    send_email(to_email, subject, text)
-
-def send_email_to_confirm(to_email):
+def send_email_to_confirm(to_email, name, surname):
     subject = 'CRIME TRACKER'
     code = random.randint(100000, 999999)
     text = f'Ваш код для підтвердження електронної скриньки:\n{code}'
-    send_email(to_email, subject, text)
+    send_email(to_email, subject, text, name, surname)
     return code
+
