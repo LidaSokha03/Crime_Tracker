@@ -25,11 +25,13 @@
         <form id="registration-form" method="POST" action="{{ url_for('registration_applicant') }}">
                 <div class="form-group">
                     <label class="form-label">ПРІЗВИЩЕ</label>
+                    <small class="form-hint">Введіть прізвище українською</small>
                     <input type="text" class="form-input" name="surname" required value="{{ form_data.get('surname', '') }}">
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">ІМʼЯ</label>
+                    <small class="form-hint">Введіть імʼя українською</small>
                     <input type="text" class="form-input" name="name" required value="{{ form_data.get('name', '') }}">
                 </div>
 

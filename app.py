@@ -47,8 +47,7 @@ def register_as():
     '''
     return render_template('register_as.html')
 
-
-#проблема з регексом
+#✅
 @app.route('/registration_applicant', methods=['GET', 'POST'])
 def registration_applicant():
     '''
@@ -93,7 +92,7 @@ def registration_applicant():
     return render_template('registration_applicant.html', form_data={})
 
 
-#проблема з регексом
+#✅
 @app.route('/registration_lawyer', methods=['GET', 'POST'])
 def registration_lawyer():
     '''
@@ -107,10 +106,14 @@ def registration_lawyer():
             if database.find_user_by_email(email):
                 flash('Ця пошта вже використовується!', 'danger')
                 return render_template('registration_lawyer.html', form_data=request.form)
+            company_code = request.form.get('company_code')
+            if company_code != 'secret_company_code':
+                flash('Невірний код компанії.', 'danger')
+                return render_template('registration_lawyer.html', form_data=request.form)
             code = send_email.send_email_to_confirm(email, request.form['name'], request.form['surname'])
             session['confirmation_code'] = code
             session['email'] = email
-            flash('Код надіслано на вашу пошту.', 'info')
+            flash('Код надіслано на вашу пошту.', 'success')
             return render_template('registration_lawyer.html', form_data=request.form)
         elif 'register' in request.form:
             code_from_page = request.form.get('code', '').strip()
@@ -127,7 +130,8 @@ def registration_lawyer():
                 "location": request.form['location'],
                 "experience_years": request.form['experience_years'],
                 "position": request.form['position'],
-                "submitter_type": 'secret'
+                "submitter_type": 'secret',
+                "company_code": request.form['company_code']
             }
             try:
                 user_ = user.Lawyer(
@@ -173,6 +177,7 @@ def password():
                 userid = database.add_applicant(user_data)
             if userid:
                 session.pop('user_data', None)
+                flash('Ви зареєстровані! Увійдіть в свій акаунт', 'success')
                 return redirect(url_for('home'))
             else:
                 return 'User not added'
@@ -492,4 +497,4 @@ def get_image(crime_id):
     return 'Зображення не знайдено', 404
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=8000)

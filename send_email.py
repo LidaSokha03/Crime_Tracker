@@ -5,7 +5,7 @@ import random
 
 def send_email(to_email, subject, text, name, surname):
     configuration = sib_api_v3_sdk.Configuration()
-    configuration.api_key['api-key'] = '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'
+    configuration.api_key['api-key'] = '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'
 
     api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
 
