@@ -330,15 +330,14 @@ def confirm_password():
                 return redirect(url_for('profile'))
     return render_template('confirm_password.html')
 
-#кнопки зі злочинами (шось придумати)
-#виведення інфромації про злочини негарне (зробити таке ж як і в crimes)
+
+#✅
 @app.route('/analyst_page')
 def analyst_page():
     docs = list(database.unvalid_crimes_collection.find())
     crimes = []
     for doc in docs:
         images = []
-
         if 'files' in doc and isinstance(doc['files'], list):
             for file in doc['files']:
                 try:
