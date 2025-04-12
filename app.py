@@ -5,7 +5,7 @@ from bson.binary import Binary
 import certifi
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
-from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, Response
 from bson import ObjectId
 import database
 from classes import user
@@ -305,7 +305,7 @@ def forgotten_password():
     return render_template('forgotten_password.html', form_data={})
 
 
-#додати вспливашку про успішно змінений пароль
+#✅
 @app.route('/confirm_password', methods=['GET', 'POST'])
 def confirm_password():
     '''
@@ -324,16 +324,15 @@ def confirm_password():
             if new_password != confirm_pass:
                 flash('Паролі не співпадають.', 'error')
                 return render_template('confirm_password.html')
-
             if new_password == confirm_pass:
                 email = user['email']
                 database.update_users_password(email, new_password)
+                flash('Пароль успішно змінено!', 'success')
                 return redirect(url_for('profile'))
     return render_template('confirm_password.html')
 
 #кнопки зі злочинами (шось придумати)
 #виведення інфромації про злочини негарне (зробити таке ж як і в crimes)
-#пістон з фотками
 @app.route('/analyst_page')
 def analyst_page():
     docs = list(database.unvalid_crimes_collection.find())
@@ -345,15 +344,12 @@ def analyst_page():
             for file in doc['files']:
                 try:
                     file_data = file.get('data')
-                    content_type = file.get('content_type')
+                    content_type = file.get('content_type', 'image/jpeg')
                     if not file_data or not content_type:
                         continue
                     if isinstance(file_data, Binary):
                         file_data = bytes(file_data)
-                    elif isinstance(file_data, str):
-                        file_data = file_data.encode('latin1')
-                    if not isinstance(file_data, bytes):
-                        continue
+
                     encoded = base64.b64encode(file_data).decode('utf-8')
                     image_url = f"data:{content_type};base64,{encoded}"
                     images.append(image_url)
@@ -375,9 +371,8 @@ def analyst_page():
         crimes.append(crime_data)
     return render_template('analyst_page.html', crimes=crimes)
 
-#вспливаюче вікно про успішну подачу
+
 #додати валідацію на заповненість полів
-#пістон з фотками
 @app.route('/crime_report', methods=['GET', 'POST'])
 def crime_report():
     '''
@@ -389,6 +384,7 @@ def crime_report():
         crime_info = {
             'applicant': request.form['applicant'],
             'applicant_number': request.form['phone'],
+            'region': request.form['region'],
             'location': request.form['location'],
             'date': request.form['date'],
             'description': request.form['description'],
@@ -402,6 +398,7 @@ def crime_report():
         crime_ = crime.Crime(
             crime_info['applicant'],
             crime_info['applicant_number'],
+            crime_info['region'],
             crime_info['location'],
             crime_info['date'],
             crime_info['description'],
@@ -411,7 +408,9 @@ def crime_report():
             crime_info['vict_info'])
         crime_ = crime_.to_dict()
         act = database.crime_report(crime_)
-        return redirect(url_for('crime_report'))
+        if act:
+            flash('Звіт про злочин успішно подано!', 'success')
+            return redirect(url_for('home_page'))
     return render_template('crime_report.html')
 
 
@@ -478,6 +477,12 @@ def search_cities():
 
     return jsonify({"cities": filtered})
 
+@app.route('/image/<crime_id>')
+def get_image(crime_id):
+    crime = database.unvalid_crimes_collection.find_one({'_id': ObjectId(crime_id)})
+    if crime and 'images' in crime and len(crime['images']) > 0:
+        return Response(crime['images'][0], mimetype='image/jpeg')
+    return 'Зображення не знайдено', 404
 
 if __name__ == '__main__':
     app.run(debug=True)

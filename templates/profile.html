@@ -18,6 +18,15 @@
         <div class="profile-header">
             <!-- <img src="profile-icon.svg" alt="Profile Icon" class="profile-icon"> -->
         </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div id="flash-container">
+                {% for category, message in messages %}
+                <div class="flash-message flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+                </div>
+            {% endif %}
+            {% endwith %}
         <div class="profile-box">
             <h1>Персональний кабінет</h1>
             <div class="profile-info">
@@ -46,3 +55,13 @@
     </div>
 </body>
 </html>
+
+<script>
+    setTimeout(() => {
+      const flashes = document.querySelectorAll('.flash-message');
+      flashes.forEach(el => {
+        el.style.opacity = '0';
+        setTimeout(() => el.remove(), 500);
+      });
+    }, 2000);
+  </script>

@@ -11,6 +11,15 @@
     <link rel="stylesheet" href="static/home_page_style.css">
 </head>
 <body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div id="flash-container">
+            {% for category, message in messages %}
+            <div class="flash-message flash-{{ category }}">{{ message }}</div>
+            {% endfor %}
+            </div>
+        {% endif %}
+        {% endwith %}
     <header>
         <div class="navigation">
             <h1>SVI.DOC</h1>
@@ -513,3 +522,13 @@
     </main>
 </body>
 </html>
+
+<script>
+    setTimeout(() => {
+      const flashes = document.querySelectorAll('.flash-message');
+      flashes.forEach(el => {
+        el.style.opacity = '0';
+        setTimeout(() => el.remove(), 500);
+      });
+    }, 3000);
+  </script>
