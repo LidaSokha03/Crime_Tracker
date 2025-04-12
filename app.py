@@ -446,9 +446,18 @@ def confirmation_of_crimes():
             database.unvalid_crimes_collection.delete_one({"_id": ObjectId(crime_id)})
             session.pop('crime_id', None)
             return redirect(url_for('analyst_page'))
-
+    images = []
+    for file in crime.get('files', []):
+        data = file.get('data')
+        content_type = file.get('content_type', 'image/jpeg')
+        if data:
+            if isinstance(data, Binary):
+                data = bytes(data)
+            encoded = base64.b64encode(data).decode('utf-8')
+            image_url = f"data:{content_type};base64,{encoded}"
+            images.append(image_url)
+    crime['image_urls'] = images
     return render_template('confirmation_of_crimes.html', crime=crime)
-
 
 
 ##########################################
