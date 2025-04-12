@@ -56,7 +56,7 @@
 <body>
     <div class="content">
         <header>
-            <h1>Сторінка Судового Аналітика</h1>
+            <h1 class="page-title">Сторінка Судового Аналітика</h1>
             <div class="subheader">
         </div>
         </header>
@@ -95,14 +95,33 @@
     </div>
 
     <script>
-        document.querySelectorAll(".details-btn").forEach((btn) => {
-            btn.addEventListener("click", function() {
-                const detailsText = this.nextElementSibling;
-                detailsText.classList.toggle("hidden");
-                this.textContent = detailsText.classList.contains("hidden") ? "Детальніше" : "Приховати";
-            });
+ document.addEventListener("DOMContentLoaded", function() {
+    // Прив'язуємо обробник подій до всіх кнопок "Детальніше"
+    document.querySelectorAll(".details-btn").forEach((btn) => {
+        btn.addEventListener("click", function(e) {
+            // Запобігаємо відправці форми
+            e.preventDefault();
+            
+            // Знаходимо батьківську картку злочину
+            const card = this.closest(".crime-card");
+            
+            // Знаходимо елементи з коротким та повним описом
+            const shortDesc = card.querySelector(".short-desc");
+            const fullDesc = card.querySelector(".full-desc");
+            
+            // Перемикаємо видимість
+            if (fullDesc.classList.contains("hidden")) {
+                shortDesc.style.display = "none";
+                fullDesc.classList.remove("hidden");
+                this.textContent = "Приховати";
+            } else {
+                shortDesc.style.display = "block";
+                fullDesc.classList.add("hidden");
+                this.textContent = "Детальніше";
+            }
         });
-
+    });
+});
         document.querySelectorAll(".toggle-btn").forEach((btn) => {
             btn.addEventListener("click", function() {
 
@@ -118,32 +137,6 @@
                         card.style.display = "none";
                     }
                 });
-            });
-        });
-    </script>
-    <script>
-        document.querySelectorAll(".details-btn").forEach((btn) => {
-            btn.addEventListener("click", function () {
-                const card = this.closest(".crime-card");
-                const shortDesc = card.querySelector(".short-desc");
-                const fullDesc = card.querySelector(".full-desc");
-                const extraInfo = card.querySelector(".details-text");
-    
-                const isHidden = fullDesc.classList.contains("hidden");
-
-                if (isHidden) {
-                    shortDesc.style.display = "none";
-                    fullDesc.classList.remove("hidden");
-                    this.textContent = "Приховати";
-                } else {
-                    shortDesc.style.display = "block";
-                    fullDesc.classList.add("hidden");
-                    this.textContent = "Детальніше";
-                }
-
-                if (extraInfo) {
-                    extraInfo.classList.toggle("hidden", isHidden);
-                }
             });
         });
     </script>

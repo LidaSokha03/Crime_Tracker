@@ -130,7 +130,9 @@ h1 {
     z-index: 0;
 } */
 
-
+.page-title{
+    font-family: Impact, fantasy;
+}
 * {
     margin: 0;
     padding: 0;
