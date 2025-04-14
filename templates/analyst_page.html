@@ -79,16 +79,13 @@
                     <p><strong>Зброя, якою завданий злочин:</strong> {{ crime.weapon_type }}</p>
                     <p><strong>Місто:</strong> {{ crime.location }}</p>
                     <p><strong>К-сть загиблих і поранених:</strong> {{ crime.victims }}</p>
-                    <p><strong>Опис злочину:</strong></p>
-                    <p class="short-desc">{{ crime.description[:100] }}{% if crime.description|length > 100 %}...{% endif %}</p>
-                    <p class="full-desc hidden">{{ crime.description }}</p>
-                    <div class="button-container">
-                        <button class="details-btn">Детальніше</button>
-                        <form method="POST" action="{{ url_for('select_crime', crime_id=crime['_id']) }}">
-                            <button type="submit" class="more-button">Підтвердження</button>
-                          </form>
-                      </div>
+                    <p><strong>Опис злочину:</strong> {{ crime.description }}</p>
+                    
+                    <form method="POST" action="{{ url_for('select_crime', crime_id=crime['_id']) }}" class="button-container">
+                        <button type="submit" class="more-button">Підтвердження</button>
+                    </form>
                 </div>
+                <!-- </div> -->
             </div>
             {% endfor %}
         </div>
@@ -121,7 +118,7 @@
             });
         });
     </script>
-    <script>
+    <!-- <script>
         document.querySelectorAll(".details-btn").forEach((btn) => {
             btn.addEventListener("click", function () {
                 const card = this.closest(".crime-card");
@@ -146,7 +143,7 @@
                 }
             });
         });
-    </script>
+    </script> -->
     
     
 </body>
