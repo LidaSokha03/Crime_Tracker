@@ -185,3 +185,47 @@ body {
     padding-top: 50px;
 }
 
+.crime-info {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+}
+
+.more-button {
+    background-color: #000;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+.more-button:hover {
+    background-color: #333;
+}
+
+.button-container {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+}
+
+.crime-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    position: relative;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+}
