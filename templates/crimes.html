@@ -37,10 +37,10 @@
                                 <strong>Дата:</strong>
                                 <span>{{ crime.date }}</span>
                             </div>
-                            <div class="detail">
+                            <!-- <div class="detail">
                                 <strong>Область:</strong>
                                 <span>{{ crime.region }}</span>
-                            </div>
+                            </div> -->
                             <div class="detail">
                                 <strong>Населений пункт:</strong>
                                 <span>{{ crime.location }}</span>
@@ -50,7 +50,7 @@
                                 <span>{{ crime.victims }}</span>
                             </div>
                             <div class="detail">
-                                <strong>Інформація про жертв:</strong>
+                                <strong>Інформація про жертви:</strong>
                                 <span>{{ crime.vict_info }}</span>
                             </div>
                         </div>
@@ -152,7 +152,6 @@
                             <option value="Crimson" {% if filters['weapon_type'] == 'Crimson' %}selected{% endif %}>Crimson</option>
                             <option value="Штурм-СМ" {% if filters['weapon_type'] == 'Штурм-СМ' %}selected{% endif %}>Штурм-СМ</option>
                         </select>
-                    </div>
                     </div>
                 </div>
                 <button type="submit" class="filter-apply-btn">Застосувати фільтри</button>
