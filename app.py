@@ -16,6 +16,8 @@ import database
 from classes import user
 from classes import crime
 import send_email
+from locations import cities_from_files
+#проблема з send_email
 
 
 app = Flask(__name__)
@@ -206,15 +208,49 @@ def profile():
         return redirect(url_for('register_as'))
 
 
-#фільтрація
+
+#все полетіло
 @app.route('/crimes', methods=['GET', 'POST'])
 def crimes():
     '''
     This function handles the crime report page.
     It retrieves the list of crimes from the database and renders the 'crimes.html' template.
     '''
-    docs = list(database.valid_crimes_collection.find())
+
+    cities = []
     crimes = []
+    show_filters = request.method == 'POST' and request.form.get('apply_filters') != 'true'
+
+    if request.form.get('city') and not request.form.get('region'):
+        flash('Оберіть область', 'danger')
+        return render_template('crimes.html', crimes=crimes, cities=cities, show_filters=show_filters)
+    
+
+    if request.form.get('region'):
+        if request.form.get('city'):
+            cities = cities_from_files.search_cities(request.form.get('region'), request.form.get('city'))
+        else:
+            cities = cities_from_files.region_to_cities(request.form.get('region'))
+
+    filters = {'date_from': None,
+                'date_to': None,
+                'region': None,
+                'location': None, 
+                'weapon_type': None}
+    
+
+    for filtr in filters.keys():
+        filters[filtr] = request.form.get(filtr)
+    
+    if request.method == 'POST' and request.form.get('apply_filters') == 'true':
+        filters_for_bd = {key: value for key, value in filters.items() if value is not None and value != '' and 'date' not in key}
+        docs = list(database.valid_crimes_collection.find(filters_for_bd))
+    else:
+        docs = list(database.valid_crimes_collection.find())
+    
+    if not docs:
+        flash('Злочини з такими фільтрами не знайдені', 'danger')
+        return render_template('crimes.html', crimes=crimes, cities=cities, filters=filters, show_filters=show_filters)
 
     for doc in docs:
         images = []
@@ -242,6 +278,7 @@ def crimes():
             '_id': str(doc['_id']),
             'applicant': doc.get('applicant', ''),
             'applicant_number': doc.get('applicant_number', ''),
+            'region': doc.get('region', ''),
             'location': doc.get('location', ''),
             'date': doc.get('date', ''),
             'weapon_type': doc.get('weapon_type', ''),
@@ -252,6 +289,9 @@ def crimes():
         }
         crimes.append(crime_data)
     return render_template('crimes.html', crimes=crimes)
+
+
+
 
 
 #✅
@@ -489,27 +529,6 @@ def select_crime(crime_id):
     session['crime_id'] = crime_id
     return redirect(url_for('confirmation_of_crimes'))
 
-
-def region_to_cities(region):
-    '''
-    This function retrieves the list of cities for a given region from a CSV file.
-    '''
-    file_name = region + '.csv'
-    return [f'{t} {n}' for t, n in csv.reader(file_name, delimiter=',')]
-
-
-@app.route("/filter-section", methods=["GET", 'POST'])
-def search_cities():
-    '''
-    This function handles the search for cities based on the selected region and query.
-    '''
-    region = request.args.get("region")
-    query = request.args.get("query", "").lower()
-
-    cities = region_to_cities(region)
-    filtered = [city for city in cities if city.lower().split()[1].startswith(query)]
-
-    return jsonify({"cities": filtered})
 
 @app.route('/image/<crime_id>')
 def get_image(crime_id):
