@@ -133,9 +133,25 @@
         <div id="fileList" class="file-preview"></div>
       </div>
       
-      <div class="form-field">
-        <input type="text" name="weapon" placeholder="Тип зброї, якою був вчинений злочин (якщо відомо)">
-      </div>
+      <div class="form-field"><div class="filter-section"><div class="weapon_cl">
+        <select name="weapon" required>
+          <option value="" disabled selected>Оберіть зброю</option>
+          <option value="Шахед-136">Шахед-136</option>
+          <option value="Кинджал">Кинджал</option>
+          <option value="Іскандер">Іскандер</option>
+          <option value="Калібр">Калібр</option>
+          <option value="С-300">С-300</option>
+          <option value="С-400">С-400</option>
+          <option value="Х-101">Х-101</option>
+          <option value="Х-55">Х-55</option>
+          <option value="Торнадо">Торнадо</option>
+          <option value='Ракета "Оса"'> Ракета "Оса"</option>
+          <option value="Crimson">Crimson</option>
+          <option value="Штурм-СМ">Штурм-СМ</option>
+          <option value="-">-</option>
+        </select>
+      </div></div></div>
+        <!-- <input type="text" name="weapon" placeholder="Тип зброї, якою був вчинений злочин (якщо відомо)"> -->
       
       <div class="form-field">
         <input type="number" name="victims" placeholder="Кількість поранених, жертв">
