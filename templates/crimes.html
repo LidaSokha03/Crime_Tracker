@@ -20,14 +20,14 @@
     <div class="content">
         <div class="crimes-grid">
             {% with messages = get_flashed_messages(with_categories=true) %}
-                        {% for category, message in messages %}
-                            {% if category == 'danger' %}
-                            <div class="input-error">
-                                <span class="error-text">{{ message }}</span>
-                            </div>
-                            {% endif %}
-                        {% endfor %}
-                    {% endwith %}
+                {% for category, message in messages %}
+                    {% if category == 'danger' %}
+                    <div class="input-error">
+                        <span class="error-text">{{ message }}</span>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            {% endwith %}
             {% for crime in crimes %}
             <div class="crime-card">
                 <div class="crime-content">
@@ -93,7 +93,7 @@
                     <div class="filter-section">
                         <h3>Період</h3>
                         <input type="date" name="date_from" value="{{ filters['date_from'] if filters['date_from'] else '' }}">
-                    <input type="date" name="date_to" value="{{ filters['date_to'] if filters['date_to'] else '' }}">
+                        <input type="date" name="date_to" value="{{ filters['date_to'] if filters['date_to'] else '' }}">
                     </div>
                     <div class="filter-section">
                         <h3>Локація</h3>
@@ -125,7 +125,7 @@
                             <option value="Чернігівська" {% if filters['region'] == 'Чернігівська' %}selected{% endif %}>Чернігівська</option>
                         </select>
                         <div class="input-with-button">
-                            <input type="text" name="city" placeholder="Почніть вводити назву населеного пункту" ">
+                            <input type="text" name="city" placeholder="Почніть вводити назву населеного пункту">
                             <button type="submit" class="city-apply-btn">+</button>
                         </div>
                         <select name="location">
@@ -222,11 +222,6 @@
             }
         });
 
-        filterApplyBtn.addEventListener('click', () => {
-            // Тут може бути обробка форми, але для прикладу просто закриваємо вікно
-            filtersModal.style.display = 'none';
-        });
-
         // Галерея зображень (для майбутньої реалізації)
         document.querySelectorAll('.prev-btn, .next-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -238,9 +233,9 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             {% if show_filters %}
-                document.querySelector('.filters-modal').style.display = 'block';
+                document.querySelector('.filters-modal').style.display = 'flex';
             {% endif %}
         });
-        </script>
+    </script>
 </body>
 </html>
