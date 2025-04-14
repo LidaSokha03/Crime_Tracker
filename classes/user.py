@@ -10,7 +10,7 @@ class User:
     def __init__(self, surname, name, email, phone_number):
         self.surname = surname
         self.name = name
-        # assert self.validate_name(), 'Некоректне імʼя'
+        assert self.validate_name(), 'Некоректне імʼя'
         self.email = email.strip()
         assert self.validate_email(), 'Некоректний email'
         self.phone_number = phone_number.strip()
@@ -19,13 +19,36 @@ class User:
 
     def validate_name(self):
         ''' validates name '''
-        pattern = r'^(([A-ZА-Я][a-zа-я]{1,29})\s{0,})+$'
-        return bool(re.match(pattern, self.name))
+        accepted = 'ЙЦУКЕНГШЩЗХЇФІВАПРОЛДЖЄЯЧСМИТЬБЮҐйцукенгшщзхїфівапролджєячесмитьбюґ -'
+        accepted_capitals = 'ЙЦУКЕНГШЩЗХЇФІВАПРОЛДЖЄЯЧСМИТЬБЮҐ'
+        name_ = self.name.split('-')
+        for name_part in name_:
+            if name_part[0] not in accepted_capitals:
+                return False
+        for name_part in name_:
+            for char in name_part:
+                if char not in accepted:
+                    return False
+        if len(self.name) > 30:
+            return False
+        return True
+
 
     def validate_surname(self):
         ''' validates surname '''
-        pattern = r'^(([A-ZА-Я][a-zа-я]{1,29})\s{0,})+$'
-        return bool(re.match(pattern, self.surname))
+        accepted = 'ЙЦУКЕНГШЩЗХЇФІВАПРОЛДЖЄЯЧСМИТЬБЮҐйцукенгшщзхїфівапролджєячесмитьбюґ -'
+        accepted_capitals = 'ЙЦУКЕНГШЩЗХЇФІВАПРОЛДЖЄЯЧСМИТЬБЮҐ'
+        name_ = self.surname.split('-')
+        for name_part in name_:
+            if name_part[0] not in accepted_capitals:
+                return False
+        for name_part in name_:
+            for char in name_part:
+                if char not in accepted:
+                    return False
+        if len(self.name) > 30:
+            return False
+        return True
 
     def validate_email(self):
         ''' validates email '''

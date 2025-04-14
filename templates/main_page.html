@@ -21,6 +21,15 @@
                 </div>                
                 <div class="right-links">
                     <a href="{{ url_for('login') }}" class="action-button">Увійти</a>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div id="flash-container">
+                        {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                    {% endwith %}
             </div>
         </div>
     </header>
@@ -520,5 +529,14 @@
         </div>
 
     </main>
+    <script>
+        setTimeout(() => {
+          const flashes = document.querySelectorAll('.flash-message');
+          flashes.forEach(el => {
+            el.style.opacity = '0';
+            setTimeout(() => el.remove(), 500);
+          });
+        }, 2000);
+      </script>
 </body>
 </html>

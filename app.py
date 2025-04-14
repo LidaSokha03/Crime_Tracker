@@ -1,12 +1,17 @@
+'''
+This is a Flask application for a crime tracking system.
+It allows users to register as applicants or lawyers, report crimes, and manage their profiles.
+The application uses MongoDB for data storage
+'''
 import csv
 import logging
 import base64
+from bson import ObjectId
 from bson.binary import Binary
 import certifi
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, Response
-from bson import ObjectId
 import database
 from classes import user
 from classes import crime
@@ -49,8 +54,7 @@ def register_as():
     '''
     return render_template('register_as.html')
 
-
-#проблема з регексом
+#✅
 @app.route('/registration_applicant', methods=['GET', 'POST'])
 def registration_applicant():
     '''
@@ -95,7 +99,7 @@ def registration_applicant():
     return render_template('registration_applicant.html', form_data={})
 
 
-#проблема з регексом
+#✅
 @app.route('/registration_lawyer', methods=['GET', 'POST'])
 def registration_lawyer():
     '''
@@ -109,10 +113,14 @@ def registration_lawyer():
             if database.find_user_by_email(email):
                 flash('Ця пошта вже використовується!', 'danger')
                 return render_template('registration_lawyer.html', form_data=request.form)
+            company_code = request.form.get('company_code')
+            if company_code != 'secret_company_code':
+                flash('Невірний код компанії.', 'danger')
+                return render_template('registration_lawyer.html', form_data=request.form)
             code = send_email.send_email_to_confirm(email, request.form['name'], request.form['surname'])
             session['confirmation_code'] = code
             session['email'] = email
-            flash('Код надіслано на вашу пошту.', 'info')
+            flash('Код надіслано на вашу пошту.', 'success')
             return render_template('registration_lawyer.html', form_data=request.form)
         elif 'register' in request.form:
             code_from_page = request.form.get('code', '').strip()
@@ -129,7 +137,8 @@ def registration_lawyer():
                 "location": request.form['location'],
                 "experience_years": request.form['experience_years'],
                 "position": request.form['position'],
-                "submitter_type": 'secret'
+                "submitter_type": 'secret',
+                "company_code": request.form['company_code']
             }
             try:
                 user_ = user.Lawyer(
@@ -175,6 +184,7 @@ def password():
                 userid = database.add_applicant(user_data)
             if userid:
                 session.pop('user_data', None)
+                flash('Ви зареєстровані! Увійдіть в свій акаунт', 'success')
                 return redirect(url_for('home'))
             else:
                 return 'User not added'
@@ -278,14 +288,13 @@ def crimes():
             'image_url': images[0] if images else None
         }
         crimes.append(crime_data)
-    return render_template('crimes.html', crimes=crimes, cities=cities, show_filters=show_filters, filters=filters)
+    return render_template('crimes.html', crimes=crimes)
 
 
 
 
 
 #✅
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     '''
@@ -371,15 +380,18 @@ def confirm_password():
                 return redirect(url_for('profile'))
     return render_template('confirm_password.html')
 
-#кнопки зі злочинами (шось придумати)
-#виведення інфромації про злочини негарне (зробити таке ж як і в crimes)
+
+#✅
 @app.route('/analyst_page')
 def analyst_page():
+    '''
+    This function handles the analyst page.
+    It retrieves the list of unvalidated crimes from the database and renders the 'analyst_page.html' template.
+    '''
     docs = list(database.unvalid_crimes_collection.find())
     crimes = []
     for doc in docs:
         images = []
-
         if 'files' in doc and isinstance(doc['files'], list):
             for file in doc['files']:
                 try:
@@ -462,10 +474,14 @@ def home_page():
     '''
     return render_template('home_page.html')
 
-#передавання локації поміняти
-#мейбі показувати фотки злочину
+
+#✅
 @app.route('/confirmation_of_crimes', methods=['GET', 'POST'])
 def confirmation_of_crimes():
+    '''
+    This function handles the confirmation of crimes.
+    It retrieves the crime data from the session and renders the 'confirmation_of_crimes.html' template.
+    '''
     crime_id = session.get('crime_id')
     if not crime_id:
         return redirect(url_for('analyst_page'))
@@ -488,9 +504,18 @@ def confirmation_of_crimes():
             database.unvalid_crimes_collection.delete_one({"_id": ObjectId(crime_id)})
             session.pop('crime_id', None)
             return redirect(url_for('analyst_page'))
-
+    images = []
+    for file in crime.get('files', []):
+        data = file.get('data')
+        content_type = file.get('content_type', 'image/jpeg')
+        if data:
+            if isinstance(data, Binary):
+                data = bytes(data)
+            encoded = base64.b64encode(data).decode('utf-8')
+            image_url = f"data:{content_type};base64,{encoded}"
+            images.append(image_url)
+    crime['image_urls'] = images
     return render_template('confirmation_of_crimes.html', crime=crime)
-
 
 
 ##########################################
@@ -498,16 +523,22 @@ def confirmation_of_crimes():
 ##########################################
 @app.route('/select_crime/<crime_id>', methods=['POST'])
 def select_crime(crime_id):
+    '''
+    This function handles the selection of a crime for confirmation.
+    '''
     session['crime_id'] = crime_id
     return redirect(url_for('confirmation_of_crimes'))
 
 
 @app.route('/image/<crime_id>')
 def get_image(crime_id):
+    '''
+    This function retrieves the first image of a crime from the database.
+    '''
     crime = database.unvalid_crimes_collection.find_one({'_id': ObjectId(crime_id)})
     if crime and 'images' in crime and len(crime['images']) > 0:
         return Response(crime['images'][0], mimetype='image/jpeg')
     return 'Зображення не знайдено', 404
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=8000)
