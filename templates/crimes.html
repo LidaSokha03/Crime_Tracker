@@ -37,10 +37,10 @@
                                 <strong>Дата:</strong>
                                 <span>{{ crime.date }}</span>
                             </div>
-                            <!-- <div class="detail">
+                            <div class="detail">
                                 <strong>Область:</strong>
                                 <span>{{ crime.region }}</span>
-                            </div> -->
+                            </div>
                             <div class="detail">
                                 <strong>Населений пункт:</strong>
                                 <span>{{ crime.location }}</span>
@@ -55,12 +55,6 @@
                             </div>
                         </div>
                         <p class="description">{{ crime.description }}</p>
-                        <button class="details-btn">Детальніше</button>
-                        <div class="details-text" style="display: none;">
-                            <p>{{ crime.extra_info_1 }}</p>
-                            <p>{{ crime.extra_info_2 }}</p>
-                            <p>{{ crime.extra_info_3 }}</p>
-                        </div>
                     </div>
                     <div class="image-container">
                         {% if crime.image_url %}

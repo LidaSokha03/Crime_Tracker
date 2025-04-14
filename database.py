@@ -3,7 +3,7 @@ from pymongo.server_api import ServerApi
 from pymongo.errors import PyMongoError
 from bson import ObjectId
 import bcrypt
-
+# from datetime import datetime
 
 
 url = "mongodb+srv://lidasokha:lidasokha0303@cluster0.20mu9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0&tls=true"
@@ -11,6 +11,8 @@ client = MongoClient(url, server_api=ServerApi('1'))
 db = client["crime_tracker_db"]
 
 valid_crimes_collection = db["valid_crimes"]
+# for new_crime in valid_crimes_collection.find():
+#     new_crime['date'] = datetime.strptime(new_crime['date'], "%Y-%m-%d")
 unvalid_crimes_collection = db['unvalid_crimes']
 lawyers_collection = db["lawyer"]
 applicants_collection = db["applicant"]
