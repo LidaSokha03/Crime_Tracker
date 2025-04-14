@@ -17,6 +17,7 @@ from classes import user
 from classes import crime
 import send_email
 from locations import cities_from_files
+from datetime import datetime
 #проблема з send_email
 
 
@@ -238,21 +239,42 @@ def crimes():
                 'location': None, 
                 'weapon_type': None}
     
-
-    for filtr in filters.keys():
-        filters[filtr] = request.form.get(filtr)
+    if request.form.get('date_from'):
+        filters['date_from'] = datetime.strptime(request.form.get('date_from'), "%Y-%m-%d")
+    if request.form.get('date_to'):
+        filters['date_to'] = datetime.strptime(request.form.get('date_to'), "%Y-%m-%d")
+    filters['region'] = request.form.get('region')
+    if request.form.get('location'):
+        filters['location'] = request.form.get('location').strip(request.form.get('location').split()[0]).strip()
+    filters['weapon_type'] = request.form.get('weapon_type')
+    
     
     if request.method == 'POST' and request.form.get('apply_filters') == 'true':
+        print('reached here')
         filters_for_bd = {key: value for key, value in filters.items() if value is not None and value != '' and 'date' not in key}
+        date_filter = {}
+        if filters['date_from']:
+            date_filter["$gte"] = filters['date_from']
+        if filters['date_to']:
+            date_filter["$lte"] = filters['date_to']
+        if date_filter:
+            filters_for_bd["date"] = date_filter
+
+        print(filters_for_bd)
         docs = list(database.valid_crimes_collection.find(filters_for_bd))
     else:
         docs = list(database.valid_crimes_collection.find())
     
     if not docs:
-        flash('Злочини з такими фільтрами не знайдені', 'danger')
+        if request.form.get('apply_filters') == 'true':
+            flash('Злочини з такими фільтрами не знайдені', 'danger')
+        else:
+            flash('Злочини не знайдені', 'danger')
         return render_template('crimes.html', crimes=crimes, cities=cities, filters=filters, show_filters=show_filters)
 
+
     for doc in docs:
+        print(type(doc['date']))
         images = []
 
         if 'files' in doc and isinstance(doc['files'], list):
@@ -288,7 +310,7 @@ def crimes():
             'image_url': images[0] if images else None
         }
         crimes.append(crime_data)
-    return render_template('crimes.html', crimes=crimes)
+    return render_template('crimes.html', crimes=crimes, cities=cities, filters=filters, show_filters=show_filters)
 
 
 
