@@ -11,6 +11,7 @@ import database
 from classes import user
 from classes import crime
 import send_email
+from locations import cities_from_files
 #проблема з send_email
 
 
@@ -196,15 +197,6 @@ def profile():
     else:
         return redirect(url_for('register_as'))
 
-#зробити фільтраціюююю
-def region_to_cities(region):
-    file_name = 'locations/' + region + '.csv'
-    with open(file_name, 'r', encoding='utf-8') as file_name:
-        return sorted([f'{t} {n}' for t, n in csv.reader(file_name, delimiter=',')], key=lambda x: x.split()[1])
-
-def search_cities(region, beginning):
-    cities = region_to_cities(region)
-    return [city for city in cities if city.lower().split()[1].startswith(beginning.lower())]
 
 
 #все полетіло
@@ -217,18 +209,18 @@ def crimes():
 
     cities = []
     crimes = []
-    show_filters = request.method == 'POST' and request.form.get('apply_filters') != 'true' and request.form.get('location')
+    show_filters = request.method == 'POST' and request.form.get('apply_filters') != 'true'
 
     if request.form.get('city') and not request.form.get('region'):
         flash('Оберіть область', 'danger')
-        return render_template('crimes.html', crimes=crimes, cities=cities)
+        return render_template('crimes.html', crimes=crimes, cities=cities, show_filters=show_filters)
     
 
     if request.form.get('region'):
         if request.form.get('city'):
-            cities = search_cities(request.form.get('region'), request.form.get('city'))
+            cities = cities_from_files.search_cities(request.form.get('region'), request.form.get('city'))
         else:
-            cities = region_to_cities(request.form.get('region'))
+            cities = cities_from_files.region_to_cities(request.form.get('region'))
 
     filters = {'date_from': None,
                 'date_to': None,
@@ -240,15 +232,15 @@ def crimes():
     for filtr in filters.keys():
         filters[filtr] = request.form.get(filtr)
     
-    filters_for_bd = {key: value for key, value in filters.items() if value is not None and value != '' and 'date' not in key}
-
-
-    docs = list(database.valid_crimes_collection.find(filters_for_bd))
-    for c in docs:
-        print(c['weapon_type'])
+    if request.method == 'POST' and request.form.get('apply_filters') == 'true':
+        filters_for_bd = {key: value for key, value in filters.items() if value is not None and value != '' and 'date' not in key}
+        docs = list(database.valid_crimes_collection.find(filters_for_bd))
+    else:
+        docs = list(database.valid_crimes_collection.find())
+    
     if not docs:
         flash('Злочини з такими фільтрами не знайдені', 'danger')
-        return render_template('crimes.html', crimes=crimes, cities=cities, filters=filters)
+        return render_template('crimes.html', crimes=crimes, cities=cities, filters=filters, show_filters=show_filters)
 
     for doc in docs:
         images = []
