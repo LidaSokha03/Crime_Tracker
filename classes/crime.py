@@ -1,3 +1,5 @@
+from datetime import datetime
+
 class Crime:
     '''
     ...
@@ -13,6 +15,13 @@ class Crime:
         self.weapon_type = weapon_type
         self.victims = victims
         self.vict_info = vict_info
+
+    @property
+    def date(self):
+        return self._date
+    @date.setter
+    def date(self, value):
+        self._date = datetime.strptime(value, "%Y-%m-%d")
 
     def to_dict(self):
         return {
