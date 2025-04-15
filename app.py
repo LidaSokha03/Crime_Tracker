@@ -466,6 +466,7 @@ def crime_report():
             'victims': None,
             'vict_info': None}
     cities = []
+    is_required = request.method == 'POST' and request.form.get('location')
 
     if request.method == 'POST' and request.form.get('report_crime') != 'true':
         if request.form.get('region'):
@@ -487,7 +488,7 @@ def crime_report():
             'weapon_type': request.form.get('weapon'),
             'victims': request.form.get('victims'),
             'vict_info': request.form.get('vict_info')}
-        return render_template('crime_report.html', crime_info=crime_info, cities=cities, is_required = True)
+        return render_template('crime_report.html', crime_info=crime_info, cities=cities, is_required = is_required)
 
     if request.method == 'POST' and request.form.get('report_crime') == 'true':
         crime_info = {
@@ -520,7 +521,7 @@ def crime_report():
         if act:
             flash('Звіт про злочин успішно подано!', 'success')
             return redirect(url_for('home_page'))
-    return render_template('crime_report.html', crime_info=crime_info, is_required = False)
+    return render_template('crime_report.html', crime_info=crime_info, is_required = is_required)
 
 
 #✅
