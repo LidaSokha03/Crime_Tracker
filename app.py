@@ -175,7 +175,7 @@ def password():
             if password != confirm_pass:
                 flash('Паролі не співпадають.', 'error')
                 return render_template('confirm_password.html')
-            user_data['password'] = request.form['confirm_password']
+            user_data['password'] = database.hash_password(request.form['confirm_password'])
             submitter_type = user_data['submitter_type']
             if submitter_type == 'secret':
                 userid = database.add_lawyer(user_data)
@@ -454,7 +454,43 @@ def crime_report():
     It collects crime information from the form and creates a Crime object.
     The crime data is stored in the database.
     '''
-    if request.method == 'POST':
+    crime_info = {
+            'applicant': None,
+            'applicant_number': None,
+            'region': None,
+            'city': None,
+            'date': None,
+            'description': None,
+            'files': None,
+            'weapon_type': None,
+            'victims': None,
+            'vict_info': None}
+    cities = []
+    is_required = request.method == 'POST' and request.form.get('location')
+
+    if request.method == 'POST' and request.form.get('report_crime') != 'true':
+        if request.form.get('region'):
+            if request.form.get('city'):
+                cities = cities_from_files.search_cities(request.form.get('region'), request.form.get('city'))
+            else:
+                cities = cities_from_files.region_to_cities(request.form.get('region'))
+        crime_info = {
+            'applicant': request.form.get('applicant'),
+            'applicant_number': request.form.get('phone'),
+            'region': request.form.get('region'),
+            'city': request.form.get('city'),
+            'date': request.form.get('date'),
+            'description': request.form.get('description'),
+            'files': [{'filename': f.filename,
+                        'content_type': f.content_type,
+                        'data': Binary(f.read())}
+                    for f in request.files.getlist('files') if f.filename],
+            'weapon_type': request.form.get('weapon'),
+            'victims': request.form.get('victims'),
+            'vict_info': request.form.get('vict_info')}
+        return render_template('crime_report.html', crime_info=crime_info, cities=cities, is_required = is_required)
+
+    if request.method == 'POST' and request.form.get('report_crime') == 'true':
         crime_info = {
             'applicant': request.form['applicant'],
             'applicant_number': request.form['phone'],
@@ -485,7 +521,7 @@ def crime_report():
         if act:
             flash('Звіт про злочин успішно подано!', 'success')
             return redirect(url_for('home_page'))
-    return render_template('crime_report.html')
+    return render_template('crime_report.html', crime_info=crime_info, is_required = is_required)
 
 
 #✅

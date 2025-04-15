@@ -34,11 +34,11 @@
     
     <form method="POST" action="{{ url_for('crime_report') }}" enctype="multipart/form-data">
       <div class="form-field">
-        <input type="text" name="applicant" placeholder="Ваше ПІБ" required><span class="required-mark">*</span>
+        <input type="text" name="applicant" value="{{ crime_info['applicant'] if crime_info['applicant'] else '' }}" placeholder="Ваше ПІБ" {% if is_required %}required{% endif %}><span class="required-mark">*</span>
       </div>
       
       <div class="form-field">
-        <input type="tel" name="phone" placeholder="Контактний номер тел." required><span class="required-mark">*</span>
+        <input type="tel" name="phone" value="{{ crime_info['phone'] if crime_info['phone'] else '' }}" placeholder="Контактний номер тел." {% if is_required %}required{% endif %}><span class="required-mark">*</span>
       </div>
 
       <!-- <div class="form-field"><div class="filter-section"><div class="oblast">
@@ -73,41 +73,50 @@
         <div class="form-field"><div class="filter-section"><div class="oblast">
         <select name="region" required>
           <option value="" disabled selected>Область</option>
-          <option value="Вінницька">Вінницька</option>
-          <option value="Волинська">Волинська</option>
-          <option value="Дніпропетровська">Дніпропетровська</option>
-          <option value="Донецька">Донецька</option>
-          <option value="Житомирська">Житомирська</option>
-          <option value="Закарпатська">Закарпатська</option>
-          <option value="Запорізька">Запорізька</option>
-          <option value="Івано-Франківська">Івано-Франківська</option>
-          <option value="Київська">Київська</option>
-          <option value="Кіровоградська">Кіровоградська</option>
-          <option value="Луганська">Луганська</option>
-          <option value="Львівська">Львівська</option>
-          <option value="Миколаївська">Миколаївська</option>
-          <option value="Одеська">Одеська</option>
-          <option value="Полтавська">Полтавська</option>
-          <option value="Рівненська">Рівненська</option>
-          <option value="Сумська">Сумська</option>
-          <option value="Тернопільська">Тернопільська</option>
-          <option value="Харківська">Харківська</option>
-          <option value="Херсонська">Херсонська</option>
-          <option value="Хмельницька">Хмельницька</option>
-          <option value="Черкаська">Черкаська</option>
-          <option value="Чернівецька">Чернівецька</option>
+                            <option value="Автономна Республіка Крим" {% if crime_info['region'] == 'Автономна Республіка Крим' %}selected{% endif %}>Черкаська</option>
+                            <option value="Вінницька" {% if crime_info['region'] == 'Вінницька' %}selected{% endif %}>Вінницька</option>
+                            <option value="Волинська" {% if crime_info['region'] == 'Волинська' %}selected{% endif %}>Волинська</option>
+                            <option value="Дніпропетровська" {% if crime_info['region'] == 'Дніпропетровська' %}selected{% endif %}>Дніпропетровська</option>
+                            <option value="Донецька" {% if crime_info['region'] == 'Донецька' %}selected{% endif %}>Донецька</option>
+                            <option value="Житомирська" {% if crime_info['region'] == 'Житомирська' %}selected{% endif %}>Житомирська</option>
+                            <option value="Закарпатська" {% if crime_info['region'] == 'Закарпатська' %}selected{% endif %}>Закарпатська</option>
+                            <option value="Запорізька" {% if crime_info['region'] == 'Запорізька' %}selected{% endif %}>Запорізька</option>
+                            <option value="Івано-Франківська" {% if crime_info['region'] == 'Івано-Франківська' %}selected{% endif %}>Івано-Франківська</option>
+                            <option value="Київська" {% if crime_info['region'] == 'Київська' %}selected{% endif %}>Київська</option>
+                            <option value="Кіровоградська" {% if crime_info['region'] == 'Кіровоградська' %}selected{% endif %}>Кіровоградська</option>
+                            <option value="Луганська" {% if crime_info['region'] == 'Луганська' %}selected{% endif %}>Луганська</option>
+                            <option value="Львівська" {% if crime_info['region'] == 'Львівська' %}selected{% endif %}>Львівська</option>
+                            <option value="Миколаївська" {% if crime_info['region'] == 'Миколаївська' %}selected{% endif %}>Миколаївська</option>
+                            <option value="Одеська" {% if crime_info['region'] == 'Одеська' %}selected{% endif %}>Одеська</option>
+                            <option value="Рівненська" {% if crime_info['region'] == 'Рівненська' %}selected{% endif %}>Рівненська</option>
+                            <option value="Сумська" {% if crime_info['region'] == 'Сумська' %}selected{% endif %}>Сумська</option>
+                            <option value="Тернопільська" {% if crime_info['region'] == 'Тернопільська' %}selected{% endif %}>Тернопільська</option>
+                            <option value="Харківська" {% if crime_info['region'] == 'Харківська' %}selected{% endif %}>Харківська</option>
+                            <option value="Херсонська" {% if crime_info['region'] == 'Херсонська' %}selected{% endif %}>Херсонська</option>
+                            <option value="Хмельницька" {% if crime_info['region'] == 'Хмельницька' %}selected{% endif %}>Хмельницька</option>
+                            <option value="Черкаська" {% if crime_info['region'] == 'Черкаська' %}selected{% endif %}>Черкаська</option>
+                            <option value="Чернівецька" {% if crime_info['region'] == 'Чернівецька' %}selected{% endif %}>Чернівецька</option>
+                            <option value="Чернігівська" {% if crime_info['region'] == 'Чернігівська' %}selected{% endif %}>Чернігівська</option>
       </select><span class="required-mark">*</span></div></div></div>
 
         <div class="form-field">
-          <input type="text" name="location" placeholder="Населений пункт" required><span class="required-mark">*</span>
+          <input type="text" name="city"  value="{{ crime_info['city'] if crime_info['city'] else '' }}"placeholder="Введіть назву населеного пункту для пошуку" required><span class="required-mark">*</span>
+          <button type="submit" class="city-apply-btn">Шукати населений пункт</button>
         </div>
+
+        <select name="location" {% if is_required %}required{% endif %}>
+          <option value="">Оберіть населений пункт зі списку</option>
+          {% for city in cities %}
+          <option>{{ city }}</option>
+          {% endfor %}
+      </select>
       
       <div class="form-field">
-        <input type="date" name="date" placeholder="Дата" required><span class="required-mark">*</span>
+        <input type="date" name="date" placeholder="Дата"  value="{{ crime_info['date'] if crime_info['date'] else '' }}"{% if is_required %}required{% endif %}><span class="required-mark">*</span>
       </div>
       
       <div class="form-field">
-        <textarea name="description" placeholder="Опис злочину"  rows="5" required></textarea><span class="required-mark">*</span>
+        <textarea name="description"  value="{{ crime_info['description'] if crime_info['description'] else '' }}" placeholder="Опис злочину"  rows="5" {% if is_required %}required{% endif %}></textarea><span class="required-mark">*</span>
       </div>
       
       <div class="form-field">
@@ -134,34 +143,33 @@
       </div>
       
       <div class="form-field"><div class="filter-section"><div class="weapon_cl">
-        <select name="weapon" required>
+        <select name="weapon" {% if is_required %}required{% endif %}>
           <option value="" disabled selected>Оберіть зброю</option>
-          <option value="Шахед-136">Шахед-136</option>
-          <option value="Кинджал">Кинджал</option>
-          <option value="Іскандер">Іскандер</option>
-          <option value="Калібр">Калібр</option>
-          <option value="С-300">С-300</option>
-          <option value="С-400">С-400</option>
-          <option value="Х-101">Х-101</option>
-          <option value="Х-55">Х-55</option>
-          <option value="Торнадо">Торнадо</option>
-          <option value='Ракета "Оса"'> Ракета "Оса"</option>
-          <option value="Crimson">Crimson</option>
-          <option value="Штурм-СМ">Штурм-СМ</option>
-          <option value="-">-</option>
+          <option value="Шахед-136" {% if crime_info['weapon_type'] == 'Шахед-136' %}selected{% endif %}>Шахед-136</option>
+          <option value="Кинджал" {% if crime_info['weapon_type'] == 'Кинджал' %}selected{% endif %}>Кинджал</option>
+          <option value="Іскандер" {% if crime_info['weapon_type'] == 'Іскандер' %}selected{% endif %}>Іскандер</option>
+          <option value="Калібр" {% if crime_info['weapon_type'] == 'Калібр' %}selected{% endif %}>Калібр</option>
+          <option value="С-300" {% if crime_info['weapon_type'] == 'С-300' %}selected{% endif %}>С-300</option>
+          <option value="С-400" {% if crime_info['weapon_type'] == 'С-400' %}selected{% endif %}>С-400</option>
+          <option value="Х-101" {% if crime_info['weapon_type'] == 'Х-101' %}selected{% endif %}>Х-101</option>
+          <option value="Х-55" {% if crime_info['weapon_type'] == 'Х-55' %}selected{% endif %}>Х-55</option>
+          <option value="Торнадо" {% if crime_info['weapon_type'] == 'Торнадо' %}selected{% endif %}>Торнадо</option>
+          <option value='Ракета "Оса"' {% if crime_info['weapon_type'] == 'Ракета "Оса"' %}selected{% endif %}>Ракета "Оса"</option>
+          <option value="Crimson" {% if crime_info['weapon_type'] == 'Crimson' %}selected{% endif %}>Crimson</option>
+          <option value="Штурм-СМ" {% if crime_info['weapon_type'] == 'Штурм-СМ' %}selected{% endif %}>Штурм-СМ</option>
+          <option value="-">{% if crime_info['weapon_type'] == '-' %}selected{% endif %}>-</option>
         </select>
       </div></div></div>
         <!-- <input type="text" name="weapon" placeholder="Тип зброї, якою був вчинений злочин (якщо відомо)"> -->
       
       <div class="form-field">
-        <input type="number" name="victims" placeholder="Кількість поранених, жертв">
+        <input type="number" name="victims" value="{{ crime_info['victims'] if crime_info['victims'] else '' }}"placeholder="Кількість поранених, жертв" {% if is_required %}required{% endif %}>
       </div>
       
       <div class="form-field">
-        <input type="text" name="vict_info" placeholder="ПІБ, вік поранених та жертв">
+        <input type="text" name="vict_info" value="{{ crime_info['vict_info'] if crime_info['vict_info'] else '' }}"placeholder="ПІБ, вік поранених та жертв" {% if is_required %}required{% endif %}>
       </div>
-      
-      <button type="submit" class="submit-button">Подати інформацію</button>
+      <button type="submit" name="report_crime" value="true" class="submit-button">Подати інформацію</button>
     </form>
   </div>
 
