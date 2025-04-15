@@ -28,7 +28,6 @@ body {
 
 .image-container {
     flex: 1;
-    /* background-image: url('/static/report_img1.png'); */
     background-size: cover;
     background-position: center;
     filter: grayscale(100%);
@@ -67,11 +66,6 @@ body {
     margin-bottom: 20px;
 }
 
-.form-field {
-    margin-bottom: 15px;
-    margin-right: 190px;
-}
-
 .form-field input,
 .form-field textarea {
     width: 100%;
@@ -79,12 +73,6 @@ body {
     border: none;
     background-color: white;
     font-size: 16px;
-}
-
-.required-mark {
-    color: #b41e14;
-    font-weight: bold;
-    margin-left: 5px;
 }
 
 .file-upload-container {
@@ -212,11 +200,148 @@ body {
     color: black;
 }
 
-.form-field select:invalid,
-.form-field select option:first-child {
-    color: #878787;
+.file-preview {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
-.form-field select option:not(:first-child) {
-    color: black;
+.file-preview img {
+    width: 100px;
+    height: auto;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    object-fit: cover;
+}
+
+.form-field {
+    position: relative;
+    margin-bottom: 20px;
+    margin-right: 190px;
+  }
+
+.required-mark {
+    color: #b41e14;
+    font-weight: bold;
+    position: absolute;
+    right: -15px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.form-field textarea + .required-mark {
+    top: 20px;
+}
+
+.form-field .filter-section .oblast .required-mark,
+.form-field .filter-section .weapon_cl .required-mark {
+    top: 50%;
+    right: -15px;
+}
+
+.form-field p .required-mark {
+    position: relative;
+    right: auto;
+    top: auto;
+    transform: none;
+    margin-left: 5px;
+}
+
+.form-field input,
+.form-field textarea,
+.form-field select {
+    padding-right: 25px;
+}
+
+.city-apply-btn {
+    background-color: #b41e14;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+    width: 100%;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+  
+.city-apply-btn:hover {
+    background-color: #d42620;
+}
+  
+select[name="location"] {
+    width: 100%;
+    height: 50px;
+    border: none;
+    background-color: white;
+    font-size: 16px;
+    color: rgb(0, 0, 0);
+    padding: 0 12px;
+    margin-bottom: 15px;
+    appearance: none;
+    /* background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23b41e14' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); */
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-field input[name="city"] + .required-mark {
+    top: 25px;
+    right: -15px;
+}
+
+.city-apply-btn {
+    margin-top: 15px;
+}
+  
+.form-field input[name="city"] {
+    position: relative;
+}
+
+.form-field input[name="city"] {
+    margin-bottom: 15px;
+}
+
+.city-apply-btn {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+select[name="location"] {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.form-field {
+    margin-bottom: 20px;
+}
+
+.submit-button {
+    background-color: #b41e14;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    width: 25%;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.submit-button:hover {
+    background-color: #d42620;
 }
