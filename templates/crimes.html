@@ -92,7 +92,7 @@
                     <div class="filter-section">
                         <h3>Локація</h3>
                         <select name="region">
-                            <option value="">Область</option>
+                            <option value="" disabled selected>Область</option>
                             <option value="Автономна Республіка Крим" {% if filters['region'] == 'Автономна Республіка Крим' %}selected{% endif %}>Черкаська</option>
                             <option value="Вінницька" {% if filters['region'] == 'Вінницька' %}selected{% endif %}>Вінницька</option>
                             <option value="Волинська" {% if filters['region'] == 'Волинська' %}selected{% endif %}>Волинська</option>
@@ -132,7 +132,7 @@
                     <div class="filter-section">
                         <h3>Зброя</h3>
                         <select name="weapon_type">
-                            <option value="">Оберіть зброю</option>
+                            <option value="" disabled selected>Оберіть зброю</option>
                             <option value="Шахед-136" {% if filters['weapon_type'] == 'Шахед-136' %}selected{% endif %}>Шахед-136</option>
                             <option value="Кинджал" {% if filters['weapon_type'] == 'Кинджал' %}selected{% endif %}>Кинджал</option>
                             <option value="Іскандер" {% if filters['weapon_type'] == 'Іскандер' %}selected{% endif %}>Іскандер</option>
