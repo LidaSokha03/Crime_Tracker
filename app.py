@@ -175,7 +175,7 @@ def password():
             if password != confirm_pass:
                 flash('Паролі не співпадають.', 'error')
                 return render_template('confirm_password.html')
-            user_data['password'] = request.form['confirm_password']
+            user_data['password'] = database.hash_password(request.form['confirm_password'])
             submitter_type = user_data['submitter_type']
             if submitter_type == 'secret':
                 userid = database.add_lawyer(user_data)

@@ -119,11 +119,11 @@
                             <option value="Чернігівська" {% if filters['region'] == 'Чернігівська' %}selected{% endif %}>Чернігівська</option>
                         </select>
                         <div class="input-with-button">
-                            <input type="text" name="city" placeholder="Почніть вводити назву населеного пункту">
-                            <button type="submit" class="city-apply-btn">+</button>
+                            <input type="text" name="city" placeholder="Введіть назву населеного пункту для пошуку">
+                            <button type="submit" class="city-apply-btn">Шукати населений пункт</button>
                         </div>
                         <select name="location">
-                            <option value="">Оберіть населений пункт</option>
+                            <option value="">Оберіть населений пункт зі списку</option>
                             {% for city in cities %}
                             <option>{{ city }}</option>
                             {% endfor %}
