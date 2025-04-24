@@ -57,7 +57,13 @@
                 </div>
             
                 <div class="form-field">
-                    <p><strong>Дата:</strong> {{ crime['date'] }}</p>
+                    <p><strong>Дата:</strong> 
+                        {% if crime.date.__class__.__name__ == 'datetime' %}
+                            {{ crime.date.strftime('%d.%m.%Y') }}
+                        {% else %}
+                            {{ crime.date }}
+                        {% endif %}
+                    </p>
                 </div>
 
                 <div class="form-field">

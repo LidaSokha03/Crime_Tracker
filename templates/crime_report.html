@@ -31,7 +31,7 @@
             <div class="oblast">
               <select name="region" required>
                 <option value="" disabled selected>Область</option>
-                <option value="Автономна Республіка Крим" {% if crime_info['region'] == 'Автономна Республіка Крим' %}selected{% endif %}>Черкаська</option>
+                <option value="Автономна Республіка Крим" {% if crime_info['region'] == 'Автономна Республіка Крим' %}selected{% endif %}>Автономна Республіка Крим</option>
                 <option value="Вінницька" {% if crime_info['region'] == 'Вінницька' %}selected{% endif %}>Вінницька</option>
                 <option value="Волинська" {% if crime_info['region'] == 'Волинська' %}selected{% endif %}>Волинська</option>
                 <option value="Дніпропетровська" {% if crime_info['region'] == 'Дніпропетровська' %}selected{% endif %}>Дніпропетровська</option>
@@ -46,6 +46,7 @@
                 <option value="Львівська" {% if crime_info['region'] == 'Львівська' %}selected{% endif %}>Львівська</option>
                 <option value="Миколаївська" {% if crime_info['region'] == 'Миколаївська' %}selected{% endif %}>Миколаївська</option>
                 <option value="Одеська" {% if crime_info['region'] == 'Одеська' %}selected{% endif %}>Одеська</option>
+                <option value="Полтавська" {% if filters['region'] == 'Полтавська' %}selected{% endif %}>Полтавська</option>
                 <option value="Рівненська" {% if crime_info['region'] == 'Рівненська' %}selected{% endif %}>Рівненська</option>
                 <option value="Сумська" {% if crime_info['region'] == 'Сумська' %}selected{% endif %}>Сумська</option>
                 <option value="Тернопільська" {% if crime_info['region'] == 'Тернопільська' %}selected{% endif %}>Тернопільська</option>

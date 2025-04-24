@@ -35,7 +35,13 @@
                         <div class="details-grid">
                             <div class="detail">
                                 <strong>Дата:</strong>
-                                <span>{{ crime.date }}</span>
+                                <span>
+                                    {% if crime.date.__class__.__name__ == 'datetime' %}
+                                        {{ crime.date.strftime('%d.%m.%Y') }}
+                                    {% else %}
+                                        {{ crime.date }}
+                                    {% endif %}
+                                </span>
                             </div>
                             <div class="detail">
                                 <strong>Область:</strong>

@@ -278,7 +278,7 @@ def crimes():
 
     if request.form.get('region'):
         if request.form.get('city'):
-            cities = cities_from_files.search_cities(request.form.get('region'), request.form.get('city'))
+            cities = cities_from_files.region_to_cities(request.form.get('region'), request.form.get('city'))
         else:
             cities = cities_from_files.region_to_cities(request.form.get('region'))
 
@@ -381,7 +381,7 @@ def crimes_for_analytics():
 
     if request.form.get('region'):
         if request.form.get('city'):
-            cities = cities_from_files.search_cities(request.form.get('region'), request.form.get('city'))
+            cities = cities_from_files.region_to_cities(request.form.get('region'), request.form.get('city'))
         else:
             cities = cities_from_files.region_to_cities(request.form.get('region'))
 
@@ -620,7 +620,7 @@ def crime_report():
     if request.method == 'POST' and request.form.get('report_crime') != 'true':
         if request.form.get('region'):
             if request.form.get('city'):
-                cities = cities_from_files.search_cities(request.form.get('region'), request.form.get('city'))
+                cities = cities_from_files.region_to_cities(request.form.get('region'), request.form.get('city'))
             else:
                 cities = cities_from_files.region_to_cities(request.form.get('region'))
         crime_info = {

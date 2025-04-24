@@ -35,7 +35,13 @@
                         <div class="details-grid">
                             <div class="detail">
                                 <strong>Дата:</strong>
-                                <span>{{ crime.date }}</span>
+                                <span>
+                                    {% if crime.date.__class__.__name__ == 'datetime' %}
+                                        {{ crime.date.strftime('%d.%m.%Y') }}
+                                    {% else %}
+                                        {{ crime.date }}
+                                    {% endif %}
+                                </span>
                             </div>
                             <div class="detail">
                                 <strong>Область:</strong>
@@ -93,7 +99,7 @@
                         <h3>Локація</h3>
                         <select name="region">
                             <option value="" disabled selected>Область</option>
-                            <option value="Автономна Республіка Крим" {% if filters['region'] == 'Автономна Республіка Крим' %}selected{% endif %}>Черкаська</option>
+                            <option value="Автономна Республіка Крим" {% if filters['region'] == 'Автономна Республіка Крим' %}selected{% endif %}>Автономна Республіка Крим</option>
                             <option value="Вінницька" {% if filters['region'] == 'Вінницька' %}selected{% endif %}>Вінницька</option>
                             <option value="Волинська" {% if filters['region'] == 'Волинська' %}selected{% endif %}>Волинська</option>
                             <option value="Дніпропетровська" {% if filters['region'] == 'Дніпропетровська' %}selected{% endif %}>Дніпропетровська</option>
@@ -108,6 +114,7 @@
                             <option value="Львівська" {% if filters['region'] == 'Львівська' %}selected{% endif %}>Львівська</option>
                             <option value="Миколаївська" {% if filters['region'] == 'Миколаївська' %}selected{% endif %}>Миколаївська</option>
                             <option value="Одеська" {% if filters['region'] == 'Одеська' %}selected{% endif %}>Одеська</option>
+                            <option value="Полтавська" {% if filters['region'] == 'Полтавська' %}selected{% endif %}>Полтавська</option>
                             <option value="Рівненська" {% if filters['region'] == 'Рівненська' %}selected{% endif %}>Рівненська</option>
                             <option value="Сумська" {% if filters['region'] == 'Сумська' %}selected{% endif %}>Сумська</option>
                             <option value="Тернопільська" {% if filters['region'] == 'Тернопільська' %}selected{% endif %}>Тернопільська</option>
@@ -119,7 +126,7 @@
                             <option value="Чернігівська" {% if filters['region'] == 'Чернігівська' %}selected{% endif %}>Чернігівська</option>
                         </select>
                         <div class="input-with-button">
-                            <input type="text" name="city" placeholder="Введіть назву населеного пункту для пошуку">
+                            <input type="text" name="city" placeholder="Введіть назву населеного пункту для пошуку ">
                             <button type="submit" class="city-apply-btn">Шукати населений пункт</button>
                         </div>
                         <select name="location">
