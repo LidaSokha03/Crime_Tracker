@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: crime-tracker
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python app.py"
+    envVars:
+      - key: SECRET_KEY
+        value: your-secret-key
+      - key: SECRET_URI
+        value: mongodb+srv://....
+      - key: API_FOR_EMAIL
+        value: your-api-key
