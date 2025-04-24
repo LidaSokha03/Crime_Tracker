@@ -360,6 +360,107 @@ def crimes():
     return render_template('crimes.html', crimes=crimes, cities=cities, filters=filters, show_filters=show_filters)
 
 
+@app.route('/crimes_for_analytics', methods=['GET', 'POST'])
+@required_lawyer
+def crimes_for_analytics():
+    '''
+    This function handles the crime report page.
+    It retrieves the list of crimes from the database and renders the 'crimes.html' template.
+    '''
+
+    cities = []
+    crimes = []
+    show_filters = request.method == 'POST' and request.form.get('apply_filters') != 'true'
+
+    if request.form.get('city') and not request.form.get('region'):
+        flash('Оберіть область', 'danger')
+        return render_template('crimes_for_analytics.html', crimes=crimes, cities=cities, show_filters=show_filters)
+    
+
+    if request.form.get('region'):
+        if request.form.get('city'):
+            cities = cities_from_files.search_cities(request.form.get('region'), request.form.get('city'))
+        else:
+            cities = cities_from_files.region_to_cities(request.form.get('region'))
+
+    filters = {'date_from': None,
+                'date_to': None,
+                'region': None,
+                'location': None, 
+                'weapon_type': None}
+    
+    if request.form.get('date_from'):
+        filters['date_from'] = datetime.strptime(request.form.get('date_from'), "%Y-%m-%d")
+    if request.form.get('date_to'):
+        filters['date_to'] = datetime.strptime(request.form.get('date_to'), "%Y-%m-%d")
+    filters['region'] = request.form.get('region')
+    if request.form.get('location'):
+        filters['location'] = request.form.get('location').strip(request.form.get('location').split()[0]).strip()
+    filters['weapon_type'] = request.form.get('weapon_type')
+
+    if request.method == 'POST' and request.form.get('apply_filters') == 'true':
+        print('reached here')
+        filters_for_bd = {key: value for key, value in filters.items() if value is not None and value != '' and 'date' not in key}
+        date_filter = {}
+        if filters['date_from']:
+            date_filter["$gte"] = filters['date_from']
+        if filters['date_to']:
+            date_filter["$lte"] = filters['date_to']
+        if date_filter:
+            filters_for_bd["date"] = date_filter
+
+        print(filters_for_bd)
+        docs = list(database.valid_crimes_collection.find(filters_for_bd))
+    else:
+        docs = list(database.valid_crimes_collection.find())
+    
+    if not docs:
+        if request.form.get('apply_filters') == 'true':
+            flash('Злочини з такими фільтрами не знайдені', 'danger')
+        else:
+            flash('Злочини не знайдені', 'danger')
+        return render_template('crimes_for_analytics.html', crimes=crimes, cities=cities, filters=filters, show_filters=show_filters)
+
+    for doc in docs:
+        print(type(doc['date']))
+        images = []
+
+        if 'files' in doc and isinstance(doc['files'], list):
+            for file in doc['files']:
+                try:
+                    file_data = file.get('data')
+                    content_type = file.get('content_type')
+                    if not file_data or not content_type:
+                        continue
+                    if isinstance(file_data, Binary):
+                        file_data = bytes(file_data)
+                    elif isinstance(file_data, str):
+                        file_data = file_data.encode('latin1')
+                    if not isinstance(file_data, bytes):
+                        continue
+                    encoded = base64.b64encode(file_data).decode('utf-8')
+                    image_url = f"data:{content_type};base64,{encoded}"
+                    images.append(image_url)
+                except Exception as e:
+                    print(f"{e}")
+                    continue
+        crime_data = {
+            '_id': str(doc['_id']),
+            'applicant': doc.get('applicant', ''),
+            'applicant_number': doc.get('applicant_number', ''),
+            'region': doc.get('region', ''),
+            'location': doc.get('location', ''),
+            'date': doc.get('date', ''),
+            'weapon_type': doc.get('weapon_type', ''),
+            'victims': doc.get('victims', ''),
+            'vict_info': doc.get('vict_info', ''),
+            'description': doc.get('description', ''),
+            'image_url': images[0] if images else None
+        }
+        crimes.append(crime_data)
+    return render_template('crimes_for_analytics.html', crimes=crimes, cities=cities, filters=filters, show_filters=show_filters)
+
+
 #✅
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -449,7 +550,7 @@ def confirm_password():
 
 #✅
 @app.route('/analyst_page')
-@required_lawyer
+# @required_lawyer
 def analyst_page():
     '''
     This function handles the analyst page.

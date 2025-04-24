@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Злочини</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='anya_first.css') }}">
+</head>
+<body>
+    <div class="header">
+        <div class="logo-container">
+            <h1 class="svidoc">SVI.DOC</h1>
+        </div>
+        <div class="filters">
+            <a href="/analyst_page" class="filter-btn">Непідтверджені злочини</a>
+            <a href="#" class="filter-btn" id="filter-button">Фільтри</a>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="crimes-grid">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% for category, message in messages %}
+                    {% if category == 'danger' %}
+                    <div class="input-error">
+                        <span class="error-text">{{ message }}</span>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            {% endwith %}
+            {% for crime in crimes %}
+            <div class="crime-card">
+                <div class="crime-content">
+                    <div class="crime-info">
+                        <div class="details-grid">
+                            <div class="detail">
+                                <strong>Дата:</strong>
+                                <span>{{ crime.date }}</span>
+                            </div>
+                            <div class="detail">
+                                <strong>Область:</strong>
+                                <span>{{ crime.region }}</span>
+                            </div>
+                            <div class="detail">
+                                <strong>Населений пункт:</strong>
+                                <span>{{ crime.location }}</span>
+                            </div>
+                            <div class="detail">
+                                <strong>К-сть жертв:</strong>
+                                <span>{{ crime.victims }}</span>
+                            </div>
+                            <div class="detail">
+                                <strong>Інформація про жертви:</strong>
+                                <span>{{ crime.vict_info }}</span>
+                            </div>
+                        </div>
+                        <p class="description">{{ crime.description }}</p>
+                    </div>
+                    <div class="image-container">
+                        {% if crime.image_url %}
+                            <img src="{{ crime.image_url }}" alt="Crime image" class="crime-image">
+                        {% else %}
+                            <p style="color: red;">[Зображення відсутнє]</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="image-modal">
+        <div class="image-modal-content">
+            <span class="close-btn">&times;</span>
+            <img src="" alt="Збільшене зображення">
+        </div>
+    </div>
+
+    <div class="filters-modal">
+        <div class="filters-modal-content">
+            <div class="filters-modal-header">
+                <h2>Фільтри</h2>
+                <span class="filters-modal-close">&times;</span>
+            </div>
+            <form method="POST">
+                <div class="filters-grid">
+                    <div class="filter-section">
+                        <h3>Період</h3>
+                        <input type="date" name="date_from" value="{{ filters['date_from'] if filters['date_from'] else '' }}">
+                        <input type="date" name="date_to" value="{{ filters['date_to'] if filters['date_to'] else '' }}">
+                    </div>
+                    <div class="filter-section">
+                        <h3>Локація</h3>
+                        <select name="region">
+                            <option value="" disabled selected>Область</option>
+                            <option value="Автономна Республіка Крим" {% if filters['region'] == 'Автономна Республіка Крим' %}selected{% endif %}>Черкаська</option>
+                            <option value="Вінницька" {% if filters['region'] == 'Вінницька' %}selected{% endif %}>Вінницька</option>
+                            <option value="Волинська" {% if filters['region'] == 'Волинська' %}selected{% endif %}>Волинська</option>
+                            <option value="Дніпропетровська" {% if filters['region'] == 'Дніпропетровська' %}selected{% endif %}>Дніпропетровська</option>
+                            <option value="Донецька" {% if filters['region'] == 'Донецька' %}selected{% endif %}>Донецька</option>
+                            <option value="Житомирська" {% if filters['region'] == 'Житомирська' %}selected{% endif %}>Житомирська</option>
+                            <option value="Закарпатська" {% if filters['region'] == 'Закарпатська' %}selected{% endif %}>Закарпатська</option>
+                            <option value="Запорізька" {% if filters['region'] == 'Запорізька' %}selected{% endif %}>Запорізька</option>
+                            <option value="Івано-Франківська" {% if filters['region'] == 'Івано-Франківська' %}selected{% endif %}>Івано-Франківська</option>
+                            <option value="Київська" {% if filters['region'] == 'Київська' %}selected{% endif %}>Київська</option>
+                            <option value="Кіровоградська" {% if filters['region'] == 'Кіровоградська' %}selected{% endif %}>Кіровоградська</option>
+                            <option value="Луганська" {% if filters['region'] == 'Луганська' %}selected{% endif %}>Луганська</option>
+                            <option value="Львівська" {% if filters['region'] == 'Львівська' %}selected{% endif %}>Львівська</option>
+                            <option value="Миколаївська" {% if filters['region'] == 'Миколаївська' %}selected{% endif %}>Миколаївська</option>
+                            <option value="Одеська" {% if filters['region'] == 'Одеська' %}selected{% endif %}>Одеська</option>
+                            <option value="Рівненська" {% if filters['region'] == 'Рівненська' %}selected{% endif %}>Рівненська</option>
+                            <option value="Сумська" {% if filters['region'] == 'Сумська' %}selected{% endif %}>Сумська</option>
+                            <option value="Тернопільська" {% if filters['region'] == 'Тернопільська' %}selected{% endif %}>Тернопільська</option>
+                            <option value="Харківська" {% if filters['region'] == 'Харківська' %}selected{% endif %}>Харківська</option>
+                            <option value="Херсонська" {% if filters['region'] == 'Херсонська' %}selected{% endif %}>Херсонська</option>
+                            <option value="Хмельницька" {% if filters['region'] == 'Хмельницька' %}selected{% endif %}>Хмельницька</option>
+                            <option value="Черкаська" {% if filters['region'] == 'Черкаська' %}selected{% endif %}>Черкаська</option>
+                            <option value="Чернівецька" {% if filters['region'] == 'Чернівецька' %}selected{% endif %}>Чернівецька</option>
+                            <option value="Чернігівська" {% if filters['region'] == 'Чернігівська' %}selected{% endif %}>Чернігівська</option>
+                        </select>
+                        <div class="input-with-button">
+                            <input type="text" name="city" placeholder="Введіть назву населеного пункту для пошуку">
+                            <button type="submit" class="city-apply-btn">Шукати населений пункт</button>
+                        </div>
+                        <select name="location">
+                            <option value="">Оберіть населений пункт зі списку</option>
+                            {% for city in cities %}
+                            <option>{{ city }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-section">
+                        <h3>Зброя</h3>
+                        <select name="weapon_type">
+                            <option value="" disabled selected>Оберіть зброю</option>
+                            <option value="Шахед-136" {% if filters['weapon_type'] == 'Шахед-136' %}selected{% endif %}>Шахед-136</option>
+                            <option value="Кинджал" {% if filters['weapon_type'] == 'Кинджал' %}selected{% endif %}>Кинджал</option>
+                            <option value="Іскандер" {% if filters['weapon_type'] == 'Іскандер' %}selected{% endif %}>Іскандер</option>
+                            <option value="Калібр" {% if filters['weapon_type'] == 'Калібр' %}selected{% endif %}>Калібр</option>
+                            <option value="С-300" {% if filters['weapon_type'] == 'С-300' %}selected{% endif %}>С-300</option>
+                            <option value="С-400" {% if filters['weapon_type'] == 'С-400' %}selected{% endif %}>С-400</option>
+                            <option value="Х-101" {% if filters['weapon_type'] == 'Х-101' %}selected{% endif %}>Х-101</option>
+                            <option value="Х-55" {% if filters['weapon_type'] == 'Х-55' %}selected{% endif %}>Х-55</option>
+                            <option value="Торнадо" {% if filters['weapon_type'] == 'Торнадо' %}selected{% endif %}>Торнадо</option>
+                            <option value='Ракета "Оса"' {% if filters['weapon_type'] == 'Ракета "Оса"' %}selected{% endif %}>Ракета "Оса"</option>
+                            <option value="Crimson" {% if filters['weapon_type'] == 'Crimson' %}selected{% endif %}>Crimson</option>
+                            <option value="Штурм-СМ" {% if filters['weapon_type'] == 'Штурм-СМ' %}selected{% endif %}>Штурм-СМ</option>
+                        </select>
+                    </div>
+                    
+                </div>
+                <button type="submit" name="apply_filters" value="true" class="filter-apply-btn">Застосувати фільтри</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Функціонал модального вікна зображення
+        const imageContainers = document.querySelectorAll('.image-container img');
+        const imageModal = document.querySelector('.image-modal');
+        const modalImage = document.querySelector('.image-modal-content img');
+        const closeBtn = document.querySelector('.close-btn');
+
+        // Відкриття модального вікна при кліці на зображення
+        imageContainers.forEach(img => {
+            img.addEventListener('click', () => {
+                imageModal.style.display = 'flex';
+                modalImage.src = img.src;
+            });
+        });
+
+        // Закриття модального вікна
+        closeBtn.addEventListener('click', () => {
+            imageModal.style.display = 'none';
+        });
+
+        // Закриття модального вікна при кліці поза зображенням
+        imageModal.addEventListener('click', (event) => {
+            if (event.target === imageModal) {
+                imageModal.style.display = 'none';  
+            }
+        });
+        
+        // Функціонал кнопки "Детальніше"
+        document.querySelectorAll(".details-btn").forEach((btn) => {
+            btn.addEventListener("click", function() {
+                let detailsText = this.nextElementSibling;
+                if (detailsText.style.display === "none") {
+                    detailsText.style.display = "block";
+                    this.textContent = "Приховати";
+                } else {
+                    detailsText.style.display = "none";
+                    this.textContent = "Детальніше";
+                }
+            });
+        });
+
+        // Функціонал фільтрів
+        const filterBtn = document.querySelector('#filter-button');
+        const filtersModal = document.querySelector('.filters-modal');
+        const filtersModalClose = document.querySelector('.filters-modal-close');
+        const filterApplyBtn = document.querySelector('.filter-apply-btn');
+
+        filterBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            filtersModal.style.display = 'flex';
+        });
+
+        filtersModalClose.addEventListener('click', () => {
+            filtersModal.style.display = 'none';
+        });
+
+        filtersModal.addEventListener('click', (event) => {
+            if (event.target === filtersModal) {
+                filtersModal.style.display = 'none';
+            }
+        });
+
+        // Галерея зображень (для майбутньої реалізації)
+        document.querySelectorAll('.prev-btn, .next-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Щоб не відкривалось модальне вікно
+                // Тут може бути функціонал для перемикання зображень
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            {% if show_filters %}
+                document.querySelector('.filters-modal').style.display = 'flex';
+            {% endif %}
+        });
+    </script>
+</body>
+</html>

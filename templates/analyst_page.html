@@ -58,10 +58,10 @@
         <header>
             <h1>Сторінка Судового Аналітика</h1>
             <div class="subheader">
-        </div>
-        </header>
-    <div class="section-header">Непідтверджені злочини</div>
-
+                <div class="header-row">
+                    <a href="/crimes_for_analytics" class="filter-btn">Усі злочини</a>
+                    <h2 class="section-header">Непідтверджені злочини</h2>
+                </div>
     <div class="crimes-grid">
         {% for crime in crimes %}
             <div class="crime-card" data-type="{{ crime.weapon_category }}">
