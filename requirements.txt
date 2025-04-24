@@ -1,0 +1,5 @@
+Flask
+python-dotenv
+pymongo
+certifi
+sib-api-v3-sdk
