@@ -670,7 +670,7 @@ def crime_report():
         if act:
             flash('Звіт про злочин успішно подано!', 'success')
             return redirect(url_for('home_page'))
-    return render_template('crime_report.html', crime_info=crime_info, is_required = is_required)
+    return render_template('crime_report.html', crime_info=crime_info,  is_required = is_required)
 
 
 #✅
@@ -728,4 +728,4 @@ def confirmation_of_crimes():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=8000)
