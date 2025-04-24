@@ -12,7 +12,7 @@
             <h1 class="svidoc">SVI.DOC</h1>
         </div>
         <div class="filters">
-            <a href="/" class="filter-btn">Головна сторінка</a>
+            <a href="{{ url_for('home_page') if session.get('user_data') else url_for('main_page') }}" class="filter-btn">Головна сторінка</a>
             <a href="#" class="filter-btn" id="filter-button">Фільтри</a>
         </div>
     </div>
