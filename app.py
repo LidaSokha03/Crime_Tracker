@@ -727,5 +727,5 @@ def confirmation_of_crimes():
     return render_template('confirmation_of_crimes.html', crime=crime)
 
 
-if __name__ == '__main__':
-    app.run(debug=True, port=8000)
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000)
