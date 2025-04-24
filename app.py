@@ -4,6 +4,8 @@ It allows users to register as applicants or lawyers, report crimes, and manage 
 The application uses MongoDB for data storage
 '''
 import csv
+from dotenv import load_dotenv
+import os
 import logging
 import base64
 from bson import ObjectId
@@ -20,12 +22,12 @@ from locations import cities_from_files
 from datetime import datetime
 from functools import wraps
 
-
+load_dotenv()
 app = Flask(__name__)
 app.logger.setLevel(logging.DEBUG)
-app.secret_key = 'super secret key'
+app.secret_key = os.getenv("SECRET_KEY")
 
-uri = "mongodb+srv://lidasokha:lidasokha0303@cluster0.20mu9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0&tls=true"
+uri = os.getenv('SECRET_URI')
 client = MongoClient(uri, tlsCAFile=certifi.where(), server_api=ServerApi('1'))
 db = client["crime_tracker_db"]
 try:

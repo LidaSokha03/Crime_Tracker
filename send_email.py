@@ -1,3 +1,5 @@
+from dotenv import load_dotenv
+import os
 import sib_api_v3_sdk
 from sib_api_v3_sdk.rest import ApiException
 from pprint import pprint
@@ -5,7 +7,7 @@ import random
 
 def send_email(to_email, subject, text, name, surname):
     configuration = sib_api_v3_sdk.Configuration()
-    configuration.api_key['api-key'] = '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'
+    configuration.api_key['api-key'] = os.getenv('API_FOR_EMAIL')
 
     api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
 
