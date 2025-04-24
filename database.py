@@ -2,11 +2,15 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from pymongo.errors import PyMongoError
 from bson import ObjectId
+from dotenv import load_dotenv
+import os
 import bcrypt
 # from datetime import datetime
 
+from dotenv import load_dotenv
+load_dotenv()
 
-url = "mongodb+srv://lidasokha:lidasokha0303@cluster0.20mu9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0&tls=true"
+url = os.getenv('SECRET_URI')
 client = MongoClient(url, server_api=ServerApi('1'))
 db = client["crime_tracker_db"]
 
