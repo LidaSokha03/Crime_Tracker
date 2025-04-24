@@ -347,3 +347,32 @@ h1 {
     display: none;
 }
 
+.header-row {
+    display: flex;
+    justify-content: space-between; /* або flex-start, якщо не треба розтягувати */
+    align-items: center;
+    margin: 20px 0;
+    gap: 20px; /* проміжок між елементами */
+}
+
+.section-header {
+    font-size: 32px;
+    font-weight: bold;
+    color: white;
+    margin: 0;
+}
+
+.filter-btn {
+    background-color: #b3302b;
+    color: white;
+    width: 230px;
+    padding: 12px 24px;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+}
+
+.filter-btn:hover {
+    background-color: #8e2622;
+}
