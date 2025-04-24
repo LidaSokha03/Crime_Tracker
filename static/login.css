@@ -250,3 +250,22 @@ label {
     font-size: 0.75rem;
     margin-top: 5px;
   }
+
+  #flash-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+  
+.flash-message {
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    color: #480707;
+    background-color: #c96053;
+    border: 1px solid #c3e6cb;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: opacity 0.5s ease-out;
+}

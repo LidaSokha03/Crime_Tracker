@@ -11,14 +11,14 @@ from bson.binary import Binary
 import certifi
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
-from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, Response
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, Response, session
 import database
 from classes import user
 from classes import crime
 import send_email
 from locations import cities_from_files
 from datetime import datetime
-#проблема з send_email
+from functools import wraps
 
 
 app = Flask(__name__)
@@ -33,6 +33,52 @@ try:
     print("Pinged your deployment. You successfully connected to MongoDB!")
 except Exception as e:
     print(e)
+
+
+##########################################
+###### helper functions ##################
+##########################################
+@app.route('/select_crime/<crime_id>', methods=['POST'])
+def select_crime(crime_id):
+    '''
+    This function handles the selection of a crime for confirmation.
+    '''
+    session['crime_id'] = crime_id
+    return redirect(url_for('confirmation_of_crimes'))
+
+@app.route('/image/<crime_id>')
+def get_image(crime_id):
+    '''
+    This function retrieves the first image of a crime from the database.
+    '''
+    crime = database.unvalid_crimes_collection.find_one({'_id': ObjectId(crime_id)})
+    if crime and 'images' in crime and len(crime['images']) > 0:
+        return Response(crime['images'][0], mimetype='image/jpeg')
+    return 'Зображення не знайдено', 404
+
+def required_login(f):
+    @wraps(f)
+    def function(*args, **kwargs):
+        if 'user_data' not in session:
+            flash('Увійдіть в свій профіль, щоб мати доступ до сторінки', 'danger')
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return function
+
+def required_lawyer(f):
+    @wraps(f)
+    def function(*args, **kwargs):
+        if 'user_data' not in session:
+            flash('Увійдіть в свій профіль, щоб мати доступ до сторінки', 'danger')
+            return redirect(url_for('login'))
+        else:
+            user_ = session['user_data']
+            if user_.get('submitter_type') != 'secret':
+                flash('Ваш профіль не є призначеним для виконання цих операцій', 'danger')
+                return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return function
+##########################################
 
 
 #✅
@@ -54,6 +100,7 @@ def register_as():
     It allows users to choose their role (applicant or lawyer) and redirects them to the appropriate registration page.
     '''
     return render_template('register_as.html')
+
 
 #✅
 @app.route('/registration_applicant', methods=['GET', 'POST'])
@@ -196,6 +243,7 @@ def password():
 
 #✅
 @app.route('/profile', methods=['GET', 'POST'])
+@required_login
 def profile():
     '''
     This function handles the user profile page.
@@ -209,8 +257,7 @@ def profile():
         return redirect(url_for('register_as'))
 
 
-
-#все полетіло
+#додати флеші
 @app.route('/crimes', methods=['GET', 'POST'])
 def crimes():
     '''
@@ -313,9 +360,6 @@ def crimes():
     return render_template('crimes.html', crimes=crimes, cities=cities, filters=filters, show_filters=show_filters)
 
 
-
-
-
 #✅
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -405,6 +449,7 @@ def confirm_password():
 
 #✅
 @app.route('/analyst_page')
+@required_lawyer
 def analyst_page():
     '''
     This function handles the analyst page.
@@ -446,8 +491,9 @@ def analyst_page():
     return render_template('analyst_page.html', crimes=crimes)
 
 
-#додати валідацію на заповненість полів
+#додати флеші
 @app.route('/crime_report', methods=['GET', 'POST'])
+@required_login
 def crime_report():
     '''
     This function handles the crime report page.
@@ -526,6 +572,7 @@ def crime_report():
 
 #✅
 @app.route('/home_page')
+@required_login
 def home_page():
     '''
     This function handles the home page for applicants.
@@ -535,6 +582,7 @@ def home_page():
 
 #✅
 @app.route('/confirmation_of_crimes', methods=['GET', 'POST'])
+@required_lawyer
 def confirmation_of_crimes():
     '''
     This function handles the confirmation of crimes.
@@ -575,28 +623,6 @@ def confirmation_of_crimes():
     crime['image_urls'] = images
     return render_template('confirmation_of_crimes.html', crime=crime)
 
-
-##########################################
-###### helper functions ##################
-##########################################
-@app.route('/select_crime/<crime_id>', methods=['POST'])
-def select_crime(crime_id):
-    '''
-    This function handles the selection of a crime for confirmation.
-    '''
-    session['crime_id'] = crime_id
-    return redirect(url_for('confirmation_of_crimes'))
-
-
-@app.route('/image/<crime_id>')
-def get_image(crime_id):
-    '''
-    This function retrieves the first image of a crime from the database.
-    '''
-    crime = database.unvalid_crimes_collection.find_one({'_id': ObjectId(crime_id)})
-    if crime and 'images' in crime and len(crime['images']) > 0:
-        return Response(crime['images'][0], mimetype='image/jpeg')
-    return 'Зображення не знайдено', 404
 
 if __name__ == '__main__':
     app.run(debug=True, port=8000)
