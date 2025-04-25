@@ -60,7 +60,7 @@
                                 <span>{{ crime.vict_info }}</span>
                             </div>
                         </div>
-                        <p class="description">{{ crime.description }}</p>
+                        <!-- <p class="description">{{ crime.description }}</p> -->
                     </div>
                     <div class="image-container">
                         {% if crime.image_url %}
@@ -70,6 +70,7 @@
                         {% endif %}
                     </div>
                 </div>
+                <p class="description">{{ crime.description }}</p>
             </div>
             {% endfor %}
         </div>
