@@ -71,13 +71,6 @@
             {% endfor %}
           </select>
         </div>
-
-        <!-- <select name="location" {% if is_required %}required{% endif %}>
-          <option value="">Оберіть населений пункт зі списку</option>
-          {% for city in cities %}
-          <option>{{ city }}</option>
-          {% endfor %}
-        </select> -->
       
       <div class="form-field">
         <input type="date" name="date" placeholder="Дата"  value="{{ crime_info['date'] if crime_info['date'] else '' }}"{% if is_required %}required{% endif %}><span class="required-mark">*</span>
