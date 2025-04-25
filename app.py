@@ -169,8 +169,9 @@ def registration_lawyer():
             if database.find_user_by_email(email):
                 flash('Ця пошта вже використовується!', 'danger')
                 return render_template('registration_lawyer.html', form_data=request.form)
-            company_code = request.form.get('company_code')
-            if company_code != 'secret_company_code':
+            company_code = request.form.get('company_code', '').strip()
+            correct_code = db.codes_collection.find_one({'code': company_code})
+            if not correct_code:
                 flash('Невірний код компанії.', 'danger')
                 return render_template('registration_lawyer.html', form_data=request.form)
             code = send_email.send_email_to_confirm(email, request.form['name'], request.form['surname'])

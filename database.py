@@ -21,6 +21,7 @@ unvalid_crimes_collection = db['unvalid_crimes']
 lawyers_collection = db["lawyer"]
 applicants_collection = db["applicant"]
 def_users_collection = db["default_user"]
+codes_collection = db['company_codes']
 
 def hash_password(password):
     '''
