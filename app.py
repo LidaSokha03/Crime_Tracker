@@ -80,6 +80,12 @@ def required_lawyer(f):
                 return redirect(url_for('login'))
         return f(*args, **kwargs)
     return function
+
+@app.route('/logout')
+def logout():
+    session.pop('user_data')
+    flash('Ви успішно вийшли з акаунту.', 'success')
+    return redirect(url_for('home'))
 ##########################################
 
 

@@ -8,7 +8,12 @@
 </head>
 <body>
     <div class="navigation">
-        <h3><a href="{{ url_for('home_page') }}" class="action-button">Повернутися на головну сторінку</h3></a>
+        <h3>
+            <a href="{{ url_for('home_page') }}" class="action-button">Повернутися на головну сторінку</a>
+        </h3>
+        <div class="logout-link">
+            <a href="{{ url_for('logout') }}" class="logout-button">Вийти</a>
+        </div>
     </div>
     <!-- <a href="login.html" class="home-button">
         <img src="home-icon.svg" alt="Home Icon">

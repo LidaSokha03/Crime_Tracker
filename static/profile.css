@@ -16,8 +16,12 @@ body {
     width: 100%;
     position: fixed;
     top: 0;
+    padding-right: 20px;
     left: 0;
     z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .navigation h3 {
@@ -130,4 +134,21 @@ h1 {
     margin-bottom: 10px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     transition: opacity 0.5s ease-out;
+}
+
+.logout-link .logout-button {
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+    background-color: transparent;
+    padding: 10px 20px;
+    border: 2px solid white;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    margin-right: 40px;
+}
+
+.logout-link .logout-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    margin-right: 40px;
 }
