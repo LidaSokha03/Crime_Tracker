@@ -9,6 +9,7 @@ class User:
     '''
     def __init__(self, surname, name, email, phone_number):
         self.surname = surname
+        assert self.validate_surname(), 'Некоректне прізвище'
         self.name = name
         assert self.validate_name(), 'Некоректне імʼя'
         self.email = email.strip()
