@@ -105,7 +105,7 @@
           <div class="weapon_cl" >
             <select name="weapon" {% if is_required %}required{% endif %}>
               <option value="" disabled selected>Оберіть зброю</option>
-              <option value="-">{% if crime_info['weapon_type'] == '-' %}selected{% endif %}-</option>
+              <option value="-"{% if crime_info['weapon_type'] == '-' %}selected{% endif %}-</option>
               <option value="Шахед-136" {% if crime_info['weapon_type'] == 'Шахед-136' %}selected{% endif %}>Шахед-136</option>
               <option value="Кинджал" {% if crime_info['weapon_type'] == 'Кинджал' %}selected{% endif %}>Кинджал</option>
               <option value="Іскандер" {% if crime_info['weapon_type'] == 'Іскандер' %}selected{% endif %}>Іскандер</option>
