@@ -47,7 +47,7 @@ class User:
             for char in name_part:
                 if char not in accepted:
                     return False
-        if len(self.name) > 30:
+        if len(self.surname) > 30:
             return False
         return True
 
