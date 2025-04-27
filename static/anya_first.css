@@ -91,8 +91,10 @@ body {
     
     .description {
     margin-bottom: 10px;
+    margin-top: 15px;
+    clear: both;
     font-size: 15px;
-    width: 60%;
+    width: 100%;
     font-family: Arial, Helvetica, sans-serif;
     }
     
@@ -305,6 +307,7 @@ body {
         display: flex;
         flex-direction: row;
         gap: 20px;
+        margin-bottom: 15px;
     }
     
     .image-container img {
@@ -386,26 +389,32 @@ body {
     
     .input-with-button {
         display: flex;
+        flex-direction: column;
         width: 100%;
         max-width: 100%;
+        position: relative;
     }
     
     .input-with-button input {
-        flex: 1;
-        width: calc(100% - 25px);
+        width: 100%;
+        margin-bottom: 10px; /* Додає відступ між полем вводу і кнопкою */
     }
     
-    .input-btn, .city-apply-btn {
-        width: 20px;
-        min-width: 20px;
-        padding: 4px;
-        height: 28px;
+    .city-apply-btn {
+        width: 70%;
+        padding: 8px 10px;
         background-color: #3d0707;
-        color: aliceblue;
+        color: white;
         border: none;
+        cursor: pointer;
+        text-align: center;
+        text-transform: uppercase;
+        font-size: 9px;
+        margin-top: 1px;
+        margin-bottom: 14px;
     }
     
-    .input-btn:hover, .city-apply-btn:hover {
+    .city-apply-btn:hover {
         background-color: #8a0909;
     }
     

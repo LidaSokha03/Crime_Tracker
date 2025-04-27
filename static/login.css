@@ -1,4 +1,3 @@
-/* General Styles */
 body {
     margin: 0;
     padding: 0;
@@ -6,7 +5,6 @@ body {
     background-color: #f0f0f0;
 }
 
-/* Header Styles */
 header {
     background-color: rgba(0, 0, 0, 0.7);
     color: white;
@@ -51,7 +49,6 @@ header {
     text-decoration: underline;
 }
 
-/* Login Container Styles */
 .container {
     position: relative;
     width: 100%;
@@ -69,7 +66,6 @@ header {
     filter: grayscale(100%) brightness(60%);
 }
 
-/* Login Form Styles */
 .login-form {
     position: absolute;
     top: 50%;
@@ -187,7 +183,6 @@ label {
     background-color: #990000;
 }
 
-/* Стилі для секції входу */
 .login-section {
     margin-top: 30px;
     display: flex;
@@ -201,7 +196,6 @@ label {
     margin-bottom: 10px;
 }
 
-/* Новий стиль для кнопки "УВІЙТИ" */
 .login-btn-outline {
     background-color: rgba(255, 255, 255, 0.2);
     color: white;

@@ -48,7 +48,6 @@ body {
     color: white;
 }
 
-/* Стилі для кнопки повернення */
 .home-button {
     position: absolute;
     top: 20px;
@@ -63,13 +62,11 @@ body {
     height: 100%;
 }
 
-/* Контейнер профілю */
 .profile-container {
     width: 400px;
     text-align: center;
 }
 
-/* Хедер профілю */
 .profile-header {
     display: flex;
     flex-direction: column;
@@ -88,7 +85,6 @@ body {
     color: white;
 }
 
-/* Основний блок профілю */
 .profile-box {
     background-color: rgba(255, 255, 255, 0.9);
     padding: 20px;

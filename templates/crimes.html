@@ -60,7 +60,7 @@
                                 <span>{{ crime.vict_info }}</span>
                             </div>
                         </div>
-                        <p class="description">{{ crime.description }}</p>
+                        <!-- <p class="description">{{ crime.description }}</p> -->
                     </div>
                     <div class="image-container">
                         {% if crime.image_url %}
@@ -70,17 +70,11 @@
                         {% endif %}
                     </div>
                 </div>
+                <p class="description">{{ crime.description }}</p>
             </div>
             {% endfor %}
         </div>
     </div>
-
-    <!-- <div class="image-modal">
-        <div class="image-modal-content">
-            <span class="close-btn">&times;</span>
-            <img src="" alt="Збільшене зображення">
-        </div>
-    </div> -->
 
     <div class="filters-modal">
         <div class="filters-modal-content">
@@ -126,7 +120,7 @@
                             <option value="Чернігівська" {% if filters['region'] == 'Чернігівська' %}selected{% endif %}>Чернігівська</option>
                         </select>
                         <div class="input-with-button">
-                            <input type="text" name="city" placeholder="Введіть назву населеного пункту для пошуку ">
+                            <input type="text" name="city" placeholder="Введіть назву населеного пункту">
                             <button type="submit" class="city-apply-btn">Шукати населений пункт</button>
                         </div>
                         <select name="location">
@@ -162,45 +156,6 @@
     </div>
 
     <script>
-        // Функціонал модального вікна зображення
-        const imageContainers = document.querySelectorAll('.image-container img');
-        const imageModal = document.querySelector('.image-modal');
-        const modalImage = document.querySelector('.image-modal-content img');
-        const closeBtn = document.querySelector('.close-btn');
-
-        // Відкриття модального вікна при кліці на зображення
-        imageContainers.forEach(img => {
-            img.addEventListener('click', () => {
-                imageModal.style.display = 'flex';
-                modalImage.src = img.src;
-            });
-        });
-
-        // Закриття модального вікна
-        closeBtn.addEventListener('click', () => {
-            imageModal.style.display = 'none';
-        });
-
-        // Закриття модального вікна при кліці поза зображенням
-        imageModal.addEventListener('click', (event) => {
-            if (event.target === imageModal) {
-                imageModal.style.display = 'none';  
-            }
-        });
-        
-        // Функціонал кнопки "Детальніше"
-        document.querySelectorAll(".details-btn").forEach((btn) => {
-            btn.addEventListener("click", function() {
-                let detailsText = this.nextElementSibling;
-                if (detailsText.style.display === "none") {
-                    detailsText.style.display = "block";
-                    this.textContent = "Приховати";
-                } else {
-                    detailsText.style.display = "none";
-                    this.textContent = "Детальніше";
-                }
-            });
-        });
 
         // Функціонал фільтрів
         const filterBtn = document.querySelector('#filter-button');
@@ -221,14 +176,6 @@
             if (event.target === filtersModal) {
                 filtersModal.style.display = 'none';
             }
-        });
-
-        // Галерея зображень (для майбутньої реалізації)
-        document.querySelectorAll('.prev-btn, .next-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation(); // Щоб не відкривалось модальне вікно
-                // Тут може бути функціонал для перемикання зображень
-            });
         });
     </script>
     <script>

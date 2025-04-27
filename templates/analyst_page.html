@@ -1,50 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="uk">
-<head>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Сторінка Судового Аналітика</title>
-    <link rel="stylesheet" href="static/css_forenscic_analyst.css">
-</head>
-<body>
-    <div class="side-image-left"></div>
-    <div class="side-image-right"></div>
-    
-    <div class="container">
-        <header>
-            <h1>Сторінка Судового Аналітика</h1>
-            <div class="subheader">
-                <a href="{{ url_for('crimes') }}" class="btn">Підтверджені злочини</a>
-                <p>Непідтверджені злочини</p>
-            </div>
-        </header>
-        
-        <section>
-            <div class="section-header">Непідтверджені злочини</div>
-            
-            <div class="crime-section">
-                {% for crime in crimes %}
-                <div class="crime-item">
-                    <img src="{{ crime['image_url'] }}" alt="Error: image not found" class="crime-image">
-                    <div class="crime-content">
-                        <p class="crime-text">{{ crime['description'] }}</p>
-                        <form method="POST" action="{{ url_for('select_crime', crime_id=crime['_id']) }}">
-                            <button type="submit" class="more-button">⬤</button>
-                        </form>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </section>
-    </div>
-</body>
-</html> -->
-
-
 <!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -87,7 +40,6 @@
                         <button type="submit" class="more-button">Підтвердження</button>
                     </form>
                 </div>
-                <!-- </div> -->
             </div>
             {% endfor %}
         </div>
@@ -120,33 +72,6 @@
             });
         });
     </script>
-    <!-- <script>
-        document.querySelectorAll(".details-btn").forEach((btn) => {
-            btn.addEventListener("click", function () {
-                const card = this.closest(".crime-card");
-                const shortDesc = card.querySelector(".short-desc");
-                const fullDesc = card.querySelector(".full-desc");
-                const extraInfo = card.querySelector(".details-text");
-    
-                const isHidden = fullDesc.classList.contains("hidden");
-
-                if (isHidden) {
-                    shortDesc.style.display = "none";
-                    fullDesc.classList.remove("hidden");
-                    this.textContent = "Приховати";
-                } else {
-                    shortDesc.style.display = "block";
-                    fullDesc.classList.add("hidden");
-                    this.textContent = "Детальніше";
-                }
-
-                if (extraInfo) {
-                    extraInfo.classList.toggle("hidden", isHidden);
-                }
-            });
-        });
-    </script> -->
-    
     
 </body>
 </html>
