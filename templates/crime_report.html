@@ -17,7 +17,7 @@
     <p class="description">При поданні даних про злочин ви підтверджуєте те, що ви відповідальні за вказану інформацію</p>
     <p class="note">* позначені поля, обов'язкові до заповнення</p>
     
-    <form method="POST" action="{{ url_for('crime_report') }}" enctype="multipart/form-data">
+    <form id="crimeReportForm" method="POST" action="{{ url_for('crime_report') }}" enctype="multipart/form-data">
       <div class="form-field">
         <input type="text" name="applicant" value="{{ crime_info['applicant'] if crime_info['applicant'] else '' }}" placeholder="Ваше ПІБ" {% if is_required %}required{% endif %}><span class="required-mark">*</span>
       </div>
@@ -84,12 +84,18 @@
         <p>Прикріплені файли<span class="required-mark">*</span></p>
         
         <div class="file-upload-container" id="fileUploadContainer">
-          <div class="file-slot" onclick="triggerFileInput(0)"></div>
-          <div class="file-slot" onclick="triggerFileInput(1)"></div>
-          <div class="file-slot" onclick="triggerFileInput(2)"></div>
-        </div>
+          <div class="file-slot" onclick="triggerFileInput(0)">
+            <input type="file" name="files" accept="image/*" style="display: none;" onchange="handleFileSelect(event, 0)">
+          </div>
+          <div class="file-slot" onclick="triggerFileInput(1)">
+            <input type="file" name="files" accept="image/*" style="display: none;" onchange="handleFileSelect(event, 1)">
+          </div>
+          <div class="file-slot" onclick="triggerFileInput(2)">
+            <input type="file" name="files" accept="image/*" style="display: none;" onchange="handleFileSelect(event, 2)">
+          </div>
+        </div>        
       
-        <input type="file" id="fileInput" name="files" accept="image/*" style="display: none;" onchange="handleFileSelect(event)">
+        <input type="file" id="fileInput" name="files" accept="image/*" multiple style="display: none;" onchange="handleFileSelect(event)">
       
         <div id="fileList" class="file-preview"></div>
       </div>
@@ -135,46 +141,44 @@
 </html>
 
 <script>
-  let selectedSlotIndex = null;
-  let uploadedFiles = [];
-  
   function triggerFileInput(index) {
-      selectedSlotIndex = index;
-      document.getElementById('fileInput').click();
+      const inputs = document.querySelectorAll('#fileUploadContainer .file-slot input[type="file"]');
+      if (inputs[index]) {
+          inputs[index].click();
+      }
   }
   
-  function handleFileSelect(event) {
+  function handleFileSelect(event, index) {
       const file = event.target.files[0];
       if (!file) return;
   
-      const reader = new FileReader();
-      reader.onload = function(e) {
-          const slots = document.getElementsByClassName('file-slot');
-          const slot = slots[selectedSlotIndex];
+      const slots = document.getElementsByClassName('file-slot');
+      const slot = slots[index];
   
-          // Очистити слот перед додаванням
-          slot.innerHTML = '';
+      const preview = slot.querySelector('.preview');
+      const img = slot.querySelector('img');
+      const deleteBtn = slot.querySelector('button');
   
-          const img = document.createElement('img');
-          img.src = e.target.result;
+      if (img) img.remove();
+      if (deleteBtn) deleteBtn.remove();
   
-          const deleteBtn = document.createElement('button');
-          deleteBtn.innerHTML = '✖';
-          deleteBtn.classList.add('delete-btn');
-          deleteBtn.onclick = function(event) {
-              event.stopPropagation();
-              uploadedFiles[selectedSlotIndex] = null;
-              slot.innerHTML = '';
-              slot.onclick = () => triggerFileInput(selectedSlotIndex);
-          };
+      const newImg = document.createElement('img');
+      newImg.src = URL.createObjectURL(file);
+      newImg.onload = () => URL.revokeObjectURL(newImg.src); // Очищення пам'яті
   
-          slot.appendChild(img);
-          slot.appendChild(deleteBtn);
-          
-          uploadedFiles[selectedSlotIndex] = file;
+      const newDeleteBtn = document.createElement('button');
+      newDeleteBtn.innerHTML = '✖';
+      newDeleteBtn.classList.add('delete-btn');
+      newDeleteBtn.onclick = function(event) {
+          event.stopPropagation();
+          const inputs = document.querySelectorAll('#fileUploadContainer .file-slot input[type="file"]');
+          inputs[index].value = ''; // Очистити input
+          if (slot.querySelector('img')) slot.querySelector('img').remove();
+          if (slot.querySelector('button')) slot.querySelector('button').remove();
       };
-      reader.readAsDataURL(file);
-      event.target.value = '';
+  
+      slot.appendChild(newImg);
+      slot.appendChild(newDeleteBtn);
   }
   </script>
   
