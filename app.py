@@ -163,14 +163,15 @@ def registration_lawyer():
     It collects user data from the form and creates a Lawyer object.
     Sends a confirmation code to the provided email, and if confirmed, redirects to password page.
     '''
+    codes_collection = db['company_codes']
     if request.method == 'POST':
         email = request.form.get('email', '').strip()
         if 'send_code' in request.form:
             if database.find_user_by_email(email):
                 flash('Ця пошта вже використовується!', 'danger')
                 return render_template('registration_lawyer.html', form_data=request.form)
-            company_code = request.form.get('company_code', '').strip()
-            correct_code = db.codes_collection.find_one({'code': company_code})
+            company_code = request.form.get('company_code').strip()
+            correct_code = codes_collection.find_one({'code': company_code})
             if not correct_code:
                 flash('Невірний код компанії.', 'danger')
                 return render_template('registration_lawyer.html', form_data=request.form)

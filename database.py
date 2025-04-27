@@ -139,15 +139,14 @@ def crime_report(crime):
     except PyMongoError as e:
         print(f"{e}")
         return None
-    
 
 
-def all_delete_unvalid_crimes():
+def all_delete_valid_crimes():
     '''
     This function deletes all unvalid crimes from the database.
     '''
     try:
-        result = unvalid_crimes_collection.delete_many({})
+        result = valid_crimes_collection.delete_many({})
         print(f"Unvalid crimes deleted: {result.deleted_count}")
         return result.deleted_count
     except PyMongoError as e:
