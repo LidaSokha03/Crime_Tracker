@@ -82,24 +82,15 @@
       
       <div class="form-field">
         <p>Прикріплені файли<span class="required-mark">*</span></p>
-        <input type="file" id="fileInput" name="files" multiple accept="image/*" style="display: none;" onchange="validateFiles()">
-          <div class="file-upload-container">
-            <div class="file-upload" onclick="document.getElementById('fileInput').click()">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
-              </svg>
-          </div>
-          <div class="file-upload" onclick="document.getElementById('fileInput').click()">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
-              </svg>
-          </div>
-          <div class="file-upload" onclick="document.getElementById('fileInput').click()">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
-              </svg>
-          </div>
+        
+        <div class="file-upload-container" id="fileUploadContainer">
+          <div class="file-slot" onclick="triggerFileInput(0)"></div>
+          <div class="file-slot" onclick="triggerFileInput(1)"></div>
+          <div class="file-slot" onclick="triggerFileInput(2)"></div>
         </div>
+      
+        <input type="file" id="fileInput" name="files" accept="image/*" style="display: none;" onchange="handleFileSelect(event)">
+      
         <div id="fileList" class="file-preview"></div>
       </div>
       
@@ -144,25 +135,46 @@
 </html>
 
 <script>
-  function validateFiles() {
-    const input = document.getElementById('fileInput');
-    const fileList = document.getElementById('fileList');
-    fileList.innerHTML = '';
-
-    if (input.files.length !== 3) {
-      alert("Потрібно вибрати рівно 3 фотографії.");
-      input.value = '';
-      return;
-    }
-
-    Array.from(input.files).forEach(file => {
+  let selectedSlotIndex = null;
+  let uploadedFiles = [];
+  
+  function triggerFileInput(index) {
+      selectedSlotIndex = index;
+      document.getElementById('fileInput').click();
+  }
+  
+  function handleFileSelect(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+  
       const reader = new FileReader();
-      reader.onload = function (e) {
-        const img = document.createElement('img');
-        img.src = e.target.result;
-        fileList.appendChild(img);
+      reader.onload = function(e) {
+          const slots = document.getElementsByClassName('file-slot');
+          const slot = slots[selectedSlotIndex];
+  
+          // Очистити слот перед додаванням
+          slot.innerHTML = '';
+  
+          const img = document.createElement('img');
+          img.src = e.target.result;
+  
+          const deleteBtn = document.createElement('button');
+          deleteBtn.innerHTML = '✖';
+          deleteBtn.classList.add('delete-btn');
+          deleteBtn.onclick = function(event) {
+              event.stopPropagation();
+              uploadedFiles[selectedSlotIndex] = null;
+              slot.innerHTML = '';
+              slot.onclick = () => triggerFileInput(selectedSlotIndex);
+          };
+  
+          slot.appendChild(img);
+          slot.appendChild(deleteBtn);
+          
+          uploadedFiles[selectedSlotIndex] = file;
       };
       reader.readAsDataURL(file);
-    });
+      event.target.value = '';
   }
-</script>
+  </script>
+  

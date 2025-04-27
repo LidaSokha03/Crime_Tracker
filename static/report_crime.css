@@ -344,3 +344,40 @@ select[name="location"] {
 .submit-button:hover {
     background-color: #d42620;
 }
+
+.file-upload-container {
+    display: flex;
+    gap: 10px;
+}
+
+.file-slot {
+    width: 100px;
+    height: 100px;
+    background: #f0f0f0;
+    border: 2px dashed #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+}
+
+.file-slot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.delete-btn {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
