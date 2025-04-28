@@ -19,6 +19,15 @@
     
     <form id="crimeReportForm" method="POST" action="{{ url_for('crime_report') }}" enctype="multipart/form-data">
       <div class="form-field">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% for category, message in messages %}
+                            {% if category == 'danger' %}
+                            <div class="input-error">
+                                <span class="error-text">{{ message }}</span>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endwith %}
         <input type="text" name="applicant" value="{{ crime_info['applicant'] if crime_info['applicant'] else '' }}" placeholder="Ваше ПІБ" {% if is_required %}required{% endif %}><span class="required-mark">*</span>
       </div>
       

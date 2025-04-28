@@ -1,4 +1,5 @@
 from datetime import datetime
+import re
 
 class Crime:
     '''
@@ -6,7 +7,9 @@ class Crime:
     '''
     def __init__(self, applicant, applicant_number, region, location, date, description, files=None, weapon_type = None, victims = None, vict_info = None):
         self.applicant = applicant
-        self.applicant_number = applicant_number
+        assert self.validate_applicant(), 'Некоректне ПІБ'
+        self.applicant_number = applicant_number, 'Номер повинен складатись з 10 цифр (0123456789)'
+        assert self.validate_phone()
         self.region = region
         self.location = location
         self.date = date
@@ -14,6 +17,7 @@ class Crime:
         self.files = files
         self.weapon_type = weapon_type
         self.victims = victims
+        assert self.validate_victims(), 'Відʼємна кількість жертв'
         self.vict_info = vict_info
 
     @property
@@ -36,3 +40,23 @@ class Crime:
             'victims': self.victims,
             'vict_info': self.vict_info
         }
+
+    def validate_applicant(self):
+        accepted = 'ЙЦУКЕНГШЩЗХЇФІВАПРОЛДЖЄЯЧСМИТЬБЮҐйцукенгшщзхїфівапролджєячесмитьбюґ -'
+        name_ = self.applicant
+        for char in name_:
+            if char not in accepted:
+                return False
+        if len(self.applicant) < 3 or len(self.applicant) > 50:
+            return False
+        return True
+
+    def validate_phone(self):
+        ''' validates phone number '''
+        pattern = r'^[0-9]{10}'
+        return re.match(pattern, self.applicant_number)
+    
+    def validate_victims(self):
+        if int(self.victims) < 0:
+            return False
+        return True

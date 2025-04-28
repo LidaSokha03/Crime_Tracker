@@ -652,27 +652,31 @@ def crime_report():
             'applicant': request.form['applicant'],
             'applicant_number': request.form['phone'],
             'region': request.form['region'],
-            'location': request.form['location'],
+            'location': request.form.get('location'),
             'date': request.form['date'],
             'description': request.form['description'],
             'files': [{'filename': f.filename,
                         'content_type': f.content_type,
                         'data': Binary(f.read())}
                     for f in request.files.getlist('files') if f.filename],
-            'weapon_type': request.form['weapon'],
-            'victims': request.form['victims'],
-            'vict_info': request.form['vict_info']}
-        crime_ = crime.Crime(
-            crime_info['applicant'],
-            crime_info['applicant_number'],
-            crime_info['region'],
-            crime_info['location'],
-            crime_info['date'],
-            crime_info['description'],
-            crime_info['files'],
-            crime_info['weapon_type'],
-            crime_info['victims'],
-            crime_info['vict_info'])
+            'weapon_type': request.form.get('weapon'),
+            'victims': request.form.get('victims'),
+            'vict_info': request.form.get('vict_info')}
+        try:
+            crime_ = crime.Crime(
+                crime_info['applicant'],
+                crime_info['applicant_number'],
+                crime_info['region'],
+                crime_info['location'],
+                crime_info['date'],
+                crime_info['description'],
+                crime_info['files'],
+                crime_info['weapon_type'],
+                crime_info['victims'],
+                crime_info['vict_info'])
+        except Exception as e:
+                flash(f'Помилка при поданні злочину: {e}', 'danger')
+                return render_template('crime_report.html', crime_info=crime_info, cities=cities, is_required=True)
         crime_ = crime_.to_dict()
         act = database.crime_report(crime_)
         if act:

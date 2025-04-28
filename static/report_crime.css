@@ -381,3 +381,17 @@ select[name="location"] {
     height: 20px;
     cursor: pointer;
 }
+
+.input-error {
+    background-color: #ffe6e6;
+    border: 1px solid #ff4d4d;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+.error-text {
+    color: #cc0000;
+    font-weight: bold;
+    font-size: 16px;
+}
