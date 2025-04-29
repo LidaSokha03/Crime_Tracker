@@ -20,8 +20,8 @@ class User:
 
     def validate_name(self):
         ''' validates name '''
-        accepted = 'ЙЦУКЕНГШЩЗХЇФІВАПРОЛДЖЄЯЧСМИТЬБЮҐйцукенгшщзхїфівапролджєячесмитьбюґ -'
-        accepted_capitals = 'ЙЦУКЕНГШЩЗХЇФІВАПРОЛДЖЄЯЧСМИТЬБЮҐ'
+        accepted = "ЙЦУКЕНГШЩЗХЇФІВАПРОЛДЖЄЯЧСМИТЬБЮҐйцукенгшщзхїфівапролджєячесмитьбюґ -'"
+        accepted_capitals = "ЙЦУКЕНГШЩЗХЇФІВАПРОЛДЖЄЯЧСМИТЬБЮҐ"
         name_ = self.name.split('-')
         for name_part in name_:
             if name_part[0] not in accepted_capitals:
