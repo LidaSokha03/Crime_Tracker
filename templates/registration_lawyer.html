@@ -25,52 +25,52 @@
         <div class="form-scrollable">
             <form id="registration-form" method="POST" action="{{ url_for('registration_lawyer') }}">
                 <div class="form-group">
-                    <label class="form-label">КОД КОМПАНІЇ</label>
+                    <label class="form-label">КОД КОМПАНІЇ<span class="required-star">*</span></label>
                     <input type="text" class="form-input" name="company_code" required value="{{ form_data.get('company_code', '') }}">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">ПРІЗВИЩЕ</label>
+                    <label class="form-label">ПРІЗВИЩЕ<span class="required-star">*</span></label>
                     <small class="form-hint">Введіть прізвище українською</small>
                     <input type="text" class="form-input" name="surname" required value="{{ form_data.get('surname', '') }}">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">ІМʼЯ</label>
+                    <label class="form-label">ІМʼЯ<span class="required-star">*</span></label>
                     <small class="form-hint">Введіть імʼя українською</small>
                     <input type="text" class="form-input" name="name" required value="{{ form_data.get('name', '') }}">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">ЕЛЕКТРОННА ПОШТА</label>
+                    <label class="form-label">ЕЛЕКТРОННА ПОШТА<span class="required-star">*</span></label>
                     <input type="email" class="form-input" name="email" required value="{{ form_data.get('email', '') }}">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">КОНТАКТНИЙ ТЕЛЕФОН</label>
+                    <label class="form-label">КОНТАКТНИЙ ТЕЛЕФОН<span class="required-star">*</span></label>
                     <input type="tel" class="form-input" name="phone" required value="{{ form_data.get('phone', '') }}">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">СПЕЦІАЛІЗАЦІЯ</label>
+                    <label class="form-label">СПЕЦІАЛІЗАЦІЯ<span class="required-star">*</span></label>
                     <input type="text" class="form-input" name="specialization" required value="{{ form_data.get('specialization', '') }}">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">МІСЦЕ ПРАЦІ</label>
+                    <label class="form-label">МІСЦЕ ПРАЦІ<span class="required-star">*</span></label>
                     <input type="text" class="form-input" name="location" required value="{{ form_data.get('location', '') }}">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">РЕГІОН</label>
+                    <label class="form-label">РЕГІОН<span class="required-star">*</span></label>
                     <input type="text" class="form-input" name="region" required value="{{ form_data.get('region', '') }}">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">ДОСВІД РОБОТИ З ВОЄННИМИ ЗЛОЧИНЦЯМИ (РОКИ)</label>
+                    <label class="form-label">ДОСВІД РОБОТИ З ВОЄННИМИ ЗЛОЧИНЦЯМИ (РОКИ)<span class="required-star">*</span></label>
                     <input type="number" class="form-input" name="experience_years" required value="{{ form_data.get('experience_years', '') }}">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">ПОСАДА</label>
+                    <label class="form-label">ПОСАДА<span class="required-star">*</span></label>
                     <input type="text" class="form-input" name="position" required value="{{ form_data.get('position', '') }}">
                 </div>
                 <div class="form-action">
-                    <button type="submit" name="send_code" value="1" class="submit-button code-button">НАДІСЛАТИ КОД</button>
+                    <button type="submit" name="send_code" value="1" class="submit-button code-button">НАДІСЛАТИ КОД НА ПОШТУ</button>
                 </div>
                 <div class="form-group">
-                    <label for="code">ВВЕДІТЬ КОД</label>
+                    <label for="code">ВВЕДІТЬ КОД<span class="required-star">*</span></label>
                     <input type="text" id="code" name="code">
                 </div>
                 <div class="checkbox-container">

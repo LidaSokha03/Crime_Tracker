@@ -24,34 +24,34 @@
         <div class="form-scrollable">
             <form id="registration-form" method="POST" action="{{ url_for('registration_applicant') }}">
                     <div class="form-group">
-                        <label class="form-label">ПРІЗВИЩЕ</label>
+                        <label class="form-label">ПРІЗВИЩЕ<span class="required-star">*</span></label>
                         <small class="form-hint">Введіть прізвище українською</small>
                         <input type="text" class="form-input" name="surname" required value="{{ form_data.get('surname', '') }}">
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">ІМʼЯ</label>
+                        <label class="form-label">ІМʼЯ<span class="required-star">*</span></label>
                         <small class="form-hint">Введіть імʼя українською</small>
                         <input type="text" class="form-input" name="name" required value="{{ form_data.get('name', '') }}">
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">ЕЛЕКТРОННА ПОШТА</label>
+                        <label class="form-label">ЕЛЕКТРОННА ПОШТА<span class="required-star">*</span></label>
                         <input type="email" class="form-input" name="email" required value="{{ form_data.get('email', '') }}">
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">МІСЦЕ ЗНАХОДЖЕННЯ</label>
+                        <label class="form-label">МІСЦЕ ЗНАХОДЖЕННЯ<span class="required-star">*</span></label>
                         <input type="text" class="form-input" name="location" required value="{{ form_data.get('location', '') }}">
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">КОНТАКТНИЙ ТЕЛЕФОН</label>
+                        <label class="form-label">КОНТАКТНИЙ ТЕЛЕФОН<span class="required-star">*</span></label>
                         <input type="tel" class="form-input" name="phone" required value="{{ form_data.get('phone', '') }}">
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">ТИП ПОДАВАЧА</label>
+                        <label class="form-label">ТИП ПОДАВАЧА<span class="required-star">*</span></label>
                         <select class="form-input" name="submitter_type" required>
                             <option value="" {% if form_data.get('submitter_type', '') == '' %}selected{% endif %}>Оберіть тип</option>
                             <option value="witness" {% if form_data.get('submitter_type') == 'witness' %}selected{% endif %}>Очевидець</option>
@@ -70,11 +70,11 @@
                         <input type="text" class="form-input" name="workplace" placeholder="Необов'язково" value="{{ form_data.get('workplace', '') }}">
                     </div>
                     <div class="form-action">
-                        <button type="submit" name="send_code" value="1" class="submit-button code-button">НАДІСЛАТИ КОД</button>
+                        <button type="submit" name="send_code" value="1" class="submit-button code-button">НАДІСЛАТИ КОД НА ПОШТУ</button>
                     </div>
                 
                     <div class="form-group">
-                        <label for="code">ВВЕДІТЬ КОД</label>
+                        <label for="code">ВВЕДІТЬ КОД<span class="required-star">*</span></label>
                         <input type="text" id="code" name="code">
                     </div>
                 
