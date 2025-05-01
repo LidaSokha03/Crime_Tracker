@@ -5,11 +5,12 @@ class Crime:
     '''
     ...
     '''
-    def __init__(self, applicant, applicant_number, region, location, date, description, files=None, weapon_type = None, victims = None, vict_info = None):
+    def __init__(self, applicant, applicant_number, region, location, date, description,
+             files=None, weapon_type=None, victims=None, vict_info=None):
         self.applicant = applicant
         assert self.validate_applicant(), 'Некоректне ПІБ'
-        self.applicant_number = applicant_number, 'Номер повинен складатись з 10 цифр (0123456789)'
-        assert self.validate_phone()
+        self.applicant_number = applicant_number
+        assert self.validate_phone(), 'Номер повинен складатись з 10 цифр (0123456789)'
         self.region = region
         self.location = location
         self.date = date
