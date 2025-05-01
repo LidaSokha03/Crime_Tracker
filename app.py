@@ -3,11 +3,12 @@ This is a Flask application for a crime tracking system.
 It allows users to register as applicants or lawyers, report crimes, and manage their profiles.
 The application uses MongoDB for data storage
 '''
-import csv
-from dotenv import load_dotenv
 import os
 import logging
 import base64
+from datetime import datetime
+from functools import wraps
+from dotenv import load_dotenv
 from bson import ObjectId
 from bson.binary import Binary
 import certifi
@@ -19,8 +20,6 @@ from classes import user
 from classes import crime
 import send_email
 from locations import cities_from_files
-from datetime import datetime
-from functools import wraps
 
 load_dotenv()
 app = Flask(__name__)
@@ -32,7 +31,6 @@ client = MongoClient(uri, tlsCAFile=certifi.where(), server_api=ServerApi('1'))
 db = client["crime_tracker_db"]
 try:
     client.admin.command('ping')
-    print("Pinged your deployment. You successfully connected to MongoDB!")
 except Exception as e:
     print(e)
 
@@ -59,6 +57,9 @@ def get_image(crime_id):
     return 'Зображення не знайдено', 404
 
 def required_login(f):
+    '''
+     Decorator for pages allowed only for logged in 
+    '''
     @wraps(f)
     def function(*args, **kwargs):
         if 'user_data' not in session:
@@ -68,6 +69,9 @@ def required_login(f):
     return function
 
 def required_lawyer(f):
+    '''
+    Decorator for pages allowed only for lawyer
+    '''
     @wraps(f)
     def function(*args, **kwargs):
         if 'user_data' not in session:
@@ -83,13 +87,15 @@ def required_lawyer(f):
 
 @app.route('/logout')
 def logout():
+    '''
+    Function for ending a session for unlogged user
+    '''
     session.pop('user_data')
     flash('Ви успішно вийшли з акаунту.', 'success')
     return redirect(url_for('home'))
 ##########################################
 
 
-#✅
 @app.route('/', methods=['GET', 'POST'])
 def home():
     '''
@@ -100,7 +106,6 @@ def home():
     return render_template('main_page.html')
 
 
-#✅
 @app.route('/register_as', methods=['GET', 'POST'])
 def register_as():
     '''
@@ -110,7 +115,6 @@ def register_as():
     return render_template('register_as.html')
 
 
-#✅
 @app.route('/registration_applicant', methods=['GET', 'POST'])
 def registration_applicant():
     '''
@@ -155,7 +159,6 @@ def registration_applicant():
     return render_template('registration_applicant.html', form_data={})
 
 
-#✅
 @app.route('/registration_lawyer', methods=['GET', 'POST'])
 def registration_lawyer():
     '''
@@ -212,7 +215,6 @@ def registration_lawyer():
     return render_template('registration_lawyer.html', form_data={})
 
 
-#✅
 @app.route('/password', methods=['GET', 'POST'])
 def password():
     '''
@@ -251,7 +253,6 @@ def password():
     return render_template('password.html')
 
 
-#✅
 @app.route('/profile', methods=['GET', 'POST'])
 @required_login
 def profile():
@@ -267,14 +268,12 @@ def profile():
         return redirect(url_for('register_as'))
 
 
-#додати флеші
 @app.route('/crimes', methods=['GET', 'POST'])
 def crimes():
     '''
     This function handles the crime report page.
     It retrieves the list of crimes from the database and renders the 'crimes.html' template.
     '''
-
     cities = []
     crimes = []
     show_filters = request.method == 'POST' and request.form.get('apply_filters') != 'true'
@@ -282,20 +281,17 @@ def crimes():
     if request.form.get('city') and not request.form.get('region'):
         flash('Оберіть область', 'danger')
         return render_template('crimes.html', crimes=crimes, cities=cities, show_filters=show_filters)
-    
 
     if request.form.get('region'):
         if request.form.get('city'):
             cities = cities_from_files.region_to_cities(request.form.get('region'), request.form.get('city'))
         else:
             cities = cities_from_files.region_to_cities(request.form.get('region'))
-
     filters = {'date_from': None,
                 'date_to': None,
                 'region': None,
                 'location': None, 
                 'weapon_type': None}
-    
     if request.form.get('date_from'):
         filters['date_from'] = datetime.strptime(request.form.get('date_from'), "%Y-%m-%d")
     if request.form.get('date_to'):
@@ -304,8 +300,6 @@ def crimes():
     if request.form.get('location'):
         filters['location'] = request.form.get('location').strip(request.form.get('location').split()[0]).strip()
     filters['weapon_type'] = request.form.get('weapon_type')
-    
-    
     if request.method == 'POST' and request.form.get('apply_filters') == 'true':
         print('reached here')
         filters_for_bd = {key: value for key, value in filters.items() if value is not None and value != '' and 'date' not in key}
@@ -321,7 +315,7 @@ def crimes():
         docs = list(database.valid_crimes_collection.find(filters_for_bd))
     else:
         docs = list(database.valid_crimes_collection.find())
-    
+
     if not docs:
         if request.form.get('apply_filters') == 'true':
             flash('Злочини з такими фільтрами не знайдені', 'danger')
@@ -329,11 +323,9 @@ def crimes():
             flash('Злочини не знайдені', 'danger')
         return render_template('crimes.html', crimes=crimes, cities=cities, filters=filters, show_filters=show_filters)
 
-
     for doc in docs:
         print(type(doc['date']))
         images = []
-
         if 'files' in doc and isinstance(doc['files'], list):
             for file in doc['files']:
                 try:
@@ -385,7 +377,6 @@ def crimes_for_analytics():
     if request.form.get('city') and not request.form.get('region'):
         flash('Оберіть область', 'danger')
         return render_template('crimes_for_analytics.html', crimes=crimes, cities=cities, show_filters=show_filters)
-    
 
     if request.form.get('region'):
         if request.form.get('city'):
@@ -423,7 +414,7 @@ def crimes_for_analytics():
         docs = list(database.valid_crimes_collection.find(filters_for_bd))
     else:
         docs = list(database.valid_crimes_collection.find())
-    
+
     if not docs:
         if request.form.get('apply_filters') == 'true':
             flash('Злочини з такими фільтрами не знайдені', 'danger')
@@ -471,7 +462,6 @@ def crimes_for_analytics():
     return render_template('crimes_for_analytics.html', crimes=crimes, cities=cities, filters=filters, show_filters=show_filters)
 
 
-#✅
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     '''
@@ -501,7 +491,6 @@ def login():
     return render_template('login.html')
 
 
-#✅
 @app.route('/forgotten_password', methods=['GET', 'POST'])
 def forgotten_password():
     '''
@@ -531,7 +520,6 @@ def forgotten_password():
     return render_template('forgotten_password.html', form_data={})
 
 
-#✅
 @app.route('/confirm_password', methods=['GET', 'POST'])
 def confirm_password():
     '''
@@ -558,9 +546,8 @@ def confirm_password():
     return render_template('confirm_password.html')
 
 
-#✅
 @app.route('/analyst_page')
-# @required_lawyer
+@required_lawyer
 def analyst_page():
     '''
     This function handles the analyst page.
@@ -602,8 +589,6 @@ def analyst_page():
     return render_template('analyst_page.html', crimes=crimes)
 
 
-#додати флеші
-import traceback
 @app.route('/crime_report', methods=['GET', 'POST'])
 @required_login
 def crime_report():
@@ -625,7 +610,6 @@ def crime_report():
             'vict_info': None}
     cities = []
     is_required = request.method == 'POST' and request.form.get('location')
-
     if request.method == 'POST' and request.form.get('report_crime') != 'true':
         if request.form.get('region'):
             if request.form.get('city'):
@@ -677,16 +661,15 @@ def crime_report():
                 crime_info['vict_info'])
         except Exception as e:
             flash(f'Помилка при поданні злочину: {e}', 'danger')
-            return render_template('crime_report.html', crime_info=crime_info, cities=cities, is_required=True)
+            return redirect(url_for('crime_report'))
         crime_ = crime_.to_dict()
         act = database.crime_report(crime_)
         if act:
             flash('Звіт про злочин успішно подано!', 'success')
             return redirect(url_for('home_page'))
-    return render_template('crime_report.html', crime_info=crime_info,  is_required = is_required)
+    return render_template('crime_report.html', crime_info = None,  is_required = False)
 
 
-#✅
 @app.route('/home_page')
 @required_login
 def home_page():
@@ -696,7 +679,6 @@ def home_page():
     return render_template('home_page.html')
 
 
-#✅
 @app.route('/confirmation_of_crimes', methods=['GET', 'POST'])
 @required_lawyer
 def confirmation_of_crimes():

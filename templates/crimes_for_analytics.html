@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Злочини</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='anya_first.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='crimes.css') }}">
 </head>
 <body>
     <div class="header">
@@ -14,6 +14,7 @@
         <div class="filters">
             <a href="/analyst_page" class="filter-btn">Непідтверджені злочини</a>
             <a href="#" class="filter-btn" id="filter-button">Фільтри</a>
+            <a href="{{ url_for('crimes_for_analytics') }}" class="filter-btn" id="filter-button">Скинути фільтри</a>
         </div>
     </div>
 

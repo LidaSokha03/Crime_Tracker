@@ -30,9 +30,9 @@
                 {% endif %}
                 </div>
                 <div class="crime-info">
-                    <p><strong>Дата:</strong> {{ crime.date }}</p>
+                    <p><strong>Дата:</strong>{{ crime.date.strftime('%d.%m.%Y') }}</p>
                     <p><strong>Зброя, якою завданий злочин:</strong> {{ crime.weapon_type }}</p>
-                    <p><strong>Місто:</strong> {{ crime.location }}</p>
+                    <p><strong>Населений пункт:</strong> {{ crime.location }}</p>
                     <p><strong>К-сть загиблих і поранених:</strong> {{ crime.victims }}</p>
                     <p><strong>Опис злочину:</strong> {{ crime.description }}</p>
                     
