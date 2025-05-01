@@ -203,3 +203,8 @@ body::before {
     font-size: 12px;
     margin-bottom: 5px;
 }
+
+.required-star {
+    color: red;
+    margin-left: 3px;
+}
