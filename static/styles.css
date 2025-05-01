@@ -54,16 +54,8 @@ header {
 .navigation a {
     color: #fff;
     text-decoration: none;
-    /* font-size: 18px; */
     font-family: 'Inter', sans-serif;
 }
-/* 
-.action-button {
-    text-transform: uppercase;
-    font-weight: bold;
-    color: #fff;
-    text-decoration: none;
-} */
 
 main {
     text-align: center;
