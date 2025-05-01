@@ -49,6 +49,13 @@ h1 {
     font-size: 18px;
 }
 
+.red-divider {
+    height: 3px;
+    background-color: #B40C0C;
+    width: 80%;
+    margin: 0 auto 30px auto;
+}
+
 .subheader a {
     color: #fff;
     text-decoration: underline;
