@@ -603,6 +603,7 @@ def analyst_page():
 
 
 #додати флеші
+import traceback
 @app.route('/crime_report', methods=['GET', 'POST'])
 @required_login
 def crime_report():
@@ -675,8 +676,8 @@ def crime_report():
                 crime_info['victims'],
                 crime_info['vict_info'])
         except Exception as e:
-                flash(f'Помилка при поданні злочину: {e}', 'danger')
-                return render_template('crime_report.html', crime_info=crime_info, cities=cities, is_required=True)
+            flash(f'Помилка при поданні злочину: {e}', 'danger')
+            return render_template('crime_report.html', crime_info=crime_info, cities=cities, is_required=True)
         crime_ = crime_.to_dict()
         act = database.crime_report(crime_)
         if act:
