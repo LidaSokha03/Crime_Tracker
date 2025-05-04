@@ -8,15 +8,15 @@
 </head>
 <body>
     <div class="header">
-        <div class="logo-container">
-            <h1 class="svidoc">SVI.DOC</h1>
-        </div>
-        <div class="filters">
-            <a href="{{ url_for('home_page') if session.get('user_data') else url_for('home') }}" class="filter-btn">Головна</a>
-            <a href="#" class="filter-btn" id="filter-button">Фільтри</a>
-            <a href="{{ url_for('crimes') }}" class="filter-btn">Скинути</a>
-        </div>
+    <div class="logo-container">
+        <h1 class="svidoc">SVI.DOC</h1>
     </div>
+    <div class="filters">
+        <a href="..." class="filter-btn">ГОЛОВНА</a>
+        <a href="#" class="filter-btn" id="filter-button">ФІЛЬТРИ</a>
+        <a href="..." class="filter-btn">СКИНУТИ</a>
+    </div>
+</div>
 
     <div class="content">
         <div class="crimes-grid">

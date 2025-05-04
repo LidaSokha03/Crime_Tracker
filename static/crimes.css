@@ -397,7 +397,7 @@ body {
     
     .input-with-button input {
         width: 100%;
-        margin-bottom: 10px; /* Додає відступ між полем вводу і кнопкою */
+        margin-bottom: 10px;
     }
     
     .city-apply-btn {
@@ -441,9 +441,7 @@ body {
         margin-top: 5px;
     }
 
-/* Додаємо адаптивні стилі для різних розмірів екранів */
 
-/* Медіа-запит для планшетів (до 1024px) */
 @media screen and (max-width: 1024px) {
     .content {
         padding: 15px;
@@ -458,7 +456,6 @@ body {
     }
 }
 
-/* Медіа-запит для невеликих планшетів та великих смартфонів (до 768px) */
 @media screen and (max-width: 768px) {
     .header {
         padding: 5px;
@@ -507,7 +504,6 @@ body {
     }
 }
 
-/* Медіа-запит для смартфонів (до 480px) */
 @media screen and (max-width: 480px) {
     .svidoc {
         font-size: 24px;
