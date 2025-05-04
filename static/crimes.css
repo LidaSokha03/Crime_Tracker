@@ -440,3 +440,114 @@ body {
         font-size: 2rem;
         margin-top: 5px;
     }
+
+/* Додаємо адаптивні стилі для різних розмірів екранів */
+
+/* Медіа-запит для планшетів (до 1024px) */
+@media screen and (max-width: 1024px) {
+    .content {
+        padding: 15px;
+    }
+    
+    .crimes-grid {
+        padding: 10px;
+    }
+    
+    .filters-modal-content {
+        max-width: 95%;
+    }
+}
+
+/* Медіа-запит для невеликих планшетів та великих смартфонів (до 768px) */
+@media screen and (max-width: 768px) {
+    .header {
+        padding: 5px;
+    }
+    
+    .svidoc {
+        font-size: 30px;
+    }
+    
+    .filters {
+        flex-wrap: wrap;
+        justify-content: center;
+        padding-left: 0;
+    }
+    
+    .filter-btn {
+        padding: 10px;
+        font-size: 16px;
+        margin: 5px;
+    }
+    
+    .filters-grid {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .filter-section {
+        min-width: 100%;
+    }
+    
+    .crime-content {
+        flex-direction: column;
+    }
+    
+    .image-container {
+        width: 100%;
+        margin-top: 15px;
+    }
+    
+    .image-container img {
+        height: auto;
+    }
+    
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Медіа-запит для смартфонів (до 480px) */
+@media screen and (max-width: 480px) {
+    .svidoc {
+        font-size: 24px;
+    }
+    
+    .filter-btn {
+        padding: 8px;
+        font-size: 14px;
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+    }
+    
+    .filters {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .crime-card {
+        padding: 10px;
+    }
+    
+    .details-grid {
+        gap: 5px;
+    }
+    
+    .detail {
+        font-size: 16px;
+    }
+    
+    .description {
+        font-size: 14px;
+    }
+    
+    .filter-apply-btn {
+        padding: 10px 0;
+        font-size: 14px;
+    }
+    
+    .filters-modal-header h2 {
+        font-size: 18px;
+    }
+}
