@@ -298,10 +298,9 @@ def crimes():
         filters['date_to'] = datetime.strptime(request.form.get('date_to'), "%Y-%m-%d")
     filters['region'] = request.form.get('region')
     if request.form.get('location'):
-        filters['location'] = request.form.get('location').strip(request.form.get('location').split()[0]).strip()
+        filters['location'] = request.form.get('location').strip()
     filters['weapon_type'] = request.form.get('weapon_type')
     if request.method == 'POST' and request.form.get('apply_filters') == 'true':
-        print('reached here')
         filters_for_bd = {key: value for key, value in filters.items() if value is not None and value != '' and 'date' not in key}
         date_filter = {}
         if filters['date_from']:
@@ -311,7 +310,6 @@ def crimes():
         if date_filter:
             filters_for_bd["date"] = date_filter
 
-        print(filters_for_bd)
         docs = list(database.valid_crimes_collection.find(filters_for_bd))
     else:
         docs = list(database.valid_crimes_collection.find())
@@ -324,7 +322,6 @@ def crimes():
         return render_template('crimes.html', crimes=crimes, cities=cities, filters=filters, show_filters=show_filters)
 
     for doc in docs:
-        print(type(doc['date']))
         images = []
         if 'files' in doc and isinstance(doc['files'], list):
             for file in doc['files']:
