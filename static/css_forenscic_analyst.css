@@ -258,8 +258,11 @@ form {
     }
     
     .logout-link {
-        top: 10px;
-        right: 10px;
+        /* top: 10px;
+        right: 10px; */
+        margin-top: 20px;
+        display: flex;
+        justify-self: flex-end;
     }
     
     .logout-link .logout-button {
