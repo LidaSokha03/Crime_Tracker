@@ -14,6 +14,42 @@ body {
     max-width: 1000px;
     margin: 0 auto;
     padding: 20px;
+    position: relative; 
+}
+
+header {
+    padding: 40px 0 30px;
+    position: relative;
+}
+
+.logout-link {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;}
+
+.logout-link .logout-button {
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+    background-color: transparent;
+    padding: 10px 20px;
+    border: 2px solid white;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    font-size: 16px;
+}
+
+.logout-link .logout-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+h1 {
+    font-size: 48px;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
 .crimes-grid {
@@ -46,7 +82,7 @@ body {
     word-wrap: break-word;
     overflow-wrap: break-word;
     word-break: break-all;
-  }
+}
 
 .crime-info p strong {
     font-weight: 600;
@@ -81,18 +117,6 @@ body {
 
 .hidden {
     display: none;
-}
-
-header {
-    padding: 40px 0 30px;
-}
-
-h1 {
-    font-size: 48px;
-    font-weight: 900;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-    text-align: center;
 }
 
 .subheader {
@@ -164,20 +188,20 @@ h1 {
     align-items: center;
 }
   
-  form {
+form {
     display: inline;
     float: right;
-  }
+}
   
-  .button-container {
+.button-container {
     display: flex;
     justify-content: flex-end;
     margin-top: 15px;
     clear: both;
     gap: 20px;
-  }
+}
 
-  .details-btn {
+.details-btn {
     background-color: #b40c0c;
     border: none;
     padding: 8px 16px;
@@ -185,16 +209,12 @@ h1 {
     border-radius: 20px;
     cursor: pointer;
     font-size: 14px;
-  }
+}
 
 .full-desc {
     font-size: 15px;
     line-height: 1.6;
     margin-top: 15px;
-    display: none;
-}
-
-.hidden {
     display: none;
 }
 
@@ -235,6 +255,16 @@ h1 {
 @media (max-width: 600px) {
     h1 {
         font-size: 28px;
+    }
+    
+    .logout-link {
+        top: 10px;
+        right: 10px;
+    }
+    
+    .logout-link .logout-button {
+        padding: 6px 12px;
+        font-size: 14px;
     }
 
     .section-header {
